@@ -5,6 +5,7 @@ import OurProducts from './Home/OurProducts';
 import SpecialOffer from './Home/SpecialOffer';
 import BlogHighlight from './Home/BlogHighlight';
 import NaturallyCrafted from './Home/NaturallyCrafted';
+import GetInTouch from './Home/GetInTouch';
 
 const Page = () => {
   return (
@@ -15,6 +16,7 @@ const Page = () => {
       <SpecialOffer />
       <BlogHighlight />
       <NaturallyCrafted />
+      <GetInTouch />
     </>
   );
 };
