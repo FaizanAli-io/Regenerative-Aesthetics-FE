@@ -2,6 +2,7 @@ import React from 'react';
 import HomeCover from './Home/HomeCover';
 import SectionIntro from './Home/SectionIntro';
 import OurProducts from './Home/OurProducts';
+import SpecialOffer from './Home/SpecialOffer';
 
 const Page = () => {
   return (
@@ -9,6 +10,7 @@ const Page = () => {
       <HomeCover />
       <SectionIntro />
       <OurProducts />
+      <SpecialOffer />
     </>
   );
 };
