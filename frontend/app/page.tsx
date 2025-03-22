@@ -1,7 +1,12 @@
 import React from 'react';
+import HomeCover from './Home/HomeCover';
 
 const Page = () => {
-  return <div>Home Page!</div>;
+  return (
+    <>
+      <HomeCover />
+    </>
+  );
 };
 
 export default Page;
