@@ -2,6 +2,13 @@ import Image from 'next/image';
 import React from 'react';
 import ProductCard from '../components/ProductCard';
 import ButtonOutline from '../components/ButtonOutline';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '@/components/ui/carousel';
 
 interface CardData {
   image: string;
@@ -11,6 +18,49 @@ interface CardData {
 }
 
 const data: CardData[] = [
+  {
+    image: '/images/home/shampoo.png',
+    children: (
+      <p>
+        Living Proof <br />
+        Frizz Free Shampoo
+      </p>
+    ),
+    price: '$900',
+  },
+  {
+    image: '/images/home/shampoo.png',
+    children: (
+      <p>
+        GOPURE
+        <br />
+        Eye Cream
+      </p>
+    ),
+    price: '$2535',
+  },
+  {
+    image: '/images/home/shampoo.png',
+    children: (
+      <p>
+        Salt & Stone
+        <br />
+        Sunscreen Lotion
+      </p>
+    ),
+    price: '$399',
+  },
+  {
+    image: '/images/home/shampoo.png',
+    children: (
+      <p>
+        Salt & Stone
+        <br />
+        Sunscreen Lotion
+      </p>
+    ),
+    price: '$399',
+  },
   {
     image: '/images/home/shampoo.png',
     children: (
@@ -75,17 +125,26 @@ const SpecialOffer = () => {
             GRAB NOW!!!
           </ButtonOutline>
         </div>
-        <div className='flex space-x-5 overflow-auto'>
-          {data.map((item, index) => (
-            <ProductCard
-              key={index}
-              image={item.image}
-              price={item.price}
-              theme={!(index % 2) ? 'primary' : 'dark'}
-            >
-              {item.children}
-            </ProductCard>
-          ))}
+        {/* <div className='flex space-x-5 overflow-auto'> */}
+        <div className='overflow-hidden'>
+          <Carousel>
+            <CarouselContent>
+              {data.map((item, index) => (
+                <CarouselItem className='basis-1/4' key={index}>
+                  <ProductCard
+                    image={item.image}
+                    price={item.price}
+                    theme={!(index % 2) ? 'primary' : 'dark'}
+                  >
+                    {item.children}
+                  </ProductCard>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+
+            <CarouselPrevious />
+            <CarouselNext />
+          </Carousel>
         </div>
       </div>
       <Image
