@@ -64,7 +64,7 @@ const ProductInfo = () => {
         </ButtonOutline>
       </div>
 
-      <div className='flex justify-between space-x-5'>
+      <div className='flex space-x-25'>
         <ProductExtras
           text1='Free Delivery'
           text2='1-2 Day'
