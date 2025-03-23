@@ -10,7 +10,7 @@ const Footer = () => {
         <div className='grid grid-cols-3'>
           <div className='space-y-5'>
             <Image
-              src='/images/logo-white.png'
+              src='/images/logo-white.svg'
               alt='Favorites'
               width='200'
               height='100'
