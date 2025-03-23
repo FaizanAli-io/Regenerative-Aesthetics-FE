@@ -10,6 +10,7 @@ import ButtonOutline from './ButtonOutline';
 import Image from 'next/image';
 import { HeartIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
   image: string;
@@ -33,33 +34,33 @@ const ProductCard = ({
         {
           'bg-primary ': theme === 'primary' || !theme,
           'bg-dark': theme === 'dark',
-          'bg-gray-100': theme === 'light',
+          'bg-[#f6f6f6] border-0': theme === 'light',
         },
-        'px-5',
+        'px-4',
         className
       )}
       {...props}
     >
-      <CardHeader className='flex justify-end'>
-        <span
-          className={cn(
-            {
-              'text-dark/70': theme === 'primary' || !theme,
-              'text-body/70': theme === 'dark',
-              'text-body/50': theme === 'light',
-            },
-            'cursor-pointer'
-          )}
-        >
-          <HeartIcon size='30' className='translate-x-5' />
-        </span>
-      </CardHeader>
-      <CardContent className='flex flex-col items-center'>
+      <CardContent className='px-2 flex flex-col items-center  h-full'>
+        <div className='flex justify-end w-full'>
+          <span
+            className={cn(
+              {
+                'text-dark/70': theme === 'primary' || !theme,
+                'text-body/70': theme === 'dark',
+                'text-body/50': theme === 'light',
+              },
+              'cursor-pointer'
+            )}
+          >
+            <HeartIcon size='25' className='translate-x-2' />
+          </span>
+        </div>
         <Image
           src={image}
           alt='Special Offer'
-          width={300}
-          height={300}
+          width={250}
+          height={250}
           className='object-contain w-full h-full'
         />
 
@@ -81,26 +82,25 @@ const ProductCard = ({
               'text-primary': theme === 'dark',
               'text-primary-darker': theme === 'light',
             },
-            'text-2xl mt-4 font-semibold'
+            'text-2xl my-3 font-semibold'
           )}
         >
           {price}
         </p>
-      </CardContent>
-      <CardFooter className='flex justify-center items-center'>
-        <ButtonOutline
+
+        <Button
           className={cn(
             {
-              'text-white bg-dark':
-                theme === 'primary' || !theme || theme === 'light',
+              'bg-dark text-white ': theme === 'primary' || !theme,
               'bg-white text-primary': theme === 'dark',
+              'bg-primary-variant2 text-white': theme === 'light',
             },
-            'py-6 font-semibold'
+            'px-10 py-5 cursor-pointer w-full'
           )}
         >
           Buy Now
-        </ButtonOutline>
-      </CardFooter>
+        </Button>
+      </CardContent>
     </Card>
   );
 };

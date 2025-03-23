@@ -2,7 +2,7 @@ import React from 'react';
 import { NavigationMenu } from '@/components/ui/navigation-menu';
 import Link from 'next/link';
 import Image from 'next/image';
-import SearchField from './SearchField';
+import SearchField from '../SearchField';
 import NavLink from './NavLink';
 import NavIcon from './NavIcon';
 import SubNav from './SubNav';
