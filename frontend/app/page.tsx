@@ -6,6 +6,7 @@ import SpecialOffer from './Home/SpecialOffer';
 import BlogHighlight from './Home/BlogHighlight';
 import NaturallyCrafted from './Home/NaturallyCrafted';
 import GetInTouch from './Home/GetInTouch';
+import Reviews from './Home/Reviews';
 
 const Page = () => {
   return (
@@ -16,6 +17,7 @@ const Page = () => {
       <SpecialOffer />
       <BlogHighlight />
       <NaturallyCrafted />
+      <Reviews />
       <GetInTouch />
     </>
   );
