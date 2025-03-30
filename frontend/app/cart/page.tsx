@@ -1,5 +1,7 @@
 import React from 'react';
 import CartItem from './_components/CartItem';
+import OrderSummary from './OrderSummary';
+import { Button } from '@/components/ui/button';
 
 const data = [
   {
@@ -27,17 +29,25 @@ const data = [
 
 const Page = () => {
   return (
-    <div className='divide-y divide-gray-400'>
-      {data.map(item => (
-        <CartItem
-          image={item.image}
-          title={item.title}
-          code={item.code}
-          qty={item.qty}
-          price={item.price}
-          key={item.code}
-        />
-      ))}
+    <div className='grid grid-cols-2 gap-x-4 px-20 py-28'>
+      <div>
+        <h2 className='font-bold text-3xl'>Shopping Cart</h2>
+        <div className='divide-y divide-gray-400 px-4'>
+          {data.map(item => (
+            <CartItem
+              image={item.image}
+              title={item.title}
+              code={item.code}
+              qty={item.qty}
+              price={item.price}
+              key={item.code}
+            />
+          ))}
+        </div>
+      </div>
+      <div className=''>
+        <OrderSummary />
+      </div>
     </div>
   );
 };

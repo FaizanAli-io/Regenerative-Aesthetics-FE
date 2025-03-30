@@ -24,20 +24,25 @@ const CartItem = ({
 }: Props) => {
   return (
     <div
-      className={clsx('flex items-center space-x-5 py-10', className)}
+      className={clsx(
+        'grid grid-cols-5 items-center space-x-5 py-10',
+        className
+      )}
       {...props}
     >
-      <Image
-        src={image}
-        alt={title}
-        className='max-w-20 h-auto object-contain'
-        width={150}
-        height={150}
-        objectFit='contain'
-      />
-      <div>
-        <h2 className='text-lg font-semibold'>{title}</h2>
-        <p className='text-gray-600'>{code}</p>
+      <div className='flex space-x-2 items-center col-span-3'>
+        <Image
+          src={image}
+          alt={title}
+          className='max-w-20 h-auto object-contain'
+          width={150}
+          height={150}
+          objectFit='contain'
+        />
+        <div>
+          <h2 className='text-lg font-semibold'>{title}</h2>
+          <p className='text-gray-600'>{code}</p>
+        </div>
       </div>
       <div className='flex'>
         <Button className='bg-white text-primary-darker text-2xl pt-1 cursor-pointer hover:bg-white'>
@@ -51,12 +56,14 @@ const CartItem = ({
           +
         </Button>
       </div>
-      <p className='text-2xl text-primary-darker'>{price}</p>
-      <XIcon
-        size={25}
-        className='cursor-pointer text-gray-500'
-        strokeWidth={1}
-      />
+      <div className='flex space-x-5 items-center'>
+        <p className='text-2xl text-primary-darker'>{price}</p>
+        <XIcon
+          size={25}
+          className='cursor-pointer text-gray-500'
+          strokeWidth={1}
+        />
+      </div>
     </div>
   );
 };
