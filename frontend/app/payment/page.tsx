@@ -1,14 +1,16 @@
 import React from 'react';
-import OrderSummary from './OrderSummary';
-import CreditCardForm from './CreditCardForm';
 import ShippingMethod from './_sections/ShippingMethod';
+import SectionAddress from './_sections/SectionAddress';
+import PaymentStepper from './_sections/PaymentStepper';
+import SectionPay from './_sections/SectionPay';
 
 const Page = () => {
   return (
     <>
+      <PaymentStepper />
+      <SectionAddress />
       <ShippingMethod />
-      <OrderSummary />
-      <CreditCardForm />
+      <SectionPay />
     </>
   );
 };
