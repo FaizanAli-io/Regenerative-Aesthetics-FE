@@ -1,18 +1,18 @@
 import { Module } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
-import { PrismaModule } from '../prisma/prisma.module';
-import { JwtModule } from '@nestjs/jwt';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { UserEntity } from './entities/user.entity';
+import { EmailsService } from 'src/emails/emails.service';
+import { EmailsModule } from 'src/emails/emails.module';
 
 @Module({
   imports: [
-    PrismaModule,
-    JwtModule.register({
-      secret: 'SECRET_KEY', // Replace with environment variable in production
-      signOptions: { expiresIn: '1h' },
-    }),
+    TypeOrmModule.forFeature([UserEntity]),
+    EmailsModule,
   ],
   controllers: [UsersController],
   providers: [UsersService],
+  exports: [UsersService],
 })
 export class UsersModule {}

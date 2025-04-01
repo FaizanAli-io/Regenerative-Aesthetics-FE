@@ -1,21 +1,33 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { ValidationPipe } from '@nestjs/common';
+import {
+  DocumentBuilder,
+  SwaggerModule,
+} from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.useGlobalPipes(
+    new ValidationPipe({ whitelist: true }),
+  );
+  app.setGlobalPrefix('api/v1');
 
-  // ✅ Configure Swagger
+  // Swagger configuration
   const config = new DocumentBuilder()
-    .setTitle('My API')
-    .setDescription('API Documentation')
+    .setTitle('Regenerative Aesthetics API')
+    .setDescription(
+      'Regenerative Aesthetics API Description',
+    )
     .setVersion('1.0')
-    .addTag('users') // Optional tags for grouping endpoints
     .build();
 
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  const document = SwaggerModule.createDocument(
+    app,
+    config,
+  );
+  SwaggerModule.setup('api/v1', app, document); // Serve at /api/v1
 
-  await app.listen(3000);
+  await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

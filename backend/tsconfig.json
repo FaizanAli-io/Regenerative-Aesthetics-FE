@@ -17,5 +17,7 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false
-  }
+  }, // Keep your existing settings
+  "include": ["src/**/*", "db/**/*"], // Add "db/**/*" here
+  "exclude": ["node_modules"]
 }
