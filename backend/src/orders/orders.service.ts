@@ -308,53 +308,40 @@ export class OrdersService {
   async getOrCreateUserCart(
     userId: number,
   ): Promise<OrderEntity> {
-    return this.manager.transaction(
-      async (transactionalEM) => {
-        // Try to find existing cart
-        let cart = await transactionalEM.findOne(
-          OrderEntity,
-          {
-            where: {
-              user: { id: userId },
-              status: OrderStatus.CART,
-            },
-            relations: [
-              'products',
-              'products.product',
-            ], // Include relationships
-          },
-        );
-
-        // Create new cart if none exists
-        if (!cart) {
-          cart = new OrderEntity();
-          cart.user = {
-            id: userId,
-          } as UserEntity; // Reference user by ID
-          cart.status = OrderStatus.CART;
-          cart = await transactionalEM.save(cart); // Save new cart
-
-          // Reload to ensure relations are initialized (empty array for products)
-          cart = await transactionalEM.findOne(
-            OrderEntity,
-            {
-              where: { id: cart.id },
-              relations: [
-                'products',
-                'products.product',
-              ],
-            },
-          );
-
-          if (!cart)
-            throw new NotFoundException(
-              `Cart for user ${userId} could not be created.`,
-            );
-        }
-
-        return cart;
+    let cart = await this.orderRepository.findOne(
+      {
+        where: {
+          user: { id: userId },
+          status: OrderStatus.CART,
+        },
+        relations: [
+          'products',
+          'products.product',
+        ], // Include relationships
       },
     );
+
+    if (!cart) {
+      cart = new OrderEntity();
+      cart.user = {
+        id: userId,
+      } as UserEntity; // Reference user by ID
+      cart.status = OrderStatus.CART;
+      cart =
+        await this.orderRepository.save(cart);
+    }
+
+    cart = await this.orderRepository.findOne({
+      where: { id: cart.id },
+      relations: ['products', 'products.product'],
+    });
+
+    if (!cart)
+      throw new NotFoundException(
+        `Cart for user ${userId} could not be created.`,
+      );
+
+    return cart;
   }
 
   async addProductToCart(
@@ -474,6 +461,21 @@ export class OrdersService {
 
     cart.shippingAddress = shipping;
 
-    return await this.orderRepository.save(cart);
+    const savedCart =
+      await this.orderRepository.save(cart);
+
+    // **Manually remove circular references**
+    return {
+      ...savedCart,
+      products: savedCart.products.map(
+        ({ order, ...rest }) => rest,
+      ), // Removing circular reference in products
+      shippingAddress: savedCart.shippingAddress
+        ? {
+            ...savedCart.shippingAddress,
+            order: undefined, // Removing circular reference in shippingAddress
+          }
+        : null,
+    };
   }
 }

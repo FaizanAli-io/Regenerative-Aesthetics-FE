@@ -5,6 +5,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { OrderEntity } from './order.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity({ name: 'shippings' })
 export class ShippingEntity {

@@ -48,7 +48,7 @@ export class OrderEntity {
     { nullable: true, cascade: true },
   )
   @JoinColumn()
-  shippingAddress: ShippingEntity;
+  shippingAddress?: ShippingEntity;
 
   @OneToMany(
     () => OrdersProductsEntity,
