@@ -57,17 +57,10 @@ export class ProductsService {
 
   async findAll(query: any): Promise<{
     products: any;
-    totalProducts;
-    limit;
+    totalProducts: number;
+    limit: number;
   }> {
-    let filteredTotalProducts: number;
-    let limit: number;
-
-    if (!query.limit) {
-      limit = 10;
-    } else {
-      limit = query.limit;
-    }
+    let limit = query.limit ? query.limit : 10;
 
     const queryBuilder = dataSource
       .getRepository(ProductEntity)
@@ -77,54 +70,87 @@ export class ProductsService {
         'category',
       )
       .leftJoin('product.reviews', 'review')
-      .addSelect([
-        'COUNT(review.id) AS reviewCount',
-        'AVG(review.ratings)::numeric(10,2) AS averageRating',
+      .select([
+        'product.id AS "id"',
+        'product.title AS "title"',
+        'product.description AS "description"',
+        'product.price AS "price"',
+        'product.stock AS "stock"',
+        'product.images AS "images"',
+        'product.createdAt AS "createdAt"',
+        'product.updatedAt AS "updatedAt"',
+        'product.addedById AS "addedById"',
+        'category.id AS "categoryId"',
+        'category.title AS "categoryTitle"',
+        'category.description AS "categoryDescription"',
+        'category.createdAt AS "categoryCreatedAt"',
+        'category.updatedAt AS "categoryUpdatedAt"',
+        'category.addedById AS "categoryAddedById"',
+        'category.parentCategoryId AS "categoryParentId"',
+        'COUNT(review.id) AS "reviewCount"',
+        'AVG(review.ratings)::numeric(10,2) AS "avgRating"',
       ])
       .groupBy('product.id, category.id');
 
     const totalProducts =
       await queryBuilder.getCount();
 
-    if (query.search) {
-      const search = query.search;
+    // Handle category filter (including children)
+    if (query.category) {
+      const categoryIds =
+        await this.categoryService.getCategoryAndChildrenIds(
+          query.category,
+        );
       queryBuilder.andWhere(
-        'product.title like :title',
-        { title: `%${search}%` },
+        'category.id IN (:...ids)',
+        {
+          ids: categoryIds,
+        },
       );
     }
 
-    if (query.category) {
-      queryBuilder.andWhere('category.id=:id', {
-        id: query.category,
-      });
+    if (query.search) {
+      queryBuilder.andWhere(
+        'product.title LIKE :title',
+        {
+          title: `%${query.search}%`,
+        },
+      );
     }
 
     if (query.minPrice) {
       queryBuilder.andWhere(
-        'product.price >=:minPrice',
-        { minPrice: query.minPrice },
+        'product.price >= :minPrice',
+        {
+          minPrice: query.minPrice,
+        },
       );
     }
 
     if (query.maxPrice) {
       queryBuilder.andWhere(
-        'product.price <=:maxPrice',
-        { maxPrice: query.maxPrice },
+        'product.price <= :maxPrice',
+        {
+          maxPrice: query.maxPrice,
+        },
       );
     }
 
     if (query.minRating) {
       queryBuilder.andHaving(
-        'AVG(review.ratings) >=:minRating',
-        { minRating: query.minRating },
+        'AVG(review.ratings) >= :minRating',
+        {
+          minRating: query.minRating,
+        },
       );
     }
 
     if (query.maxRating) {
       queryBuilder.andHaving(
-        'AVG(review.ratings) <=:maxRating',
-        { maxRating: query.maxRating },
+        'AVG(review.ratings) <= :maxRating',
+        {
+          maxRating: query.maxRating,
+        },
       );
     }
 
@@ -133,13 +159,49 @@ export class ProductsService {
     if (query.offset) {
       queryBuilder.offset(query.offset);
     }
+
     const products =
       await queryBuilder.getRawMany();
 
+    const formattedProducts = products.map(
+      (product) => {
+        return {
+          id: product.id,
+          title: product.title,
+          description: product.description,
+          price: Number(product.price), // Convert to number
+          stock: Number(product.stock), // Convert to number
+          images: product.images
+            ? product.images.split(',')
+            : [],
+          createdAt: product.createdAt,
+          updatedAt: product.updatedAt,
+          addedById: product.addedById,
+          reviewCount: Number(
+            product.reviewCount,
+          ), // Convert to number
+          avgRating: product.avgRating
+            ? Number(product.avgRating)
+            : null, // Convert to number or null
+          category: {
+            id: product.categoryId,
+            title: product.categoryTitle,
+            description:
+              product.categoryDescription,
+            createdAt: product.categoryCreatedAt,
+            updatedAt: product.categoryUpdatedAt,
+            addedById: product.categoryAddedById,
+            parentCategoryId:
+              product.categoryParentId,
+          },
+        };
+      },
+    );
+
     return {
-      products: products,
       totalProducts,
       limit,
+      products: formattedProducts,
     };
   }
 

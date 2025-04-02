@@ -53,9 +53,13 @@ export class ProductEntity {
 
   @ManyToOne(
     () => CategoryEntity,
-    (cat) => cat.products,
+    (category) => category.products,
+    {
+      nullable: true,
+      onDelete: 'SET NULL', // Set the category ID to null when the category is deleted
+    },
   )
-  category: CategoryEntity;
+  category: CategoryEntity | null;
 
   @OneToMany(
     () => ReviewEntity,

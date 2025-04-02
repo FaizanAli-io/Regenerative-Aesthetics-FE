@@ -17,39 +17,51 @@ export class ProductsDto {
 }
 
 export class ProductList {
-  @Expose({ name: 'product_id' })
+  @Expose()
   id: number;
 
-  @Expose({ name: 'product_title' })
+  @Expose()
   title: string;
 
-  @Expose({ name: 'product_description' })
+  @Expose()
   description: string;
 
-  @Expose({ name: 'product_price' })
+  @Expose()
   price: number;
 
-  @Expose({ name: 'product_stock' })
+  @Expose()
   stock: number;
 
-  @Expose({ name: 'product_images' })
+  @Expose()
   @Transform(({ value }) =>
     value.toString().split(','),
-  )
+  ) // Convert string paths to an array
   images: string[];
 
-  @Transform(({ obj }) => {
-    return {
-      id: obj.category_id,
-      title: obj.category_title,
-    };
-  })
   @Expose()
+  createdAt: Date;
+
+  @Expose()
+  updatedAt: Date;
+
+  @Expose()
+  addedById: number;
+
+  @Expose()
+  reviewCount: number;
+
+  @Expose()
+  avgRating: number;
+
+  @Expose()
+  @Transform(({ obj }) => ({
+    id: obj.categoryId,
+    title: obj.categoryTitle,
+    description: obj.categoryDescription,
+    createdAt: obj.categoryCreatedAt,
+    updatedAt: obj.categoryUpdatedAt,
+    addedById: obj.categoryAddedById,
+    parentCategoryId: obj.categoryParentId,
+  }))
   category: any;
-
-  @Expose({ name: 'reviewCount' })
-  review: number;
-
-  @Expose({ name: 'avgRating' })
-  rating: number;
 }

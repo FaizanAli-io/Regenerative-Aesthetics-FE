@@ -174,6 +174,29 @@ export class CategoriesController {
     );
   }
 
+  @Get(':id/children')
+  @ApiOperation({
+    summary:
+      'Get all child categories of a given category ID',
+  })
+  @ApiResponse({
+    status: 200,
+    description:
+      'Returns all child categories of the given category ID.',
+    type: [CategoryEntity],
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Category not found.',
+  })
+  async getChildren(
+    @Param('id') id: string,
+  ): Promise<CategoryEntity[]> {
+    const category =
+      await this.categoriesService.findOne(+id);
+    return category.children || [];
+  }
+
   @UseGuards(
     AuthenticationGuard,
     AuthorizeGuard([Roles.ADMIN]),

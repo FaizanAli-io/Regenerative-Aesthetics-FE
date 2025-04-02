@@ -39,4 +39,20 @@ export class CategoryEntity {
     (prod) => prod.category,
   )
   products: ProductEntity[];
+
+  @ManyToOne(
+    () => CategoryEntity,
+    (category) => category.children,
+    {
+      nullable: true, // ✅ Fixes the issue
+      onDelete: 'SET NULL',
+    },
+  )
+  parentCategory: CategoryEntity | null;
+
+  @OneToMany(
+    () => CategoryEntity,
+    (category) => category.parentCategory,
+  )
+  children: CategoryEntity[];
 }
