@@ -1,19 +1,26 @@
-import {
-  Expose,
-  Transform,
-  Type,
-} from 'class-transformer';
+import { Expose, Type } from 'class-transformer';
 
-export class ProductsDto {
+export class CategoryDto {
   @Expose()
-  totalProducts: number;
+  id: number;
 
   @Expose()
-  limit: number;
+  title: string;
 
   @Expose()
-  @Type(() => ProductList)
-  products: ProductList[];
+  description: string;
+
+  @Expose()
+  createdAt: Date;
+
+  @Expose()
+  updatedAt: Date;
+
+  @Expose()
+  addedById: number;
+
+  @Expose()
+  parentCategoryId: number | null;
 }
 
 export class ProductList {
@@ -33,9 +40,7 @@ export class ProductList {
   stock: number;
 
   @Expose()
-  @Transform(({ value }) =>
-    value.toString().split(','),
-  ) // Convert string paths to an array
+  @Type(() => String) // Ensure proper transformation
   images: string[];
 
   @Expose()
@@ -54,14 +59,18 @@ export class ProductList {
   avgRating: number;
 
   @Expose()
-  @Transform(({ obj }) => ({
-    id: obj.categoryId,
-    title: obj.categoryTitle,
-    description: obj.categoryDescription,
-    createdAt: obj.categoryCreatedAt,
-    updatedAt: obj.categoryUpdatedAt,
-    addedById: obj.categoryAddedById,
-    parentCategoryId: obj.categoryParentId,
-  }))
-  category: any;
+  @Type(() => CategoryDto) // Now correctly references CategoryDto
+  category: CategoryDto;
+}
+
+export class ProductsDto {
+  @Expose()
+  totalProducts: number;
+
+  @Expose()
+  limit: number;
+
+  @Expose()
+  @Type(() => ProductList)
+  products: ProductList[];
 }

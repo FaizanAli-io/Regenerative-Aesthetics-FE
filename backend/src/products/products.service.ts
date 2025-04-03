@@ -163,40 +163,59 @@ export class ProductsService {
     const products =
       await queryBuilder.getRawMany();
 
+    console.log(products);
+
     const formattedProducts = products.map(
       (product) => {
+        console.log(
+          'Product before formatting:',
+          product,
+        ); // Debugging log
+
         return {
           id: product.id,
           title: product.title,
           description: product.description,
-          price: Number(product.price), // Convert to number
-          stock: Number(product.stock), // Convert to number
+          price: parseFloat(product.price), // Ensure numeric price
+          stock: product.stock,
           images: product.images
             ? product.images.split(',')
-            : [],
+            : [], // Convert to array
           createdAt: product.createdAt,
           updatedAt: product.updatedAt,
           addedById: product.addedById,
-          reviewCount: Number(
+          reviewCount: parseInt(
             product.reviewCount,
-          ), // Convert to number
+            10,
+          ),
           avgRating: product.avgRating
-            ? Number(product.avgRating)
-            : null, // Convert to number or null
-          category: {
-            id: product.categoryId,
-            title: product.categoryTitle,
-            description:
-              product.categoryDescription,
-            createdAt: product.categoryCreatedAt,
-            updatedAt: product.categoryUpdatedAt,
-            addedById: product.categoryAddedById,
-            parentCategoryId:
-              product.categoryParentId,
-          },
+            ? parseFloat(product.avgRating)
+            : null,
+
+          category: product.categoryId
+            ? {
+                id: product.categoryId,
+                title: product.categoryTitle,
+                description:
+                  product.categoryDescription,
+                createdAt:
+                  product.categoryCreatedAt,
+                updatedAt:
+                  product.categoryUpdatedAt,
+                addedById:
+                  product.categoryAddedById,
+                parentCategoryId:
+                  product.categoryParentId,
+              }
+            : null,
         };
       },
     );
+
+    console.log(
+      'Formatted Products:',
+      formattedProducts,
+    ); // Debugging log
 
     return {
       totalProducts,
