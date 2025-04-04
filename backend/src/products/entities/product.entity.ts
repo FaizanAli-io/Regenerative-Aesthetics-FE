@@ -48,6 +48,7 @@ export class ProductEntity {
   @ManyToOne(
     () => UserEntity,
     (user) => user.products,
+    { onDelete: 'SET NULL' },
   )
   addedBy: UserEntity;
 

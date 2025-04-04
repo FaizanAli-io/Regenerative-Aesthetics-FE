@@ -30,12 +30,14 @@ export class ReviewEntity {
   @ManyToOne(
     (type) => UserEntity,
     (user) => user.reviews,
+    { onDelete: 'CASCADE' },
   )
   user: UserEntity;
 
   @ManyToOne(
     (type) => ProductEntity,
     (prod) => prod.reviews,
+    { onDelete: 'CASCADE' }, // Add this line
   )
   product: ProductEntity;
 }

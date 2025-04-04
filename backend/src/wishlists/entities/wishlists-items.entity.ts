@@ -20,11 +20,14 @@ export class WishlistItemEntity {
   @ManyToOne(
     () => UserEntity,
     (user) => user.wishlistItems,
+    { onDelete: 'CASCADE' },
   )
   @JoinColumn()
   user: UserEntity;
 
-  @ManyToOne(() => ProductEntity)
+  @ManyToOne(() => ProductEntity, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn()
   product: ProductEntity;
 }

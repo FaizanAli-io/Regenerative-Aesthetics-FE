@@ -39,6 +39,7 @@ export class OrderEntity {
   @ManyToOne(
     () => UserEntity,
     (user) => user.ordersUpdateBy,
+    { onDelete: 'SET NULL' },
   )
   updatedBy: UserEntity;
 

@@ -31,6 +31,7 @@ export class CategoryEntity {
   @ManyToOne(
     () => UserEntity,
     (user) => user.categories,
+    { onDelete: 'SET NULL' },
   )
   addedBy: UserEntity;
 
