@@ -6,9 +6,10 @@ import {
 } from '@/components/ui/accordion';
 import { Checkbox } from '@/components/ui/checkbox';
 import SearchField from '../components/SearchField';
+import { Category } from '@/services/category-services';
 
 interface Props {
-  items: { label: string; count: number }[];
+  items: Category[];
   title: string;
 }
 
@@ -26,16 +27,16 @@ function ProductSidebarAccordion({ items, title }: Props) {
           {items.map(item => (
             <div className='flex items-center space-x-2'>
               <Checkbox
-                id={item.label.replace(' ', '_')}
+                // id={item.label.replace(' ', '_')}
                 className='cursor-pointer'
               />
               <label
-                htmlFor={item.label.replace(' ', '_')}
+                // htmlFor={item.label.replace(' ', '_')}
                 className='text-primary-darker text-sm font-medium leading-none cursor-pointer'
               >
-                {item.label}
+                {item.title}
                 <span className='text-xs text-neutral-400 font-normal ml-1'>
-                  {item.count}
+                  {/* {item.count} */}
                 </span>
               </label>
             </div>
