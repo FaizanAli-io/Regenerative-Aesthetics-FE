@@ -1,11 +1,20 @@
+'use client';
+
 import React from 'react';
 import TextField from '../components/TextField';
 import TextFieldLablel from '../components/TextFieldLable';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/lib/stores/cart';
+import { toast } from 'sonner';
+import { redirect } from 'next/navigation';
 
 const OrderSummary = () => {
   const total = useCart(state => state.cart.totalPrice);
+
+  const handleCheckout = () => {
+    if (total > 0) redirect('/payment');
+    else toast.error('Your cart is empty!');
+  };
 
   return (
     <div className='border-1 border-gray-300 rounded-md p-15 space-y-5'>
@@ -47,7 +56,10 @@ const OrderSummary = () => {
         <p className='font-semibold text-xl'>${total > 0 ? total + 100 : 0}</p>
       </div>
 
-      <Button className='w-full text-xl py-6 mt-4 rounded-sm bg-primary-variant2'>
+      <Button
+        className='w-full text-xl py-6 mt-4 rounded-sm bg-primary-variant2 cursor-pointer'
+        onClick={handleCheckout} // Attach handleCheckout to the button
+      >
         Checkout
       </Button>
     </div>
