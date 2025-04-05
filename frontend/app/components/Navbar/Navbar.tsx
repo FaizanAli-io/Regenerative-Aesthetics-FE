@@ -27,7 +27,7 @@ const Navbar = () => {
 
           <div className='flex gap-4 justify-center items-center'>
             <NavLink href='/'>Home</NavLink>
-            <NavLink href='/about'>About</NavLink>
+            <NavLink href='/products'>Products</NavLink>
             <NavLink href='/contact'>Contact Us</NavLink>
           </div>
 

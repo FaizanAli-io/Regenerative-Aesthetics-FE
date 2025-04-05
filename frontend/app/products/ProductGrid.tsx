@@ -14,108 +14,9 @@ interface CardData {
   children: React.ReactNode;
 }
 
-const data: CardData[] = [
-  {
-    image: '/images/home/shampoo.png',
-    children: (
-      <p>
-        Living Proof <br />
-        Frizz Free Shampoo
-      </p>
-    ),
-    price: '$900',
-  },
-  {
-    image: '/images/home/shampoo.png',
-    children: (
-      <p>
-        GOPURE
-        <br />
-        Eye Cream
-      </p>
-    ),
-    price: '$2535',
-  },
-  {
-    image: '/images/home/shampoo.png',
-    children: (
-      <p>
-        Salt & Stone
-        <br />
-        Sunscreen Lotion
-      </p>
-    ),
-    price: '$399',
-  },
-  {
-    image: '/images/home/shampoo.png',
-    children: (
-      <p>
-        Salt & Stone
-        <br />
-        Sunscreen Lotion
-      </p>
-    ),
-    price: '$399',
-  },
-  {
-    image: '/images/home/shampoo.png',
-    children: (
-      <p>
-        Living Proof <br />
-        Frizz Free Shampoo
-      </p>
-    ),
-    price: '$900',
-  },
-  {
-    image: '/images/home/shampoo.png',
-    children: (
-      <p>
-        GOPURE
-        <br />
-        Eye Cream
-      </p>
-    ),
-    price: '$2535',
-  },
-  {
-    image: '/images/home/shampoo.png',
-    children: (
-      <p>
-        Salt & Stone
-        <br />
-        Sunscreen Lotion
-      </p>
-    ),
-    price: '$399',
-  },
-  {
-    image: '/images/home/shampoo.png',
-    children: (
-      <p>
-        Salt & Stone
-        <br />
-        Sunscreen Lotion
-      </p>
-    ),
-    price: '$399',
-  },
-  {
-    image: '/images/home/shampoo.png',
-    children: (
-      <p>
-        Salt & Stone
-        <br />
-        Sunscreen Lotion
-      </p>
-    ),
-    price: '$399',
-  },
-];
-
 const ProductGrid = () => {
   const { data: products, isLoading } = useProducts();
+  console.log('products', products);
 
   return (
     <div className='space-y-10'>
@@ -131,16 +32,18 @@ const ProductGrid = () => {
       <div className='grid grid-cols-4 grid-rows-3 gap-5'>
         {isLoading && <Loader />}
 
-        {products?.map(product => (
-          <ProductCard
-            image='/images/home/shampoo.png'
-            price={product.price}
-            theme={'light'}
-            key={product.id}
-          >
-            <p>{product.title}</p>
-          </ProductCard>
-        ))}
+        {products &&
+          products?.map(product => (
+            <ProductCard
+              product={product}
+              // image='/images/home/shampoo.png'
+              // price={product.price}
+              theme={'light'}
+              key={product.id}
+            >
+              <p>{product.title}</p>
+            </ProductCard>
+          ))}
       </div>
     </div>
   );

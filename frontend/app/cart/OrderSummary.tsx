@@ -2,8 +2,11 @@ import React from 'react';
 import TextField from '../components/TextField';
 import TextFieldLablel from '../components/TextFieldLable';
 import { Button } from '@/components/ui/button';
+import { useCart } from '@/lib/stores/cart';
 
 const OrderSummary = () => {
+  const total = useCart(state => state.cart.totalPrice);
+
   return (
     <div className='border-1 border-gray-300 rounded-md p-15 space-y-5'>
       <h2 className='font-bold text-3xl'>Order Summary</h2>
@@ -27,21 +30,21 @@ const OrderSummary = () => {
 
       <div className='flex justify-between'>
         <p className='font-semibold text-xl'>Subtotal</p>
-        <p className='font-semibold text-xl'>$2347</p>
+        <p className='font-semibold text-xl'>${total}</p>
       </div>
 
       <div className='flex justify-between'>
         <p className='text-black/70 text-lg'>Estimated Tax</p>
-        <p className='font-semibold text-xl'>$50</p>
+        <p className='font-semibold text-xl'>${total > 0 ? '50' : '0'}</p>
       </div>
       <div className='flex justify-between'>
         <p className='text-black/70 text-lg'>Estimated shipping & Handling</p>
-        <p className='font-semibold text-xl'>$50</p>
+        <p className='font-semibold text-xl'>${total > 0 ? '50' : '0'}</p>
       </div>
 
       <div className='flex justify-between'>
         <p className='font-semibold text-xl'>Total</p>
-        <p className='font-semibold text-xl'>$2426</p>
+        <p className='font-semibold text-xl'>${total > 0 ? total + 100 : 0}</p>
       </div>
 
       <Button className='w-full text-xl py-6 mt-4 rounded-sm bg-primary-variant2'>

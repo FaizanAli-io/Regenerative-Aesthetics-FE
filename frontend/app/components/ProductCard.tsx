@@ -1,32 +1,46 @@
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import React, { HTMLAttributes } from 'react';
-import ButtonOutline from './ButtonOutline';
+'use client';
+import { Card, CardContent, CardTitle } from '@/components/ui/card';
+import React, { HTMLAttributes, useEffect, useState } from 'react';
 import Image from 'next/image';
 import { HeartIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { Product } from '@/lib/services/products-service';
+import { useCart } from '@/lib/stores/cart';
+import { toast } from 'sonner';
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
-  image: string;
-  price: string;
+  product: Product;
   theme?: 'light' | 'dark' | 'primary';
 }
 
 const ProductCard = ({
-  image,
-  price,
+  product,
   children,
   className,
   theme,
   ...props
 }: Props) => {
-  console.log(theme);
+  const addToCart = useCart(state => state.addToCart);
+  const items = useCart(state => state.cart.items);
+
+  const [isAdded, setIsAdded] = useState(false);
+
+  useEffect(() => {
+    if (items.length && items.find(i => i.id === product.id)) setIsAdded(true);
+  });
+
+  const handleClick = () => {
+    if (items.length && items.find(i => i.id === product.id)) return;
+
+    setIsAdded(true);
+    addToCart({
+      ...product,
+      quantity: 1,
+    });
+
+    toast.success('Added to cart');
+  };
 
   return (
     <Card
@@ -57,8 +71,9 @@ const ProductCard = ({
           </span>
         </div>
         <Image
-          src={image}
-          alt='Special Offer'
+          // !temp
+          src='/images/home/shampoo.png'
+          alt={product.title}
           width={250}
           height={250}
           className='object-contain w-full h-full'
@@ -85,10 +100,12 @@ const ProductCard = ({
             'text-2xl my-3 font-semibold'
           )}
         >
-          {price}
+          {product.price}
         </p>
 
         <Button
+          disabled={isAdded}
+          onClick={handleClick}
           className={cn(
             {
               'bg-dark text-white ': theme === 'primary' || !theme,
@@ -98,7 +115,8 @@ const ProductCard = ({
             'px-10 py-5 cursor-pointer w-full'
           )}
         >
-          Buy Now
+          {isAdded ? 'Added' : 'Add to Cart'}
+          {/* Buy Now */}
         </Button>
       </CardContent>
     </Card>

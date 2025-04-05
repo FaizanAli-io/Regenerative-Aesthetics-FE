@@ -4,6 +4,7 @@ import './globals.css';
 import Navbar from './components/Navbar/Navbar';
 import Footer from './components/Footer';
 import QueryProvider from '@/components/QueryProvider';
+import { Toaster } from '@/components/ui/sonner';
 
 const poppins = Poppins({
   variable: '--font-poppins',
@@ -27,6 +28,7 @@ export default function RootLayout({
         <Navbar />
         <QueryProvider>{children}</QueryProvider>
         <Footer />
+        <Toaster />
       </body>
     </html>
   );

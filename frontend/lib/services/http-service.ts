@@ -11,6 +11,16 @@ class HttpService {
     this.endpoint = endpoint;
   }
 
+  getOdd<T>(url: string) {
+    const controller = new AbortController();
+
+    const request = apiClient.get<T>(this.endpoint + url, {
+      signal: controller.signal,
+    });
+
+    return { request, cancel: () => controller.abort() };
+  }
+
   getAll<T>() {
     const controller = new AbortController();
 
@@ -37,3 +47,4 @@ class HttpService {
 const create = (endpoint: string) => new HttpService(endpoint);
 
 export default create;
+export { HttpService };
