@@ -115,8 +115,7 @@ const ProductCard = ({
             'px-10 py-5 cursor-pointer w-full'
           )}
         >
-          {isAdded ? 'Added' : 'Add to Cart'}
-          {/* Buy Now */}
+          {isAdded ? 'Added' : 'Buy Now'}
         </Button>
       </CardContent>
     </Card>
