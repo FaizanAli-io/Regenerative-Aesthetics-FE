@@ -1,8 +1,6 @@
+import './globals.css';
 import type { Metadata } from 'next';
 import { Poppins } from 'next/font/google';
-import './globals.css';
-import Navbar from './components/Navbar/Navbar';
-import Footer from './components/Footer';
 import QueryProvider from '@/components/QueryProvider';
 import { Toaster } from '@/components/ui/sonner';
 
