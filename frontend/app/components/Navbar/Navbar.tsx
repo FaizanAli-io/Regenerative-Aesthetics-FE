@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { NavigationMenu } from '@/components/ui/navigation-menu';
 import Link from 'next/link';
@@ -6,8 +8,11 @@ import SearchField from '../SearchField';
 import NavLink from './NavLink';
 import NavIcon from './NavIcon';
 import SubNav from './SubNav';
+import { useAuth } from '@/lib/hooks/use-auth';
 
 const Navbar = () => {
+  const { isAuthenticated } = useAuth();
+
   return (
     <>
       <NavigationMenu className='px-10 w-full justify-stretch my-2'>
@@ -34,7 +39,11 @@ const Navbar = () => {
           <div className='flex gap-2 justify-center items-center'>
             <NavIcon href='/favorites' src='/icons/heart.svg' alt='Favorites' />
             <NavIcon href='/cart' src='/icons/cart.svg' alt='Cart' />
-            <NavIcon href='/profile' src='/icons/user.svg' alt='Profile' />
+            {isAuthenticated ? (
+              <NavIcon href='/favorites' src='/icons/user.svg' alt='Profile' />
+            ) : (
+              <NavIcon href='/login' src='/icons/user.svg' alt='Login' />
+            )}
           </div>
         </div>
       </NavigationMenu>

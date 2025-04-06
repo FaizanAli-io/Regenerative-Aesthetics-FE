@@ -3,18 +3,19 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { useAuth } from '@/lib/hooks/use-auth'; // Assuming a hook to check authentication
+import { redirect } from 'next/navigation';
+
 import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { HTMLAttributes } from 'react';
 import { cn } from '@/lib/utils';
 import {
   Card,
@@ -23,21 +24,38 @@ import {
   CardDescription,
   CardContent,
 } from '@/components/ui/card';
+import Link from 'next/link';
+import { useLogin } from '@/lib/hooks/use-login';
+import { toast } from 'sonner';
+import { useEffect } from 'react';
 
 const FormSchema = z.object({
   email: z.string().email().min(1, {
     message: 'Email is required',
   }),
 
-  password: z.string().min(1, {
-    message: 'Password is required',
-  }),
+  password: z
+    .string()
+    .min(1, { message: 'Password is required' })
+    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/, {
+      message:
+        'Password must contain at least 1 uppercase letter, 1 lowercase letter, and 1 number',
+    }),
 });
 
 function LoginForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<'div'>) {
+  const { isAuthenticated } = useAuth();
+  const { mutate: login, isPending, isSuccess } = useLogin();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      redirect('/');
+    }
+  }, [isAuthenticated]);
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -47,17 +65,14 @@ function LoginForm({
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log(data);
-
-    // toast({
-    //   title: "You submitted the following values:",
-    //   description: (
-    //     <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-    //       <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-    //     </pre>
-    //   ),
-    // })
+    login(data, {
+      onSuccess: () => {
+        toast.success('Login successful!');
+      },
+    });
   }
+
+  if (isAuthenticated) return null;
 
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
@@ -113,6 +128,7 @@ function LoginForm({
               <Button
                 type='submit'
                 className='w-full bg-primary-variant2 cursor-pointer'
+                disabled={isPending || isSuccess}
               >
                 Login
               </Button>
@@ -120,6 +136,12 @@ function LoginForm({
                 Login with Google
               </Button>
             </form>
+            <div className='mt-4 text-center text-sm'>
+              Don&apos;t have an account?{' '}
+              <Link href='/sign-up' className='underline underline-offset-4'>
+                Sign up
+              </Link>
+            </div>
           </Form>
         </CardContent>
       </Card>
