@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { useAuth } from '@/lib/hooks/use-auth'; // Assuming a hook to check authentication
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -49,12 +49,7 @@ function LoginForm({
 }: React.ComponentPropsWithoutRef<'div'>) {
   const { isAuthenticated } = useAuth();
   const { mutate: login, isPending, isSuccess } = useLogin();
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      redirect('/');
-    }
-  }, [isAuthenticated]);
+  const router = useRouter(); // Use useRouter for navigation
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -68,6 +63,7 @@ function LoginForm({
     login(data, {
       onSuccess: () => {
         toast.success('Login successful!');
+        router.push('/products'); // Replace redirect with router.push
       },
     });
   }
