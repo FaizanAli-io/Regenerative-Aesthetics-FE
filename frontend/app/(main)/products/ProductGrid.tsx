@@ -26,13 +26,7 @@ const ProductGrid = () => {
 
         {products &&
           products?.map(product => (
-            <ProductCard
-              product={product}
-              // image='/images/home/shampoo.png'
-              // price={product.price}
-              theme={'light'}
-              key={product.id}
-            >
+            <ProductCard product={product} theme={'light'} key={product.id}>
               <p>{product.title}</p>
             </ProductCard>
           ))}

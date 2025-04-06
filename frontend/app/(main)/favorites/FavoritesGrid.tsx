@@ -1,15 +1,12 @@
 'use client';
 
 import React from 'react';
-import { Label } from '@/components/ui/label';
-import { useProducts } from '@/lib/hooks/use-products';
 import Loader from '@/app/components/Loader';
 import ProductCard from '@/app/components/ProductCard';
-import { useWishlist } from '@/lib/hooks/use-wishlist';
+import { useWishlist } from '@/lib/hooks/wishlist/use-wishlist';
 
 const FavoritesGrid = () => {
   const { data: wishlist, isLoading } = useWishlist();
-  const { data: products } = useProducts();
 
   return (
     <div className='space-y-10'>

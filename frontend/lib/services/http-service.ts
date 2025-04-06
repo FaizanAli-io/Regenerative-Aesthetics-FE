@@ -35,8 +35,10 @@ class HttpService {
     return apiClient.delete(this.endpoint + '/' + id);
   }
 
-  create<T>(entity: T) {
-    return apiClient.post(this.endpoint, entity);
+  create<T, U>(entity: T, url?: string) {
+    if (url) return apiClient.post<U>(this.endpoint + url, entity);
+
+    return apiClient.post<U>(this.endpoint, entity);
   }
 
   update<T extends Entity>(entity: T) {

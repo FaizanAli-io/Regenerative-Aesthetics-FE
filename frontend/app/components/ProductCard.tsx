@@ -8,6 +8,10 @@ import { Button } from '@/components/ui/button';
 import { Product } from '@/lib/services/products-service';
 import { useCart } from '@/lib/stores/cart';
 import { toast } from 'sonner';
+import { getUser } from '@/lib/auth';
+import { useAuth } from '@/lib/hooks/use-auth';
+import { User } from '@/lib/services/auth-service';
+import { useAddWishlist } from '@/lib/hooks/wishlist/use-add-wishlist';
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
   isFavourite?: boolean;
@@ -23,14 +27,19 @@ const ProductCard = ({
   isFavourite = false,
   ...props
 }: Props) => {
+  const { mutate: addToWishlist } = useAddWishlist();
+
   const addToCart = useCart(state => state.addToCart);
   const items = useCart(state => state.cart.items);
-
+  const [user, setUser] = useState<User | null>(null);
   const [isAdded, setIsAdded] = useState(false);
 
   useEffect(() => {
     if (items.length && items.find(i => i.id === product.id)) setIsAdded(true);
-  });
+
+    const _user = getUser();
+    setUser(_user);
+  }, []);
 
   const handleClick = () => {
     if (items.length && items.find(i => i.id === product.id)) return;
@@ -42,6 +51,25 @@ const ProductCard = ({
     });
 
     toast.success('Added to cart');
+  };
+
+  const handleFavorite = () => {
+    if (isFavourite || !user) return;
+
+    addToWishlist(
+      {
+        productId: product.id,
+        userId: user.id,
+      },
+      {
+        onSuccess: () => {
+          toast.success('Added to wishlist');
+        },
+        onError: () => {
+          toast.error('Failed to add to wishlist');
+        },
+      }
+    );
   };
 
   return (
@@ -74,6 +102,7 @@ const ProductCard = ({
               className='translate-x-2'
               fill={isFavourite ? '#fa6784' : 'none'}
               stroke={isFavourite ? '#fa6784' : '#999'}
+              onClick={handleFavorite}
             />
           </span>
         </div>

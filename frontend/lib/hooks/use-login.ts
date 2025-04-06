@@ -1,22 +1,22 @@
 import { useMutation } from '@tanstack/react-query';
 import api from '../services/api-client';
 // import { setToken } from '../auth';
-import { User } from '../services/auth-service';
+import { Login } from '../services/auth-service';
 import { AxiosError } from 'axios';
-import { setToken } from '../auth';
+import { setToken, setUser } from '../auth';
 
 interface LoginInput {
   email: string;
   password: string;
 }
 
-const login = async (data: LoginInput): Promise<User> => {
-  const res = await api.post<User>('/users/signin', data);
+const login = async (data: LoginInput): Promise<Login> => {
+  const res = await api.post<Login>('/users/signin', data);
   return res.data;
 };
 
 export const useLogin = () => {
-  return useMutation<User, AxiosError, LoginInput>({
+  return useMutation<Login, AxiosError, LoginInput>({
     mutationFn: login,
 
     onMutate: () => {
@@ -27,6 +27,7 @@ export const useLogin = () => {
     onSuccess: data => {
       console.log('Login successful:', data);
       setToken(data.accessToken);
+      setUser(data.user);
     },
 
     onError: error => {

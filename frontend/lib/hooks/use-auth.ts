@@ -1,26 +1,23 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { getToken, removeToken } from '../auth';
+import { getToken, getUser, removeToken, removeUser } from '../auth';
+import { User } from '../services/auth-service';
 
 export const useAuth = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    const token = getToken();
-
-    if (token) {
-      console.log('token found', token);
-      setIsAuthenticated(true);
-    } else {
-      console.log('token not found', token);
-      setIsAuthenticated(false);
-    }
+    setIsAuthenticated(!!getToken());
+    const user = getUser();
+    setUser(user);
   }, []);
 
   const logout = () => {
     removeToken();
     setIsAuthenticated(false);
+    removeUser();
   };
 
-  return { isAuthenticated, logout };
+  return { isAuthenticated, logout, user };
 };

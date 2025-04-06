@@ -1,10 +1,12 @@
 interface User {
-  accessToken: string;
-  user: {
-    id: number;
-    name: string;
-    email: string;
-  };
+  id: number;
+  name: string;
+  email: string;
 }
 
-export type { User };
+interface Login {
+  accessToken: string;
+  user: User;
+}
+
+export type { Login, User };
