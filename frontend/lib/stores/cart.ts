@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { Product } from '../services/products-service';
 
-export interface CartItem extends Product {
+export interface CartItem extends Omit<Product, 'category'> {
   quantity: number;
 }
 

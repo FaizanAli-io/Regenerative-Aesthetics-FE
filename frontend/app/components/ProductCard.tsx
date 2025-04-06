@@ -11,7 +11,7 @@ import { toast } from 'sonner';
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
   isFavourite?: boolean;
-  product: Product;
+  product: Omit<Product, 'category'>; // Removed 'category' from Product type
   theme?: 'light' | 'dark' | 'primary';
 }
 

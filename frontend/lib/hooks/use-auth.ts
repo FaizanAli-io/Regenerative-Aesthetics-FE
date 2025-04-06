@@ -6,7 +6,15 @@ export const useAuth = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    setIsAuthenticated(!!getToken());
+    const token = getToken();
+
+    if (token) {
+      console.log('token found', token);
+      setIsAuthenticated(true);
+    } else {
+      console.log('token not found', token);
+      setIsAuthenticated(false);
+    }
   }, []);
 
   const logout = () => {
