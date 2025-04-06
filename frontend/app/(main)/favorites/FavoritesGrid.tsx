@@ -20,7 +20,7 @@ const FavoritesGrid = () => {
               product={item.product}
               theme={'light'}
               key={item.id}
-              isFavourite
+              favorite
             >
               <p>{item.product.title}</p>
             </ProductCard>

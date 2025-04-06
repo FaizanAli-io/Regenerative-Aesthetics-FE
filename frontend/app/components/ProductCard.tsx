@@ -12,27 +12,31 @@ import { getUser } from '@/lib/auth';
 import { useAuth } from '@/lib/hooks/use-auth';
 import { User } from '@/lib/services/auth-service';
 import { useAddWishlist } from '@/lib/hooks/wishlist/use-add-wishlist';
+import { useWishlist } from '@/lib/hooks/wishlist/use-wishlist';
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
-  isFavourite?: boolean;
   product: Omit<Product, 'category'>; // Removed 'category' from Product type
   theme?: 'light' | 'dark' | 'primary';
+  favorite?: boolean;
 }
 
 const ProductCard = ({
   product,
   children,
   className,
+  favorite,
   theme,
-  isFavourite = false,
   ...props
 }: Props) => {
   const { mutate: addToWishlist } = useAddWishlist();
+  const { data: wishlist } = useWishlist();
 
   const addToCart = useCart(state => state.addToCart);
   const items = useCart(state => state.cart.items);
+
   const [user, setUser] = useState<User | null>(null);
   const [isAdded, setIsAdded] = useState(false);
+  const [isFavourite, setIsFavourite] = useState(false);
 
   useEffect(() => {
     if (items.length && items.find(i => i.id === product.id)) setIsAdded(true);
@@ -40,6 +44,16 @@ const ProductCard = ({
     const _user = getUser();
     setUser(_user);
   }, []);
+
+  useEffect(() => {
+    if (favorite || !wishlist || !wishlist.wishlistItems.length) return;
+
+    const isProductInWishlist = wishlist.wishlistItems.find(
+      item => item.product.id === product.id
+    );
+
+    if (isProductInWishlist) setIsFavourite(true);
+  }, [wishlist, favorite]);
 
   const handleClick = () => {
     if (items.length && items.find(i => i.id === product.id)) return;
@@ -100,8 +114,8 @@ const ProductCard = ({
             <HeartIcon
               size='25'
               className='translate-x-2'
-              fill={isFavourite ? '#fa6784' : 'none'}
-              stroke={isFavourite ? '#fa6784' : '#999'}
+              fill={isFavourite || favorite ? '#fa6784' : 'none'}
+              stroke={isFavourite || favorite ? '#fa6784' : '#999'}
               onClick={handleFavorite}
             />
           </span>
