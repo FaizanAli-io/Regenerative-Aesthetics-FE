@@ -1,9 +1,9 @@
 'use client';
 import React from 'react';
-import TextField from '../components/TextField';
-import ButtonOutline from '../components/ButtonOutline';
 import { Checkbox } from '@/components/ui/checkbox';
 import Image from 'next/image';
+import TextField from '@/app/components/TextField';
+import ButtonOutline from '@/app/components/ButtonOutline';
 
 const CreditCardForm = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {

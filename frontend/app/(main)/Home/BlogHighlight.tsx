@@ -1,5 +1,5 @@
+import BlogCard from '@/app/components/BlogCard';
 import React from 'react';
-import BlogCard from '../components/BlogCard';
 
 const data = [
   {

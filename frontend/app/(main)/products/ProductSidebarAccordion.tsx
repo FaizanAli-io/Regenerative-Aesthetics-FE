@@ -1,3 +1,4 @@
+import SearchField from '@/app/components/SearchField';
 import {
   Accordion,
   AccordionContent,
@@ -5,7 +6,6 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { Checkbox } from '@/components/ui/checkbox';
-import SearchField from '../components/SearchField';
 import { Category } from '@/lib/services/category-services';
 
 interface Props {

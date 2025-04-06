@@ -25,9 +25,7 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body className={`${poppins.variable} antialiased`}>
-        <Navbar />
         <QueryProvider>{children}</QueryProvider>
-        <Footer />
         <Toaster />
       </body>
     </html>

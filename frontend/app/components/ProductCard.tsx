@@ -10,6 +10,7 @@ import { useCart } from '@/lib/stores/cart';
 import { toast } from 'sonner';
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
+  isFavourite?: boolean;
   product: Product;
   theme?: 'light' | 'dark' | 'primary';
 }
@@ -19,6 +20,7 @@ const ProductCard = ({
   children,
   className,
   theme,
+  isFavourite = false,
   ...props
 }: Props) => {
   const addToCart = useCart(state => state.addToCart);
@@ -67,7 +69,12 @@ const ProductCard = ({
               'cursor-pointer'
             )}
           >
-            <HeartIcon size='25' className='translate-x-2' />
+            <HeartIcon
+              size='25'
+              className='translate-x-2'
+              fill={isFavourite ? '#fa6784' : 'none'}
+              stroke={isFavourite ? '#fa6784' : '#999'}
+            />
           </span>
         </div>
         <Image

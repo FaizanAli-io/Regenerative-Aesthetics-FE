@@ -1,5 +1,5 @@
+import ButtonOutline from '@/app/components/ButtonOutline';
 import React from 'react';
-import ButtonOutline from '../components/ButtonOutline';
 
 const SectionIntro = () => {
   return (

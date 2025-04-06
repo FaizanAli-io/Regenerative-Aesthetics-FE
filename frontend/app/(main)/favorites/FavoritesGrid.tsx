@@ -1,13 +1,11 @@
 'use client';
-
 import React from 'react';
-import ProductCard from '../components/ProductCard';
 import { Label } from '@/components/ui/label';
-import ProductSortDropdown from './ProductSortDropdown';
 import { useProducts } from '@/lib/hooks/use-products';
-import Loader from '../components/Loader';
+import Loader from '@/app/components/Loader';
+import ProductCard from '@/app/components/ProductCard';
 
-const ProductGrid = () => {
+const FavoritesGrid = () => {
   const { data: products, isLoading } = useProducts();
 
   return (
@@ -19,20 +17,13 @@ const ProductGrid = () => {
             {products && products.length}
           </span>
         </Label>
-        <ProductSortDropdown />
       </div>
       <div className='grid grid-cols-4 grid-rows-3 gap-5'>
         {isLoading && <Loader />}
 
         {products &&
           products?.map(product => (
-            <ProductCard
-              product={product}
-              // image='/images/home/shampoo.png'
-              // price={product.price}
-              theme={'light'}
-              key={product.id}
-            >
+            <ProductCard product={product} theme={'light'} key={product.id}>
               <p>{product.title}</p>
             </ProductCard>
           ))}
@@ -41,4 +32,4 @@ const ProductGrid = () => {
   );
 };
 
-export default ProductGrid;
+export default FavoritesGrid;

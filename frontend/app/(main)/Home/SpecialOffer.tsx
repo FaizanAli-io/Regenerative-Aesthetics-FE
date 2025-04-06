@@ -1,7 +1,5 @@
 import Image from 'next/image';
 import React from 'react';
-import ProductCard from '../components/ProductCard';
-import ButtonOutline from '../components/ButtonOutline';
 import {
   Carousel,
   CarouselContent,
@@ -9,6 +7,8 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
+import ButtonOutline from '@/app/components/ButtonOutline';
+import ProductCard from '@/app/components/ProductCard';
 
 interface CardData {
   image: string;
@@ -131,13 +131,13 @@ const SpecialOffer = () => {
             <CarouselContent>
               {data.map((item, index) => (
                 <CarouselItem className='basis-1/4' key={index}>
-                  <ProductCard
-                    image={item.image}
-                    price={item.price}
+                  {/* <ProductCard
+                    // image={item.image}
+                    // price={item.price}
                     theme={!(index % 2) ? 'primary' : 'dark'}
                   >
                     {item.children}
-                  </ProductCard>
+                  </ProductCard> */}
                 </CarouselItem>
               ))}
             </CarouselContent>

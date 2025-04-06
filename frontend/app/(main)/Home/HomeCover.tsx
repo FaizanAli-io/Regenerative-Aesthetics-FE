@@ -1,6 +1,6 @@
+import Block from '@/app/components/Block';
+import ButtonOutline from '@/app/components/ButtonOutline';
 import React from 'react';
-import Block from '../components/Block';
-import ButtonOutline from '../components/ButtonOutline';
 
 const HomeCover = () => {
   return (

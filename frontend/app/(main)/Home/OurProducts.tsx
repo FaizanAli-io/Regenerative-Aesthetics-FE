@@ -1,6 +1,6 @@
+import ButtonOutline from '@/app/components/ButtonOutline';
 import Image from 'next/image';
 import React from 'react';
-import ButtonOutline from '../components/ButtonOutline';
 
 const OurProducts = () => {
   return (

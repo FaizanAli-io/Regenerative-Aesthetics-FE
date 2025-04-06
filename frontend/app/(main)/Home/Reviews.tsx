@@ -1,5 +1,4 @@
 import React from 'react';
-import ReviewCard from '../components/ReviewCard';
 import {
   Carousel,
   CarouselContent,
@@ -7,6 +6,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
+import ReviewCard from '@/app/components/ReviewCard';
 
 const Reviews = () => {
   return (
