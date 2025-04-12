@@ -47,7 +47,7 @@ export class UsersService {
 
     let user = this.usersRepository.create({
       ...userSignUpDto,
-      isVerified: true, //while in developement this is true, otherwise false.
+      isVerified: false, //while in developement this is true, otherwise false.
       verificationToken,
       verificationTokenExpires,
     });
@@ -56,35 +56,35 @@ export class UsersService {
 
     //IMP: email service is not yet complete so this is commented:
 
-    // await this.emailService.sendVerificationEmail(
-    //   user.email,
-    //   verificationToken,
-    // );
+    await this.emailService.sendVerificationEmail(
+      user.email,
+      verificationToken,
+    );
     delete (user as any).password;
     return user;
   }
 
-  // async verifyEmailToken(
-  //   token: string,
-  // ): Promise<UserEntity> {
-  //   const user =
-  //     await this.usersRepository.findOne({
-  //       where: {
-  //         verificationToken: token,
-  //         verificationTokenExpires: MoreThan(
-  //           new Date(),
-  //         ),
-  //       },
-  //     });
+  async verifyEmailToken(
+    token: string,
+  ): Promise<UserEntity> {
+    const user =
+      await this.usersRepository.findOne({
+        where: {
+          verificationToken: token,
+          verificationTokenExpires: MoreThan(
+            new Date(),
+          ),
+        },
+      });
 
-  //   if (!user)
-  //     throw new BadRequestException(
-  //       'Invalid or expired token.',
-  //     );
+    if (!user)
+      throw new BadRequestException(
+        'Invalid or expired token.',
+      );
 
-  //   user.isVerified = true;
-  //   return this.usersRepository.save(user);
-  // }
+    user.isVerified = true;
+    return this.usersRepository.save(user);
+  }
 
   async signin(
     userSignInDto: UserSignInDto,
@@ -109,14 +109,63 @@ export class UsersService {
         'Bad credentials.',
       );
 
-    // if (!userExists.isVerified) {
-    //   throw new BadRequestException(
-    //     'Email not verified.',
-    //   );
-    // }
+    if (!userExists.isVerified) {
+      throw new BadRequestException(
+        'Email not verified.',
+      );
+    }
 
     delete (userExists as any).password;
     return userExists;
+  }
+
+  async requestPasswordReset(
+    email: string,
+  ): Promise<void> {
+    const user =
+      await this.findUserByEmail(email);
+    if (!user) return; // prevent email enumeration
+
+    const resetToken = crypto
+      .randomBytes(32)
+      .toString('hex');
+    const resetTokenExpires = new Date(
+      Date.now() + 60 * 60 * 1000,
+    ); // 1 hour expiry
+
+    user.resetPasswordToken = resetToken;
+    user.resetPasswordTokenExpires =
+      resetTokenExpires;
+    await this.usersRepository.save(user);
+
+    await this.emailService.sendResetPasswordEmail(
+      user.email,
+      resetToken,
+    );
+  }
+
+  async resetPassword(
+    token: string,
+    newPassword: string,
+  ): Promise<void> {
+    const user =
+      await this.usersRepository.findOne({
+        where: {
+          resetPasswordToken: token,
+          resetPasswordTokenExpires: MoreThan(
+            new Date(),
+          ),
+        },
+      });
+
+    if (!user) {
+      throw new BadRequestException(
+        'Invalid or expired token.',
+      );
+    }
+
+    user.password = await hash(newPassword, 10);
+    await this.usersRepository.save(user);
   }
 
   async accessToken(

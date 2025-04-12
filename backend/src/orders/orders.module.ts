@@ -10,6 +10,7 @@ import { OrdersProductsEntity } from './entities/orders-products.entity';
 import { ShippingEntity } from './entities/shipping.entity';
 import { ProductsModule } from 'src/products/products.module';
 import { UsersModule } from 'src/users/users.module';
+import { EmailsModule } from 'src/emails/emails.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { UsersModule } from 'src/users/users.module';
     ]),
     forwardRef(() => ProductsModule),
     UsersModule,
+    EmailsModule,
   ],
   controllers: [OrdersController],
   providers: [OrdersService],

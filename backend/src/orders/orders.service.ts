@@ -28,6 +28,7 @@ import { CreateCartDto } from './dto/create-cart.dto';
 import { UpdateCartDto } from './dto/update-cart.dto';
 import { OrderedProductsDto } from './dto/ordered-products.dto';
 import { CreateShippingDto } from './dto/create-shipping.dto';
+import { EmailsService } from 'src/emails/emails.service';
 
 @Injectable()
 export class OrdersService {
@@ -41,6 +42,7 @@ export class OrdersService {
     @Inject(forwardRef(() => ProductsService))
     private readonly productService: ProductsService,
     private readonly userService: UsersService,
+    private readonly emailService: EmailsService,
   ) {}
 
   async create(
@@ -253,6 +255,33 @@ export class OrdersService {
       );
     }
 
+    // 🚀 Send status change email
+    const newStatus = updateOrderStatusDto.status;
+    const userEmail = order.user.email;
+    if (newStatus === OrderStatus.PROCESSING) {
+      await this.emailService.sendOrderStatusEmail(
+        userEmail,
+        order.id,
+        'processing',
+      );
+    } else if (
+      newStatus === OrderStatus.SHIPPED
+    ) {
+      await this.emailService.sendOrderStatusEmail(
+        userEmail,
+        order.id,
+        'shipped',
+      );
+    } else if (
+      newStatus === OrderStatus.DELIVERED
+    ) {
+      await this.emailService.sendOrderStatusEmail(
+        userEmail,
+        order.id,
+        'delivered',
+      );
+    }
+
     return order;
   }
 
@@ -274,6 +303,12 @@ export class OrdersService {
     await this.stockUpdate(
       order,
       OrderStatus.CANCELLED,
+    );
+
+    await this.emailService.sendOrderStatusEmail(
+      order.user.email,
+      order.id,
+      'cancelled',
     );
 
     return order;
@@ -352,15 +387,10 @@ export class OrdersService {
       await this.productService.findOne(
         orderedProductsDto.id,
       );
-
     const cart = await this.getOrCreateUserCart(
       currentUser.id,
     );
 
-    const orderedProduct =
-      new OrdersProductsEntity();
-    orderedProduct.order = cart;
-    orderedProduct.product = product;
     if (
       product.stock <
       orderedProductsDto.product_quantity
@@ -369,36 +399,59 @@ export class OrdersService {
         `Product ${product.id} is out of stock.`,
       );
     }
-    orderedProduct.product_quantity =
-      orderedProductsDto.product_quantity;
-    orderedProduct.product_unit_price =
-      product.price;
 
-    const savedProduct =
-      await this.opRepository.save(
-        orderedProduct,
-      );
-
-    const existingProduct = cart.products.find(
-      (p) => p.id === orderedProductsDto.id,
+    // Check if product already exists in cart
+    let existingProduct = cart.products.find(
+      (p) =>
+        p.product.id === orderedProductsDto.id,
     );
+
     if (existingProduct) {
+      // Update quantity only
       existingProduct.product_quantity =
         orderedProductsDto.product_quantity;
       await this.opRepository.save(
         existingProduct,
       );
     } else {
+      // Create new entry
+      const orderedProduct =
+        new OrdersProductsEntity();
+      orderedProduct.order = cart;
+      orderedProduct.product = product;
+      orderedProduct.product_quantity =
+        orderedProductsDto.product_quantity;
+      orderedProduct.product_unit_price =
+        product.price;
+
+      const savedProduct =
+        await this.opRepository.save(
+          orderedProduct,
+        );
       cart.products.push(savedProduct);
     }
 
+    // Calculate the total price of the cart
+    const totalPrice = cart.products.reduce(
+      (sum, product) => {
+        return (
+          sum +
+          product.product_unit_price *
+            product.product_quantity
+        );
+      },
+      0,
+    );
+
     const savedCart =
       await this.orderRepository.save(cart);
+
     return {
       ...savedCart,
+      totalPrice,
       products: savedCart.products.map(
         ({ order, ...rest }) => rest,
-      ), // Removing circular reference
+      ), // Remove circular ref
     };
   }
 
@@ -463,6 +516,12 @@ export class OrdersService {
 
     const savedCart =
       await this.orderRepository.save(cart);
+
+    await this.emailService.sendOrderStatusEmail(
+      currentUser.email,
+      cart.id,
+      'processing',
+    );
 
     // **Manually remove circular references**
     return {

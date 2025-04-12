@@ -1,112 +1,3 @@
-// import {
-//   Controller,
-//   Get,
-//   Post,
-//   Body,
-//   Patch,
-//   Param,
-//   NotFoundException,
-//   UseGuards,
-//   Query,
-// } from '@nestjs/common';
-// import { UsersService } from './users.service';
-// import { UpdateUserDto } from './dto/update-user.dto';
-// import { UserSignUpDto } from './dto/user-signup.dto';
-// import { UserEntity } from './entities/user.entity';
-// import { UserSignInDto } from './dto/user-signin.dto';
-// import { CurrentUser } from 'src/utility/common/decorators/current-user.decorator';
-// import { AuthenticationGuard } from 'src/utility/common/guards/authentication.guard';
-// import { Roles } from 'src/utility/common/user-roles.enum';
-// import { AuthorizeGuard } from 'src/utility/common/guards/authorization.guard';
-
-// @Controller('users')
-// export class UsersController {
-//   constructor(
-//     private readonly usersService: UsersService,
-//   ) {}
-
-//   @Post('signup')
-//   async signup(
-//     @Body() userSignUpDto: UserSignUpDto,
-//   ): Promise<{ user: UserEntity }> {
-//     return {
-//       user: await this.usersService.signup(
-//         userSignUpDto,
-//       ),
-//     };
-//   }
-
-//   @Post('signin')
-//   async signin(
-//     @Body() userSignInDto: UserSignInDto,
-//   ): Promise<{
-//     accessToken: string;
-//     user: UserEntity;
-//   }> {
-//     const user = await this.usersService.signin(
-//       userSignInDto,
-//     );
-//     const accessToken =
-//       await this.usersService.accessToken(user);
-
-//     return { accessToken, user };
-//   }
-
-//   //IMP: email service is not yet complete so this is commented:
-
-//   // @Get('verify-email')
-//   // async verifyEmail(
-//   //   @Query('token') token: string,
-//   // ) {
-//   //   await this.usersService.verifyEmailToken(
-//   //     token,
-//   //   );
-//   //   return {
-//   //     message: 'Email verified successfully',
-//   //   };
-//   // }
-
-//   @UseGuards(
-//     AuthenticationGuard,
-//     AuthorizeGuard([Roles.ADMIN]),
-//   )
-//   @Get('all')
-//   async findAll(): Promise<UserEntity[]> {
-//     return await this.usersService.findAll();
-//   }
-
-//   @Get('single/:id')
-//   async findOne(@Param('id') id: string) {
-//     const user =
-//       await this.usersService.findOne(+id);
-//     if (!user)
-//       throw new NotFoundException(
-//         'User not found.',
-//       );
-//     return user;
-//   }
-
-//   @UseGuards(AuthenticationGuard)
-//   @Patch('')
-//   async update(
-//     @Body() updateUserDto: UpdateUserDto,
-//     @CurrentUser() currentUser: UserEntity,
-//   ) {
-//     return await this.usersService.update(
-//       currentUser.id,
-//       updateUserDto,
-//     );
-//   }
-
-//   @UseGuards(AuthenticationGuard)
-//   @Get('me')
-//   getProfile(
-//     @CurrentUser() currentUser: UserEntity,
-//   ) {
-//     return currentUser;
-//   }
-// }
-
 import {
   Controller,
   Get,
@@ -181,18 +72,65 @@ export class UsersController {
   }
 
   // IMP: email service is not yet complete so this is commented:
-  // @Get('verify-email')
-  // @ApiOperation({ summary: 'Verify User Email' })
-  // @ApiResponse({
-  //   status: 200,
-  //   description: 'Email verified successfully.',
-  // })
-  // async verifyEmail(@Query('token') token: string) {
-  //   await this.usersService.verifyEmailToken(token);
-  //   return {
-  //     message: 'Email verified successfully',
-  //   };
-  // }
+  @Get('verify-email')
+  @ApiOperation({ summary: 'Verify User Email' })
+  @ApiResponse({
+    status: 200,
+    description: 'Email verified successfully.',
+  })
+  async verifyEmail(
+    @Query('token') token: string,
+  ) {
+    await this.usersService.verifyEmailToken(
+      token,
+    );
+    return {
+      message: 'Email verified successfully',
+    };
+  }
+
+  @Post('forgot-password')
+  @ApiOperation({
+    summary: 'Request password reset link',
+  })
+  @ApiResponse({
+    status: 200,
+    description:
+      'Reset link sent to email if user exists.',
+  })
+  async forgotPassword(
+    @Body('email') email: string,
+  ) {
+    await this.usersService.requestPasswordReset(
+      email,
+    );
+    return {
+      message:
+        'If your email is registered, you will receive a password reset link shortly.',
+    };
+  }
+
+  @Post('reset-password')
+  @ApiOperation({
+    summary: 'Reset password with token',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Password reset successful.',
+  })
+  async resetPassword(
+    @Body('token') token: string,
+    @Body('newPassword') newPassword: string,
+  ) {
+    await this.usersService.resetPassword(
+      token,
+      newPassword,
+    );
+    return {
+      message:
+        'Password has been reset successfully.',
+    };
+  }
 
   @UseGuards(
     AuthenticationGuard,

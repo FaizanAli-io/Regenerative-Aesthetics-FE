@@ -28,6 +28,7 @@ export class UserEntity {
   @Column({ select: false })
   password: string;
 
+  @Exclude()
   @Column({
     type: 'enum',
     enum: Roles,
@@ -37,6 +38,7 @@ export class UserEntity {
   })
   roles: Roles[];
 
+  @Exclude()
   @Column({ default: false })
   isVerified: boolean;
 
@@ -47,6 +49,14 @@ export class UserEntity {
   @Exclude()
   @Column({ type: 'timestamp', nullable: true })
   verificationTokenExpires: Date;
+
+  @Exclude()
+  @Column({ nullable: true })
+  resetPasswordToken: string;
+
+  @Exclude()
+  @Column({ nullable: true, type: 'timestamp' })
+  resetPasswordTokenExpires: Date;
 
   @CreateDateColumn()
   createdAt: Timestamp;
