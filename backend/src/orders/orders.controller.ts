@@ -58,25 +58,91 @@ export class OrdersController {
     );
   }
 
+  // ADMIN: Get all orders
   @Get('all')
-  @ApiOperation({ summary: 'Get all orders' })
+  @UseGuards(
+    AuthenticationGuard,
+    AuthorizeGuard([Roles.ADMIN]),
+  )
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: 'Get all orders (admin)',
+  })
   @ApiResponse({
     status: 200,
     description: 'Returns a list of orders.',
     type: [OrderEntity],
   })
+  @ApiResponse({
+    status: 403,
+    description:
+      'Forbidden. Admin access required.',
+  })
   async findAll(
     @Query('limit') limit: number,
     @Query('offset') offset: number,
+    @Query('status')
+    status?:
+      | 'processing'
+      | 'shipped'
+      | 'delivered'
+      | 'cancelled',
   ): Promise<OrderEntity[]> {
     return await this.ordersService.findAll(
       limit,
       offset,
+      status,
+    );
+  }
+
+  // USER: Get own orders
+  @Get()
+  @UseGuards(
+    AuthenticationGuard,
+    AuthorizeGuard([Roles.USER]),
+  )
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: 'Get your own orders',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns your own orders.',
+    type: [OrderEntity],
+  })
+  @ApiResponse({
+    status: 403,
+    description:
+      'Forbidden. User access required.',
+  })
+  async findMyOrders(
+    @CurrentUser() currentUser: UserEntity,
+    @Query('limit') limit: number,
+    @Query('offset') offset: number,
+    @Query('status')
+    status?:
+      | 'processing'
+      | 'shipped'
+      | 'delivered'
+      | 'cancelled',
+  ): Promise<OrderEntity[]> {
+    return await this.ordersService.findAll(
+      limit,
+      offset,
+      status,
+      currentUser.id,
     );
   }
 
   @Get(':id')
-  @ApiOperation({ summary: 'Get an order by ID' })
+  @UseGuards(
+    AuthenticationGuard,
+    AuthorizeGuard([Roles.USER]),
+  )
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: 'Get an order by ID (admin)',
+  })
   @ApiResponse({
     status: 200,
     description: 'Returns the order details.',

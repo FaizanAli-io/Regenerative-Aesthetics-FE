@@ -130,11 +130,22 @@ export class OrdersService {
   async findAll(
     limit: number = 10,
     offset: number = 0,
+    status?:
+      | 'processing'
+      | 'shipped'
+      | 'delivered'
+      | 'cancelled',
+    userId?: number,
   ): Promise<OrderEntity[]> {
+    const whereClause: any = {};
+    if (status) whereClause.status = status;
+    if (userId) whereClause.user = { id: userId };
+
     const orders =
       await this.orderRepository.find({
         take: limit,
         skip: offset,
+        where: whereClause,
         relations: {
           shippingAddress: true,
           user: true,
@@ -144,10 +155,11 @@ export class OrdersService {
         },
       });
 
-    if (!orders)
+    if (!orders || orders.length === 0) {
       throw new NotFoundException(
         'No orders found.',
       );
+    }
 
     return orders;
   }
