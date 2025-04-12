@@ -24,48 +24,64 @@ import {
   CardDescription,
   CardContent,
 } from '@/components/ui/card';
-import { useLogin } from '@/lib/hooks/use-login';
 import { toast } from 'sonner';
 import Image from 'next/image';
+import { useSignup } from '@/lib/hooks/use-signup';
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
-  navigateToSignup?: () => void;
+  navigateToLogin?: () => void;
 }
 
-const FormSchema = z.object({
-  email: z.string().email().min(1, {
-    message: 'Email is required',
-  }),
+const FormSchema = z
+  .object({
+    fullName: z.string().min(1, { message: 'Full name is required' }),
 
-  password: z
-    .string()
-    .min(1, { message: 'Password is required' })
-    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/, {
-      message:
-        'Password must contain at least 1 uppercase letter, 1 lowercase letter, and 1 number',
+    email: z.string().email().min(1, {
+      message: 'Email is required',
     }),
-});
 
-function LoginForm({ className, navigateToSignup, ...props }: Props) {
+    password: z
+      .string()
+      .min(1, { message: 'Password is required' })
+      .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/, {
+        message:
+          'Password must contain at least 1 uppercase letter, 1 lowercase letter, and 1 number',
+      }),
+
+    confirmPassword: z
+      .string()
+      .min(1, { message: 'Confirm password is required' }),
+  })
+  .refine(data => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ['confirmPassword'],
+  });
+
+function SignupForm({ className, navigateToLogin, ...props }: Props) {
   const { isAuthenticated } = useAuth();
-  const { mutate: login, isPending, isSuccess } = useLogin();
+  const { mutate: signup, isPending, isSuccess } = useSignup();
   const router = useRouter(); // Use useRouter for navigation
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
+      fullName: '',
       email: '',
       password: '',
+      confirmPassword: '',
     },
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    login(data, {
-      onSuccess: () => {
-        toast.success('Login successful!');
-        router.push('/products'); // Replace redirect with router.push
-      },
-    });
+    signup(
+      { name: data.fullName, email: data.email, password: data.password },
+      {
+        onSuccess: () => {
+          toast.success('Signup successful!');
+          router.push('/login'); // Replace redirect with router.push
+        },
+      }
+    );
   }
 
   if (isAuthenticated) return null;
@@ -80,6 +96,7 @@ function LoginForm({ className, navigateToSignup, ...props }: Props) {
           height={1000}
           className='w-full h-full object-cover'
         />
+
         <div className='py-6'>
           <CardHeader>
             <div className='w-full flex justify-center'>
@@ -92,10 +109,8 @@ function LoginForm({ className, navigateToSignup, ...props }: Props) {
               />
             </div>
 
-            <CardTitle className='text-2xl'>Login</CardTitle>
-            <CardDescription>
-              Enter your email below to login to your account
-            </CardDescription>
+            <CardTitle className='text-2xl'>Sign Up</CardTitle>
+            <CardDescription>Create an account to get started</CardDescription>
           </CardHeader>
           <CardContent>
             <Form {...form}>
@@ -103,6 +118,20 @@ function LoginForm({ className, navigateToSignup, ...props }: Props) {
                 className='flex flex-col gap-6'
                 onSubmit={form.handleSubmit(onSubmit)}
               >
+                <FormField
+                  control={form.control}
+                  name='fullName'
+                  render={({ field }) => (
+                    <FormItem className='grid gap-2'>
+                      <FormLabel>Full Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder='Full Name' {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
                 <FormField
                   control={form.control}
                   name='email'
@@ -139,24 +168,42 @@ function LoginForm({ className, navigateToSignup, ...props }: Props) {
                   )}
                 />
 
+                <FormField
+                  control={form.control}
+                  name='confirmPassword'
+                  render={({ field }) => (
+                    <FormItem className='grid gap-2'>
+                      <FormLabel>Confirm Password</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder='Confirm Password'
+                          {...field}
+                          type='password'
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
                 <Button
                   type='submit'
                   className='w-full bg-primary-variant2 cursor-pointer'
                   disabled={isPending || isSuccess}
                 >
-                  Login
+                  Sign Up
                 </Button>
                 <Button variant='outline' className='w-full'>
-                  Login with Google
+                  Sign Up with Google
                 </Button>
               </form>
               <div className='mt-4 text-center text-sm'>
-                Don&apos;t have an account?{' '}
+                Already have an account?
                 <span
-                  onClick={navigateToSignup}
+                  onClick={navigateToLogin}
                   className='underline underline-offset-4 cursor-pointer'
                 >
-                  Sign up
+                  Login
                 </span>
               </div>
             </Form>
@@ -167,4 +214,4 @@ function LoginForm({ className, navigateToSignup, ...props }: Props) {
   );
 }
 
-export default LoginForm;
+export default SignupForm;

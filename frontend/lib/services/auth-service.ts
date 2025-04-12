@@ -9,4 +9,9 @@ interface Login {
   user: User;
 }
 
-export type { Login, User };
+interface Signup {
+  user: User;
+  isVerified: boolean;
+}
+
+export type { Login, User, Signup };
