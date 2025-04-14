@@ -17,13 +17,13 @@ const OrderSummary = () => {
       </div>
 
       <div className='text-black/70'>
-        <p className=' text-lg'>Address</p>
+        <p className=' text-lg font-semibold'>Address</p>
         <p className='text-xl'>1131 Dusty Townline, Jacksonville, TX 40322</p>
       </div>
 
       <div className='text-black/70'>
-        <p className=' text-lg'>Shipping method</p>
-        <p className='text-xl'>EasyPaisa</p>
+        <p className=' text-lg font-semibold'>Shipping method</p>
+        <p className='text-xl'>Cash on Delivery</p>
       </div>
 
       <div className='flex justify-between'>

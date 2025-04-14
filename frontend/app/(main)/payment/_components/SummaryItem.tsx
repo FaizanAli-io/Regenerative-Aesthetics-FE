@@ -1,9 +1,9 @@
 import React, { HTMLAttributes } from 'react';
 import Image from 'next/image';
-import { Product } from '@/lib/services/products-service';
+import { CartItem } from '@/lib/stores/cart';
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
-  product: Product;
+  product: CartItem;
 }
 
 const SummaryItem = ({ product: { price, title } }: Props) => {
@@ -19,7 +19,7 @@ const SummaryItem = ({ product: { price, title } }: Props) => {
         objectFit='contain'
       />
       <p className='text-lg'>{title}</p>
-      <p className='font-semibold text-2xl'>{price}</p>
+      <p className='font-semibold text-2xl'>${price}</p>
     </div>
   );
 };
