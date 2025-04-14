@@ -27,6 +27,13 @@ export const useLogin = () => {
     onSuccess: data => {
       setToken(data.accessToken);
       setUser(data.user);
+
+      api.interceptors.request.use(config => {
+        if (data.accessToken) {
+          config.headers.Authorization = `Bearer ${data.accessToken}`;
+        }
+        return config;
+      });
     },
 
     onError: error => {

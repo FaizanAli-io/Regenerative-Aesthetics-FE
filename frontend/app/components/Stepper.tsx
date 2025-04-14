@@ -32,14 +32,15 @@ function Stepper({ steps, activeStep, onStepClick, className }: StepperProps) {
                 <button
                   type='button'
                   onClick={() => onStepClick?.(index)}
-                  className={cn(
-                    'flex items-center justify-center w-8 h-8 rounded-full border-2 shrink-0',
-                    isActive &&
-                      'border-primary-variant2 bg-primary-variant2 text-primary-variant2-foreground',
-                    isCompleted &&
-                      'border-primary-variant2 bg-primary-variant2 text-primary-variant2-foreground',
-                    !isActive && !isCompleted && 'bg-primary-variant2/30'
-                  )}
+                  className='flex items-center justify-center w-8 h-8 rounded-full border-2 shrink-0 border-primary-variant2 bg-primary-variant2 text-primary-variant2-foreground'
+                  // className={cn(
+                  //   'flex items-center justify-center w-8 h-8 rounded-full border-2 shrink-0',
+                  //   isActive &&
+                  //     'border-primary-variant2 bg-primary-variant2 text-primary-variant2-foreground',
+                  //   isCompleted &&
+                  //     'border-primary-variant2 bg-primary-variant2 text-primary-variant2-foreground',
+                  //   !isActive && !isCompleted && 'bg-primary-variant2/30'
+                  // )}
                   aria-current={isActive ? 'step' : undefined}
                 >
                   {step.icon}
@@ -48,10 +49,10 @@ function Stepper({ steps, activeStep, onStepClick, className }: StepperProps) {
                 <div className='mt-2 text-left -translate-y-2'>
                   <span
                     className={cn(
-                      'text-sm font-medium',
-                      isActive && 'text-foreground',
-                      isCompleted && 'text-foreground',
-                      !isActive && !isCompleted && 'text-muted-foreground'
+                      'text-sm font-medium text-foreground'
+                      // isActive && 'text-foreground',
+                      // isCompleted && 'text-foreground'
+                      // !isActive && !isCompleted && 'text-muted-foreground'
                     )}
                   >
                     {step.label}

@@ -9,7 +9,6 @@ import { Product } from '@/lib/services/products-service';
 import { useCart } from '@/lib/stores/cart';
 import { toast } from 'sonner';
 import { getUser } from '@/lib/auth';
-import { useAuth } from '@/lib/hooks/use-auth';
 import { User } from '@/lib/services/auth-service';
 import { useAddWishlist } from '@/lib/hooks/wishlist/use-add-wishlist';
 import { useWishlist } from '@/lib/hooks/wishlist/use-wishlist';
