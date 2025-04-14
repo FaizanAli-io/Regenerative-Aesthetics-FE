@@ -14,6 +14,7 @@ import {
   Timestamp,
   UpdateDateColumn,
 } from 'typeorm';
+import { AddressBookEntity } from './address-book.entity';
 
 @Entity('users')
 export class UserEntity {
@@ -98,4 +99,10 @@ export class UserEntity {
     (wishlistItem) => wishlistItem.user,
   )
   wishlistItems: WishlistItemEntity[];
+
+  @OneToMany(
+    () => AddressBookEntity,
+    (addBook) => addBook.user,
+  )
+  contactDetails: AddressBookEntity[];
 }

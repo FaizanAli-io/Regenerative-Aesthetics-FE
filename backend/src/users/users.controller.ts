@@ -8,6 +8,8 @@ import {
   NotFoundException,
   UseGuards,
   Query,
+  ParseIntPipe,
+  Delete,
 } from '@nestjs/common';
 import {
   ApiOperation,
@@ -24,6 +26,9 @@ import { CurrentUser } from 'src/utility/common/decorators/current-user.decorato
 import { AuthenticationGuard } from 'src/utility/common/guards/authentication.guard';
 import { Roles } from 'src/utility/common/user-roles.enum';
 import { AuthorizeGuard } from 'src/utility/common/guards/authorization.guard';
+import { AddContactDetailsDto } from './dto/add-contact-details.dto';
+import { AddressBookEntity } from './entities/address-book.entity';
+import { UpdateContactDetailsDto } from './dto/update-contact-details.dto';
 
 @ApiTags('Users')
 @Controller('users')
@@ -211,5 +216,74 @@ export class UsersController {
     @CurrentUser() currentUser: UserEntity,
   ) {
     return currentUser;
+  }
+
+  @UseGuards(AuthenticationGuard)
+  @Post('contact')
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: 'Add contact details for a user.',
+  })
+  async addContactDetails(
+    @CurrentUser() currentUser: UserEntity,
+    @Body()
+    addContactDetailsDto: AddContactDetailsDto,
+  ): Promise<AddressBookEntity> {
+    return await this.usersService.addContactDetails(
+      currentUser,
+      addContactDetailsDto,
+    );
+  }
+
+  @UseGuards(AuthenticationGuard)
+  @Get('contact')
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary:
+      'Get all saved contact details of a user',
+  })
+  async getContactDetails(
+    @CurrentUser() currentUser: UserEntity,
+  ): Promise<AddressBookEntity[]> {
+    return await this.usersService.getContactDetails(
+      currentUser,
+    );
+  }
+
+  @UseGuards(AuthenticationGuard)
+  @Patch('contact/:id')
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary:
+      'Update contact details of a user by instance id.',
+  })
+  async updateContactDetails(
+    @Param('id', ParseIntPipe) id: number,
+    @CurrentUser() currentUser: UserEntity,
+    @Body()
+    updateContactDetailsDto: UpdateContactDetailsDto,
+  ) {
+    return await this.usersService.updateContactDetails(
+      id,
+      currentUser,
+      updateContactDetailsDto,
+    );
+  }
+
+  @UseGuards(AuthenticationGuard)
+  @Delete('contact/:id')
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary:
+      'Delete contact details by instance id.',
+  })
+  async deleteContactDetails(
+    @Param('id', ParseIntPipe) id: number,
+    @CurrentUser() currentUser: UserEntity,
+  ) {
+    return await this.usersService.deleteContactDetails(
+      id,
+      currentUser,
+    );
   }
 }
