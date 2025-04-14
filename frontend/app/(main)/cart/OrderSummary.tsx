@@ -5,8 +5,8 @@ import { Button } from '@/components/ui/button';
 import { useCart } from '@/lib/stores/cart';
 import { toast } from 'sonner';
 import { redirect } from 'next/navigation';
-import TextFieldLablel from '@/app/components/TextFieldLable';
-import TextField from '@/app/components/TextField';
+// import TextFieldLablel from '@/app/components/TextFieldLable';
+// import TextField from '@/app/components/TextField';
 
 const OrderSummary = () => {
   const total = useCart(state => state.cart.totalPrice);
@@ -19,11 +19,11 @@ const OrderSummary = () => {
   return (
     <div className='border-1 border-gray-300 rounded-md p-15 space-y-5'>
       <h2 className='font-bold text-3xl'>Order Summary</h2>
-      <div className='space-y-2'>
+      {/* <div className='space-y-2'>
         <TextFieldLablel>Discount Code</TextFieldLablel>
         <TextField placeholder='Code' />
-      </div>
-      <div className='space-y-2'>
+      </div> */}
+      {/* <div className='space-y-2'>
         <TextFieldLablel>Your bonus card number</TextFieldLablel>
         <div className='flex items-center pr-3  cursor-pointer border rounded-md border-body'>
           <TextField
@@ -35,7 +35,7 @@ const OrderSummary = () => {
             Apply
           </Button>
         </div>
-      </div>
+      </div> */}
 
       <div className='flex justify-between'>
         <p className='font-semibold text-xl'>Subtotal</p>

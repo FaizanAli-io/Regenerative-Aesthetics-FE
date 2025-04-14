@@ -28,17 +28,19 @@ const ShippingMethodItem = ({
           <Checkbox
             className=' data-[state=checked]:bg-primary-variant2'
             id='billing-address'
+            checked
           />
           <label
             htmlFor={text}
             className='font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
           >
-            {charges}
+            {/* {charges} */}
           </label>
         </div>
         <p>{text}</p>
       </div>
-      <p className='font-semibold text-lg'>{date}</p>
+      {/* <p className='font-semibold text-lg'>{date}</p> */}
+      {/* <p className='font-semibold text-lg'></p> */}
     </div>
   );
 };
