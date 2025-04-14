@@ -13,12 +13,17 @@ import { UserSignInDto } from './dto/user-signin.dto';
 import { sign } from 'jsonwebtoken';
 import { EmailsService } from 'src/emails/emails.service';
 import * as crypto from 'crypto';
+import { AddContactDetailsDto } from './dto/add-contact-details.dto';
+import { AddressBookEntity } from './entities/address-book.entity';
+import { UpdateContactDetailsDto } from './dto/update-contact-details.dto';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(UserEntity)
     private usersRepository: Repository<UserEntity>,
+    @InjectRepository(AddressBookEntity)
+    private addressBookRepository: Repository<AddressBookEntity>,
     private emailService: EmailsService,
   ) {}
 
@@ -228,5 +233,114 @@ export class UsersService {
     return await this.usersRepository.findOneBy({
       email,
     });
+  }
+
+  async addContactDetails(
+    currentUser: UserEntity,
+    addContactDetailsDto: AddContactDetailsDto,
+  ): Promise<AddressBookEntity> {
+    let contactDetails = new AddressBookEntity();
+
+    contactDetails.address =
+      addContactDetailsDto.address;
+    contactDetails.city =
+      addContactDetailsDto.city;
+    contactDetails.country =
+      addContactDetailsDto.country;
+    contactDetails.phone =
+      addContactDetailsDto.phone;
+    contactDetails.postalCode =
+      addContactDetailsDto.postalCode;
+    contactDetails.state =
+      addContactDetailsDto.state;
+    contactDetails.label =
+      addContactDetailsDto.label;
+
+    contactDetails.name = currentUser.name;
+
+    contactDetails.user = currentUser;
+
+    return await this.addressBookRepository.save(
+      contactDetails,
+    );
+  }
+
+  async getContactDetails(
+    currentUser: UserEntity,
+  ): Promise<AddressBookEntity[]> {
+    return await this.addressBookRepository.find({
+      where: { user: { id: currentUser.id } },
+    });
+  }
+
+  async updateContactDetails(
+    id: number,
+    currentUser: UserEntity,
+    updateContactDetailsDto: UpdateContactDetailsDto,
+  ) {
+    const record =
+      await this.addressBookRepository.findOne({
+        where: {
+          id: id,
+          user: { id: currentUser.id },
+        },
+      });
+
+    if (!record)
+      throw new NotFoundException(
+        'Invalid or unauthorized contact details id.',
+      );
+
+    if (updateContactDetailsDto.address)
+      record.address =
+        updateContactDetailsDto.address;
+
+    if (updateContactDetailsDto.city)
+      record.city = updateContactDetailsDto.city;
+
+    if (updateContactDetailsDto.country)
+      record.country =
+        updateContactDetailsDto.country;
+
+    if (updateContactDetailsDto.label)
+      record.label =
+        updateContactDetailsDto.label;
+
+    if (updateContactDetailsDto.phone)
+      record.phone =
+        updateContactDetailsDto.phone;
+
+    if (updateContactDetailsDto.postalCode)
+      record.postalCode =
+        updateContactDetailsDto.postalCode;
+
+    if (updateContactDetailsDto.state)
+      record.state =
+        updateContactDetailsDto.state;
+
+    return await this.addressBookRepository.save(
+      record,
+    );
+  }
+
+  async deleteContactDetails(
+    id: number,
+    currentUser: UserEntity,
+  ) {
+    const result =
+      await this.addressBookRepository.delete({
+        id: id,
+        user: { id: currentUser.id },
+      });
+
+    if (result.affected === 0) {
+      throw new NotFoundException(
+        'Invalid or unauthorized contact details id.',
+      );
+    }
+
+    return {
+      message: 'Contact deleted successfully.',
+    };
   }
 }
