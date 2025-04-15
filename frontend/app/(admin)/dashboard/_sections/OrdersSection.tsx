@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent } from '@/components/ui/card';
 import OrderRow from '../_components/OrderRow';
@@ -7,10 +7,6 @@ import { useAllOrders } from '@/lib/hooks/cart/use-all-orders';
 
 const OrdersSection: React.FC = () => {
   const { data: orders, isFetched, isLoading } = useAllOrders();
-
-  useEffect(() => {
-    console.log(orders);
-  }, [orders]);
 
   const renderOrders = () => {
     if (isLoading) {
