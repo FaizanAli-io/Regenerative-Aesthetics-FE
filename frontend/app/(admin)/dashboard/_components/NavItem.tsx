@@ -23,21 +23,6 @@ function NavItem({
       onClick={() => setActiveIndex(index)}
     >
       <div className='w-5 h-5 flex items-center justify-center'>
-        {icon === 'home' && (
-          <svg
-            xmlns='http://www.w3.org/2000/svg'
-            viewBox='0 0 24 24'
-            fill='none'
-            stroke='currentColor'
-            strokeWidth='2'
-            strokeLinecap='round'
-            strokeLinejoin='round'
-            className='w-5 h-5'
-          >
-            <path d='M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z' />
-            <polyline points='9 22 9 12 15 12 15 22' />
-          </svg>
-        )}
         {icon === 'orders' && (
           <svg
             xmlns='http://www.w3.org/2000/svg'
@@ -70,7 +55,7 @@ function NavItem({
             <line x1='12' y1='22.08' x2='12' y2='12' />
           </svg>
         )}
-        {icon === 'customers' && (
+        {icon === 'users' && (
           <svg
             xmlns='http://www.w3.org/2000/svg'
             viewBox='0 0 24 24'
@@ -85,52 +70,6 @@ function NavItem({
             <circle cx='9' cy='7' r='4' />
             <path d='M23 21v-2a4 4 0 0 0-3-3.87' />
             <path d='M16 3.13a4 4 0 0 1 0 7.75' />
-          </svg>
-        )}
-        {icon === 'analytics' && (
-          <svg
-            xmlns='http://www.w3.org/2000/svg'
-            viewBox='0 0 24 24'
-            fill='none'
-            stroke='currentColor'
-            strokeWidth='2'
-            strokeLinecap='round'
-            strokeLinejoin='round'
-            className='w-5 h-5'
-          >
-            <line x1='18' y1='20' x2='18' y2='10' />
-            <line x1='12' y1='20' x2='12' y2='4' />
-            <line x1='6' y1='20' x2='6' y2='14' />
-          </svg>
-        )}
-        {icon === 'marketing' && (
-          <svg
-            xmlns='http://www.w3.org/2000/svg'
-            viewBox='0 0 24 24'
-            fill='none'
-            stroke='currentColor'
-            strokeWidth='2'
-            strokeLinecap='round'
-            strokeLinejoin='round'
-            className='w-5 h-5'
-          >
-            <polygon points='12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2' />
-          </svg>
-        )}
-        {icon === 'discounts' && (
-          <svg
-            xmlns='http://www.w3.org/2000/svg'
-            viewBox='0 0 24 24'
-            fill='none'
-            stroke='currentColor'
-            strokeWidth='2'
-            strokeLinecap='round'
-            strokeLinejoin='round'
-            className='w-5 h-5'
-          >
-            <line x1='19' y1='5' x2='5' y2='19' />
-            <circle cx='6.5' cy='6.5' r='2.5' />
-            <circle cx='17.5' cy='17.5' r='2.5' />
           </svg>
         )}
       </div>

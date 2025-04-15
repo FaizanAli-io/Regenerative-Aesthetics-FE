@@ -3,15 +3,17 @@ import React, { useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { useUsers } from '@/lib/hooks/use-all-users';
 import UserRow from '../_components/UserRow';
+import { useProducts } from '@/lib/hooks/use-products';
+import ProductsRow from '../_components/ProductsRow';
 
-const UsersSection: React.FC = () => {
-  const { data: users, isFetched, isLoading } = useUsers();
+const ProductsSection: React.FC = () => {
+  const { data: products, isFetched, isLoading } = useProducts();
 
   useEffect(() => {
-    console.log(users);
-  }, [users]);
+    console.log(products);
+  }, [products]);
 
-  const renderOrders = () => {
+  const renderProducts = () => {
     if (isLoading) {
       return (
         <tr>
@@ -22,7 +24,7 @@ const UsersSection: React.FC = () => {
       );
     }
 
-    if (!isFetched || !users || !users.length) {
+    if (!isFetched || !products || !products.length) {
       return (
         <tr>
           <td colSpan={6}>No orders found</td>
@@ -30,14 +32,7 @@ const UsersSection: React.FC = () => {
       );
     }
 
-    return users.map(user => (
-      <UserRow
-        id={user.id}
-        name={user.name}
-        email={user.email}
-        createdAt={user.createdAt}
-      />
-    ));
+    return products.map(product => <ProductsRow product={product} />);
   };
 
   return (
@@ -48,12 +43,13 @@ const UsersSection: React.FC = () => {
             <thead>
               <tr className='border-b'>
                 <th className='p-3 text-left'>ID</th>
-                <th className='p-3 text-left'>Full Name</th>
-                <th className='p-3 text-left'>Email</th>
-                <th className='p-3 text-left'>Join Date</th>
+                <th className='p-3 text-left'>Title</th>
+                <th className='p-3 text-left'>Price</th>
+                <th className='p-3 text-left'>Stock</th>
+                <th className='p-3 text-left'>Category</th>
               </tr>
             </thead>
-            <tbody>{renderOrders()}</tbody>
+            <tbody>{renderProducts()}</tbody>
           </table>
         </div>
       </CardContent>
@@ -61,4 +57,4 @@ const UsersSection: React.FC = () => {
   );
 };
 
-export default UsersSection;
+export default ProductsSection;

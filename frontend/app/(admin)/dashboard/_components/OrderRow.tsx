@@ -22,9 +22,6 @@ const OrderRow: React.FC<OrderRowProps> = ({
   return (
     <tr className='border-b hover:bg-gray-50'>
       <td className='p-3'>
-        <Checkbox />
-      </td>
-      <td className='p-3'>
         <span className='text-sm font-medium text-green-600'>{id}</span>
       </td>
       <td className='p-3'>

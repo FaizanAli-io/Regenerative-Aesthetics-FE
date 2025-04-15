@@ -48,12 +48,9 @@ const OrdersSection: React.FC = () => {
           <div className='border-b px-4'>
             <TabsList className='h-12 bg-transparent'>
               <TabsTrigger value='all-orders'>All Orders</TabsTrigger>
-              <TabsTrigger value='open'>Open</TabsTrigger>
+              <TabsTrigger value='failed'>Failed</TabsTrigger>
+              <TabsTrigger value='processing'>Processing</TabsTrigger>
               <TabsTrigger value='unfulfilled'>Unfulfilled</TabsTrigger>
-              <TabsTrigger value='unpaid'>Unpaid</TabsTrigger>
-              <TabsTrigger value='from-canada'>From Canada</TabsTrigger>
-              <TabsTrigger value='paid-orders'>Paid Orders</TabsTrigger>
-              <TabsTrigger value='customers'>Customers</TabsTrigger>
             </TabsList>
           </div>
 
@@ -62,7 +59,6 @@ const OrdersSection: React.FC = () => {
               <table className='w-full'>
                 <thead>
                   <tr className='border-b'>
-                    <th className='p-3 text-left'>Order</th>
                     <th className='p-3 text-left'>Date</th>
                     <th className='p-3 text-left'>Customer</th>
                     <th className='p-3 text-left'>Payment Status</th>

@@ -4,7 +4,20 @@ import React from 'react';
 import NavItem from './NavItem';
 import useSidebarStore from '@/lib/stores/dashboard-sidebar-store';
 
-const sections = ['ordres', 'products', 'customers'];
+const sections = [
+  {
+    icon: 'orders',
+    label: 'Orders',
+  },
+  {
+    icon: 'products',
+    label: 'Products',
+  },
+  {
+    icon: 'users',
+    label: 'Users',
+  },
+];
 
 const Sidepanel = () => {
   const activeIndex = useSidebarStore(state => state.activeIndex);
@@ -32,10 +45,10 @@ const Sidepanel = () => {
       <nav className='flex-1 p-4 space-y-2'>
         {sections.map((section, i) => (
           <NavItem
-            key={section}
+            key={section.label}
             index={i}
-            icon={section}
-            label={section}
+            icon={section.icon}
+            label={section.label}
             active={i === activeIndex}
           />
         ))}
