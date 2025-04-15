@@ -1,7 +1,14 @@
+'use client';
+
 import React from 'react';
 import NavItem from './NavItem';
+import useSidebarStore from '@/lib/stores/dashboard-sidebar-store';
+
+const sections = ['ordres', 'products', 'customers'];
 
 const Sidepanel = () => {
+  const activeIndex = useSidebarStore(state => state.activeIndex);
+
   return (
     <div className='hidden md:flex w-64 flex-col bg-[#f0f9f0] border-r'>
       <div className='flex items-center gap-2 p-4 border-b'>
@@ -20,16 +27,18 @@ const Sidepanel = () => {
             <polyline points='9 22 9 12 15 12 15 22' />
           </svg>
         </div>
-        <span className='font-semibold text-gray-800'>Shopify Admin Panel</span>
+        <span className='font-semibold text-gray-800'>Admin Panel</span>
       </div>
       <nav className='flex-1 p-4 space-y-2'>
-        <NavItem icon='home' label='Home' active />
-        <NavItem icon='orders' label='Orders' />
-        <NavItem icon='products' label='Products' />
-        <NavItem icon='customers' label='Customers' />
-        <NavItem icon='analytics' label='Analytics' />
-        <NavItem icon='marketing' label='Marketing' />
-        <NavItem icon='discounts' label='Discounts' />
+        {sections.map((section, i) => (
+          <NavItem
+            key={section}
+            index={i}
+            icon={section}
+            label={section}
+            active={i === activeIndex}
+          />
+        ))}
       </nav>
     </div>
   );

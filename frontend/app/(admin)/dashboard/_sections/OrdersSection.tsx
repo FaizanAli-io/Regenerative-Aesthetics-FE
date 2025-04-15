@@ -2,29 +2,11 @@
 import React, { useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent } from '@/components/ui/card';
-import OrderRow from './OrderRow';
+import OrderRow from '../_components/OrderRow';
 import { useAllOrders } from '@/lib/hooks/cart/use-all-orders';
 
-// Define tab values that correspond to sidebar indices
-const tabValues = [
-  'all-orders', // Default
-  'open', // Index 1
-  'unfulfilled', // Index 2
-  'unpaid', // Index 3
-  'from-canada', // Index 4
-  'paid-orders', // Index 5
-  'customers', // Index 6
-];
-
-interface OrdersSectionProps {
-  activeIndex?: number;
-}
-
-const OrdersSection: React.FC<OrdersSectionProps> = ({ activeIndex = 0 }) => {
+const OrdersSection: React.FC = () => {
   const { data: orders, isFetched, isLoading } = useAllOrders();
-
-  // Determine which tab to display based on activeIndex
-  const defaultTab = tabValues[activeIndex] || 'all-orders';
 
   useEffect(() => {
     console.log(orders);
@@ -66,7 +48,7 @@ const OrdersSection: React.FC<OrdersSectionProps> = ({ activeIndex = 0 }) => {
   return (
     <Card>
       <CardContent className='p-0'>
-        <Tabs defaultValue={defaultTab} className='w-full'>
+        <Tabs defaultValue='all-orders' className='w-full'>
           <div className='border-b px-4'>
             <TabsList className='h-12 bg-transparent'>
               <TabsTrigger value='all-orders'>All Orders</TabsTrigger>

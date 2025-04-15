@@ -1,17 +1,26 @@
+'use client';
+
+import useSidebarStore from '@/lib/stores/dashboard-sidebar-store';
+
 function NavItem({
   icon,
   label,
+  index,
   active = false,
 }: {
   icon: string;
   label: string;
   active?: boolean;
+  index: number;
 }) {
+  const setActiveIndex = useSidebarStore(state => state.setActiveIndex);
+
   return (
     <div
-      className={`flex items-center gap-3 px-3 py-2 rounded-md ${
+      className={`flex items-center gap-3 px-3 py-2 rounded-md cursor-pointer ${
         active ? 'bg-white text-green-600' : 'text-gray-600 hover:bg-white/50'
       }`}
+      onClick={() => setActiveIndex(index)}
     >
       <div className='w-5 h-5 flex items-center justify-center'>
         {icon === 'home' && (
