@@ -2,10 +2,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-
-import { useAuth } from '@/lib/hooks/use-auth'; // Assuming a hook to check authentication
-import { useRouter } from 'next/navigation';
-
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -20,6 +16,7 @@ import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { useCheckout } from '@/lib/hooks/cart/use-checkout';
 import { HTMLAttributes } from 'react';
+import { useCart } from '@/lib/stores/cart';
 
 const FormSchema = z.object({
   phone: z.string().min(1, 'Phone number is required'),
@@ -32,8 +29,7 @@ const FormSchema = z.object({
 });
 
 function AddressForm({ className, ...props }: HTMLAttributes<HTMLFormElement>) {
-  const { mutate: checkout, isPending, isSuccess } = useCheckout();
-  const router = useRouter(); // Use useRouter for navigation
+  const setAddress = useCart(state => state.setAddress);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -49,12 +45,8 @@ function AddressForm({ className, ...props }: HTMLAttributes<HTMLFormElement>) {
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    checkout(data, {
-      onSuccess: () => {
-        toast.success('Order placed successfully!');
-        router.push('/products'); // Replace redirect with router.push
-      },
-    });
+    setAddress(data);
+    toast.success('Address added successfully!');
   }
 
   return (
@@ -173,7 +165,6 @@ function AddressForm({ className, ...props }: HTMLAttributes<HTMLFormElement>) {
         <Button
           type='submit'
           className='w-full bg-primary-variant2 cursor-pointer'
-          disabled={isPending || isSuccess}
         >
           Add New Address
         </Button>

@@ -7,6 +7,7 @@ import { useCart } from '@/lib/stores/cart';
 const OrderSummary = () => {
   const items = useCart(state => state.cart.items);
   const total = useCart(state => state.cart.totalPrice);
+  const address = useCart(state => state.address);
 
   return (
     <div className='border-1 border-gray-300 rounded-md p-15 space-y-5'>
@@ -18,7 +19,7 @@ const OrderSummary = () => {
 
       <div className='text-black/70'>
         <p className=' text-lg font-semibold'>Address</p>
-        <p className='text-xl'>1131 Dusty Townline, Jacksonville, TX 40322</p>
+        {address?.address && <p className='text-xl'>{address.address}</p>}
       </div>
 
       <div className='text-black/70'>

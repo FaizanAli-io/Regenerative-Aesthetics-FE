@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { Product } from '../services/products-service';
+import { Address } from '../services/checkout-service';
 
 export interface CartItem extends Omit<Product, 'category'> {
   quantity: number;
@@ -17,10 +18,18 @@ interface CartStore {
   clearCart: () => void;
   incrementQuantity: (itemId: number) => void;
   decrementQuantity: (itemId: number) => void;
+
+  address: Omit<Address, 'id'> | null;
+  setAddress: (address: Omit<Address, 'id'>) => void;
 }
 
 export const useCart = create<CartStore>(set => ({
   cart: { items: [], totalPrice: 0 },
+  address: null,
+
+  setAddress: (address: Omit<Address, 'id'>): void => {
+    set(cart => ({ ...cart, address }));
+  },
 
   addToCart: (item: CartItem): void =>
     set((state: CartStore) => {

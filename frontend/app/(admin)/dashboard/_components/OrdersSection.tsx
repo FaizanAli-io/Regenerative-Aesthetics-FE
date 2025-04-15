@@ -1,9 +1,50 @@
-import React from 'react';
+'use client';
+import React, { useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent } from '@/components/ui/card';
 import OrderRow from './OrderRow';
+import { useAllOrders } from '@/lib/hooks/cart/use-all-orders';
 
 const OrdersSection: React.FC = () => {
+  const { data: orders, isFetched, isLoading } = useAllOrders();
+
+  useEffect(() => {
+    console.log(orders);
+  }, [orders]);
+
+  const renderOrders = () => {
+    if (isLoading) {
+      return (
+        <tr>
+          <td colSpan={6} className='text-center py-2'>
+            Loading...
+          </td>
+        </tr>
+      );
+    }
+
+    if (!isFetched || !orders || !orders.length) {
+      return (
+        <tr>
+          <td colSpan={6}>No orders found</td>
+        </tr>
+      );
+    }
+
+    return orders.map(order => (
+      <OrderRow
+        id={`#${order.id}`}
+        date={new Date(order.orderAt!).toLocaleDateString() || 'Unknown Date'}
+        customer={order.user.name || 'Unknown Customer'}
+        paymentStatus={order.status as 'paid' | 'processing' | 'failed'}
+        fulfillmentStatus={
+          order.status === 'paid' ? 'fulfilled' : 'unfulfilled'
+        }
+        total={`$${order.totalAmount?.toFixed(2) || '0.00'}`}
+      />
+    ));
+  };
+
   return (
     <Card>
       <CardContent className='p-0'>
@@ -33,17 +74,7 @@ const OrdersSection: React.FC = () => {
                     <th className='p-3 text-left'>Total</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <OrderRow
-                    id='#1002901'
-                    date='23/03/2023 09:45 AM'
-                    customer='Theodore William Henry'
-                    paymentStatus='paid'
-                    fulfillmentStatus='unfulfilled'
-                    total='$615.00'
-                  />
-                  {/* Add more rows as needed */}
-                </tbody>
+                <tbody>{renderOrders()}</tbody>
               </table>
             </div>
           </TabsContent>
