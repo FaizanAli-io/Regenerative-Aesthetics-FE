@@ -3,6 +3,7 @@ import React from 'react';
 import CartItem from './_components/CartItem';
 import OrderSummary from './OrderSummary';
 import { useCart } from '@/lib/hooks/cart/use-cart';
+import { ProtectedPage } from '@/app/components/ProtectedPage';
 
 const Page = () => {
   const { data, isLoading } = useCart();
@@ -39,15 +40,17 @@ const Page = () => {
   };
 
   return (
-    <div className='grid grid-cols-2 gap-x-4 px-20 py-28'>
-      <div>
-        <h2 className='font-bold text-3xl'>Shopping Cart</h2>
-        {renderCartItems()}
+    <ProtectedPage>
+      <div className='grid grid-cols-2 gap-x-4 px-20 py-28'>
+        <div>
+          <h2 className='font-bold text-3xl'>Shopping Cart</h2>
+          {renderCartItems()}
+        </div>
+        <div className=''>
+          <OrderSummary total={data?.totalAmount || 0} />
+        </div>
       </div>
-      <div className=''>
-        <OrderSummary total={data?.totalAmount || 0} />
-      </div>
-    </div>
+    </ProtectedPage>
   );
 };
 

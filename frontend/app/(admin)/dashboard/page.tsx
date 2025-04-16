@@ -6,6 +6,7 @@ import OrdersSection from './_sections/OrdersSection';
 import UsersSection from './_sections/UsersSecton';
 import ProductsSection from './_sections/ProductsSection';
 import CategoriesSection from './_sections/CategoriesSection';
+import { ProtectedPage } from '@/app/components/ProtectedPage';
 
 export default function AdminPanel() {
   const activeIndex = useSidebarStore(state => state.activeIndex);
@@ -24,11 +25,13 @@ export default function AdminPanel() {
   };
 
   return (
-    <main className='flex-1 overflow-auto p-6'>
-      <div className='max-w-6xl mx-auto'>
-        <WelcomeSection />
-        {renderContent()}
-      </div>
-    </main>
+    <ProtectedPage>
+      <main className='flex-1 overflow-auto p-6'>
+        <div className='max-w-6xl mx-auto'>
+          <WelcomeSection />
+          {renderContent()}
+        </div>
+      </main>
+    </ProtectedPage>
   );
 }

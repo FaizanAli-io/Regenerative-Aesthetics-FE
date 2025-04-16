@@ -1,18 +1,26 @@
 'use client';
 
-import { useAuth } from '@/lib/hooks/use-auth';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export const ProtectedPage = ({ children }: { children: React.ReactNode }) => {
-  const { isAuthenticated } = useAuth();
   const router = useRouter();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    console.log('isAuthenticated', isAuthenticated);
+  // useEffect(() => {
+  //   // setIsAuthenticated(!!localStorage.getItem('access_token')); // Replace with your auth logic
+  //   if (!isAuthenticated) {
+  //     router.push('/auth');
+  //   } else {
+  //     setIsLoading(false);
+  //   }
+  // }, [isAuthenticated, router]);
 
-    if (!isAuthenticated) router.push('/login');
-  }, [isAuthenticated]);
+  // if (isLoading) {
+  // return <p>Loading...</p>;
+  // }
 
-  return isAuthenticated ? <>{children}</> : null;
+  // return isAuthenticated ? <>{children}</> : null;
+  return <>{children}</>;
 };

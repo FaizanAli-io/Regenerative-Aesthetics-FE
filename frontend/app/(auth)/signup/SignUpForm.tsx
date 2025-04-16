@@ -77,8 +77,7 @@ function SignupForm({ className, navigateToLogin, ...props }: Props) {
       { name: data.fullName, email: data.email, password: data.password },
       {
         onSuccess: () => {
-          toast.success('Signup successful!');
-          router.push('/login'); // Replace redirect with router.push
+          toast.success('verification mail sent!');
         },
       }
     );

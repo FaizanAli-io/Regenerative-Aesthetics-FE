@@ -42,7 +42,7 @@ const Navbar = () => {
             {isAuthenticated ? (
               <NavIcon href='/favorites' src='/icons/user.svg' alt='Profile' />
             ) : (
-              <NavIcon href='/login' src='/icons/user.svg' alt='Login' />
+              <NavIcon href='/auth' src='/icons/user.svg' alt='Login' />
             )}
           </div>
         </div>
