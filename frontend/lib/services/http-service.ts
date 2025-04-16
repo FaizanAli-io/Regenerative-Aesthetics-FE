@@ -31,8 +31,8 @@ class HttpService {
     return { request, cancel: () => controller.abort() };
   }
 
-  delete(id: number) {
-    return apiClient.delete(this.endpoint + '/' + id);
+  delete(id: number, url = '/') {
+    return apiClient.delete(`${this.endpoint}${url}/${String(id)}`);
   }
 
   create<T, U>(entity: T, url?: string) {

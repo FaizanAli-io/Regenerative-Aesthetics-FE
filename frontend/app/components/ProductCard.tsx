@@ -12,6 +12,7 @@ import { getUser } from '@/lib/auth';
 import { User } from '@/lib/services/auth-service';
 import { useAddWishlist } from '@/lib/hooks/wishlist/use-add-wishlist';
 import { useWishlist } from '@/lib/hooks/wishlist/use-wishlist';
+import { useAddToCart } from '@/lib/hooks/cart/use-add-to-cart';
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
   product: Omit<Product, 'category'>; // Removed 'category' from Product type
@@ -30,18 +31,16 @@ const ProductCard = ({
   const { mutate: addToWishlist } = useAddWishlist();
   const { data: wishlist } = useWishlist();
 
-  const addToCart = useCart(state => state.addToCart);
-  const items = useCart(state => state.cart.items);
+  // const addToCart = useCart(state => state.addToCart);
+  const { mutate: addToCart } = useAddToCart();
+  // const items = useCart(state => state.cart.items);
 
   const [user, setUser] = useState<User | null>(null);
   const [isAdded, setIsAdded] = useState(false);
   const [isFavourite, setIsFavourite] = useState(false);
 
   useEffect(() => {
-    if (items.length && items.find(i => i.id === product.id)) setIsAdded(true);
-
-    const _user = getUser();
-    setUser(_user);
+    // if (items.length && items.find(i => i.id === product.id)) setIsAdded(true);
   }, []);
 
   useEffect(() => {
@@ -55,15 +54,19 @@ const ProductCard = ({
   }, [wishlist, favorite]);
 
   const handleClick = () => {
-    if (items.length && items.find(i => i.id === product.id)) return;
-
     setIsAdded(true);
-    addToCart({
-      ...product,
-      quantity: 1,
-    });
-
-    toast.success('Added to cart');
+    addToCart(
+      {
+        id: product.id,
+        product_quantity: 1,
+      },
+      {
+        onError: () => {
+          toast.error('Failed to add to cart');
+          setIsAdded(false);
+        },
+      }
+    );
   };
 
   const handleFavorite = () => {

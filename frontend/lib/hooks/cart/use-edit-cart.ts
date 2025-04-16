@@ -15,18 +15,18 @@ interface Res {
 }
 
 const fn = async (data: CartAddReq): Promise<Res> => {
-  const res = await cart.create<CartAddReq, Res>(data);
+  const res = await cart.update<CartAddReq>(data);
   return res.data;
 };
 
-export const useAddToCart = () => {
+export const useEditCart = () => {
   const queryClient = useQueryClient();
 
   return useMutation<Res, AxiosError, CartAddReq>({
     mutationFn: fn,
 
     onMutate: async newItem => {
-      console.log('adding cart item started');
+      console.log('updating cart item...');
       // Optimistic update logic
       // await queryClient.cancelQueries(['wishlist']);
       // const previousWishlist = queryClient.getQueryData<Res[]>(['wishlist']);
@@ -43,7 +43,7 @@ export const useAddToCart = () => {
     },
 
     onSuccess: data => {
-      console.log('added to the cart.', data);
+      console.log('cart item updted...', data);
       queryClient.invalidateQueries({ queryKey: CART_KEY });
     },
 

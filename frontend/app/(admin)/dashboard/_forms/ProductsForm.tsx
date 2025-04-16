@@ -23,7 +23,6 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useCategories } from '@/lib/hooks/categories/use-categories';
-import { Category } from '@/lib/services/category-services';
 import CloudinaryUploader from '@/components/FileUploader';
 
 // Form schema

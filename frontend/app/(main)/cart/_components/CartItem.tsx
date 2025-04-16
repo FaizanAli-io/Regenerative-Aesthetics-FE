@@ -1,24 +1,43 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Product } from '@/lib/services/products-service';
+import { useDeleteCart } from '@/lib/hooks/cart/use-delete-cart';
+import { useEditCart } from '@/lib/hooks/cart/use-edit-cart';
 import { CartItem as ICartItem, useCart } from '@/lib/stores/cart';
 import clsx from 'clsx';
 import { XIcon } from 'lucide-react';
 import Image from 'next/image';
 import React, { HTMLAttributes } from 'react';
+import { toast } from 'sonner';
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
   product: ICartItem;
 }
 
 const CartItem = ({ product, className, ...props }: Props) => {
-  const removeItem = useCart(state => state.removeFromCart);
-  const increment = useCart(state => state.incrementQuantity);
-  const decrement = useCart(state => state.decrementQuantity);
+  // const increment = useCart(state => state.incrementQuantity);
+  // const decrement = useCart(state => state.decrementQuantity);
 
-  const handleRemove = () => removeItem(product.id);
-  const handleIncrement = () => increment(product.id);
-  const handleDecrement = () => decrement(product.id);
+  const { mutate: deleteItem } = useDeleteCart();
+  const { mutate: updateItem } = useEditCart();
+
+  const handleRemove = () => {
+    deleteItem(product.id, {
+      onSuccess: () => {
+        toast.success('Product removed!');
+      },
+      onError: error => {
+        console.error(error);
+        toast.error('Failed to remove product!');
+      },
+    });
+  };
+  const handleIncrement = () => {
+    // updateItem({ id: product.id, quantity: product.quantity + 1 });
+    toast.info('You can only buy one product at a time!');
+  };
+  const handleDecrement = () => {
+    toast.info('You can only buy one product at a time!');
+  };
 
   return (
     <div
