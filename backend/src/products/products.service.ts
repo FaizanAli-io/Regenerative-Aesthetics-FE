@@ -10,12 +10,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ProductEntity } from './entities/product.entity';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { UserEntity } from 'src/users/entities/user.entity';
-import { OrderStatus } from 'src/orders/enum/order-status.enum';
-import { OrdersService } from 'src/orders/orders.service';
-import { CategoriesService } from 'src/categories/categories.service';
-import dataSource from 'db/data-source';
-
+import { UserEntity } from './../users/entities/user.entity';
+import { OrderStatus } from './../orders/enum/order-status.enum';
+import { OrdersService } from './../orders/orders.service';
+import { CategoriesService } from './../categories/categories.service';
+import dataSource from './../../db/data-source';
 @Injectable()
 export class ProductsService {
   constructor(
@@ -25,7 +24,6 @@ export class ProductsService {
     @Inject(forwardRef(() => OrdersService))
     private readonly orderService: OrdersService,
   ) {}
-
   async create(
     createProductDto: CreateProductDto,
     currentUser: UserEntity,
@@ -34,31 +32,25 @@ export class ProductsService {
       await this.categoryService.findOne(
         +createProductDto.categoryId,
       );
-
     if (!category)
       throw new NotFoundException(
         'Category not found',
       );
-
     const product = this.productRepository.create(
       createProductDto,
     );
-
     product.category = category;
     product.addedBy = currentUser;
-
     return await this.productRepository.save(
       product,
     );
   }
-
   async findAll(query: any): Promise<{
     products: any;
     totalProducts: number;
     limit: number;
   }> {
     let limit = query.limit ? query.limit : 10;
-
     const queryBuilder = dataSource
       .getRepository(ProductEntity)
       .createQueryBuilder('product')
@@ -88,10 +80,8 @@ export class ProductsService {
         'AVG(review.ratings)::numeric(10,2) AS "avgRating"',
       ])
       .groupBy('product.id, category.id');
-
     const totalProducts =
       await queryBuilder.getCount();
-
     // Handle category filter (including children)
     if (query.category) {
       const categoryIds =
@@ -105,7 +95,6 @@ export class ProductsService {
         },
       );
     }
-
     if (query.search) {
       queryBuilder.andWhere(
         'product.title LIKE :title',
@@ -114,7 +103,6 @@ export class ProductsService {
         },
       );
     }
-
     if (query.minPrice) {
       queryBuilder.andWhere(
         'product.price >= :minPrice',
@@ -123,7 +111,6 @@ export class ProductsService {
         },
       );
     }
-
     if (query.maxPrice) {
       queryBuilder.andWhere(
         'product.price <= :maxPrice',
@@ -132,7 +119,6 @@ export class ProductsService {
         },
       );
     }
-
     if (query.minRating) {
       queryBuilder.andHaving(
         'AVG(review.ratings) >= :minRating',
@@ -141,7 +127,6 @@ export class ProductsService {
         },
       );
     }
-
     if (query.maxRating) {
       queryBuilder.andHaving(
         'AVG(review.ratings) <= :maxRating',
@@ -150,25 +135,19 @@ export class ProductsService {
         },
       );
     }
-
     queryBuilder.limit(limit);
-
     if (query.offset) {
       queryBuilder.offset(query.offset);
     }
-
     const products =
       await queryBuilder.getRawMany();
-
     console.log(products);
-
     const formattedProducts = products.map(
       (product) => {
         console.log(
           'Product before formatting:',
           product,
         ); // Debugging log
-
         return {
           id: product.id,
           title: product.title,
@@ -188,7 +167,6 @@ export class ProductsService {
           avgRating: product.avgRating
             ? parseFloat(product.avgRating)
             : null,
-
           category: product.categoryId
             ? {
                 id: product.categoryId,
@@ -208,19 +186,16 @@ export class ProductsService {
         };
       },
     );
-
     console.log(
       'Formatted Products:',
       formattedProducts,
     ); // Debugging log
-
     return {
       totalProducts,
       limit,
       products: formattedProducts,
     };
   }
-
   async findOne(id: number) {
     const product =
       await this.productRepository.findOne({
@@ -242,26 +217,20 @@ export class ProductsService {
           },
         },
       });
-
     if (!product)
       throw new NotFoundException(
         'Product not found.',
       );
-
     return product;
   }
-
   async update(
     id: number,
     fields: Partial<UpdateProductDto>,
     currentUser: UserEntity,
   ): Promise<ProductEntity> {
     const product = await this.findOne(id);
-
     Object.assign(product, fields);
-
     product.addedBy = currentUser;
-
     if (fields.categoryId) {
       const category =
         await this.categoryService.findOne(
@@ -271,32 +240,26 @@ export class ProductsService {
         throw new NotFoundException(
           'Category not found',
         );
-
       product.category = category;
     }
-
     return await this.productRepository.save(
       product,
     );
   }
-
   async remove(id: number) {
     const product = await this.findOne(id);
     const order =
       await this.orderService.findOneByProductId(
         product.id,
       );
-
     if (order)
       throw new BadRequestException(
         'Products is in use.',
       );
-
     return await this.productRepository.remove(
       product,
     );
   }
-
   async updateStock(
     id: number,
     stock: number,
@@ -308,7 +271,6 @@ export class ProductsService {
     } else {
       product.stock += stock;
     }
-
     product =
       await this.productRepository.save(product);
     return product;

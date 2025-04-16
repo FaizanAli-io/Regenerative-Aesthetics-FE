@@ -19,25 +19,23 @@ import {
 } from '@nestjs/swagger';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { AuthenticationGuard } from 'src/utility/common/guards/authentication.guard';
-import { CurrentUser } from 'src/utility/common/decorators/current-user.decorator';
-import { UserEntity } from 'src/users/entities/user.entity';
+import { AuthenticationGuard } from './../utility/common/guards/authentication.guard';
+import { CurrentUser } from './../utility/common/decorators/current-user.decorator';
+import { UserEntity } from './../users/entities/user.entity';
 import { OrderEntity } from './entities/order.entity';
-import { AuthorizeGuard } from 'src/utility/common/guards/authorization.guard';
-import { Roles } from 'src/utility/common/user-roles.enum';
+import { AuthorizeGuard } from './../utility/common/guards/authorization.guard';
+import { Roles } from './../utility/common/user-roles.enum';
 import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
 import { CreateCartDto } from './dto/create-cart.dto';
 import { UpdateCartDto } from './dto/update-cart.dto';
 import { OrderedProductsDto } from './dto/ordered-products.dto';
 import { CreateShippingDto } from './dto/create-shipping.dto';
-
 @ApiTags('Orders')
 @Controller('orders')
 export class OrdersController {
   constructor(
     private readonly ordersService: OrdersService,
   ) {}
-
   @UseGuards(AuthenticationGuard)
   @Post()
   @ApiBearerAuth()
@@ -49,15 +47,16 @@ export class OrdersController {
     type: OrderEntity,
   })
   async create(
-    @Body() createOrderDto: CreateOrderDto,
-    @CurrentUser() currentUser: UserEntity,
+    @Body()
+    createOrderDto: CreateOrderDto,
+    @CurrentUser()
+    currentUser: UserEntity,
   ): Promise<OrderEntity | null> {
     return await this.ordersService.create(
       createOrderDto,
       currentUser,
     );
   }
-
   // ADMIN: Get all orders
   @Get('all')
   @UseGuards(
@@ -79,8 +78,10 @@ export class OrdersController {
       'Forbidden. Admin access required.',
   })
   async findAll(
-    @Query('limit') limit: number,
-    @Query('offset') offset: number,
+    @Query('limit')
+    limit: number,
+    @Query('offset')
+    offset: number,
     @Query('status')
     status?:
       | 'processing'
@@ -94,7 +95,6 @@ export class OrdersController {
       status,
     );
   }
-
   // USER: Get own orders
   @Get()
   @UseGuards(
@@ -116,9 +116,12 @@ export class OrdersController {
       'Forbidden. User access required.',
   })
   async findMyOrders(
-    @CurrentUser() currentUser: UserEntity,
-    @Query('limit') limit: number,
-    @Query('offset') offset: number,
+    @CurrentUser()
+    currentUser: UserEntity,
+    @Query('limit')
+    limit: number,
+    @Query('offset')
+    offset: number,
     @Query('status')
     status?:
       | 'processing'
@@ -133,7 +136,6 @@ export class OrdersController {
       currentUser.id,
     );
   }
-
   @Get(':id')
   @UseGuards(
     AuthenticationGuard,
@@ -153,11 +155,11 @@ export class OrdersController {
     description: 'Order not found.',
   })
   async findOne(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', ParseIntPipe)
+    id: number,
   ): Promise<OrderEntity> {
     return await this.ordersService.findOne(id);
   }
-
   @UseGuards(
     AuthenticationGuard,
     AuthorizeGuard([Roles.ADMIN]),
@@ -174,10 +176,12 @@ export class OrdersController {
     type: OrderEntity,
   })
   async update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', ParseIntPipe)
+    id: number,
     @Body()
     updateOrderStatusDto: UpdateOrderStatusDto,
-    @CurrentUser() currentUser: UserEntity,
+    @CurrentUser()
+    currentUser: UserEntity,
   ) {
     return await this.ordersService.update(
       id,
@@ -185,7 +189,6 @@ export class OrdersController {
       currentUser,
     );
   }
-
   @UseGuards(
     AuthenticationGuard,
     AuthorizeGuard([Roles.ADMIN]),
@@ -202,15 +205,16 @@ export class OrdersController {
     type: OrderEntity,
   })
   async cancelledOrder(
-    @Param('id', ParseIntPipe) id: number,
-    @CurrentUser() currentUser: UserEntity,
+    @Param('id', ParseIntPipe)
+    id: number,
+    @CurrentUser()
+    currentUser: UserEntity,
   ) {
     return await this.ordersService.cancelled(
       id,
       currentUser,
     );
   }
-
   @Delete(':id')
   @ApiOperation({
     summary: 'Delete an order by ID',
@@ -222,11 +226,11 @@ export class OrdersController {
     type: OrderEntity,
   })
   async remove(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', ParseIntPipe)
+    id: number,
   ) {
     return await this.ordersService.remove(id);
   }
-
   @UseGuards(AuthenticationGuard)
   @Get('cart/mine')
   @ApiBearerAuth()
@@ -240,13 +244,13 @@ export class OrdersController {
     type: CreateCartDto,
   })
   async getCart(
-    @CurrentUser() currentUser: UserEntity,
+    @CurrentUser()
+    currentUser: UserEntity,
   ) {
     return this.ordersService.getOrCreateUserCart(
       currentUser.id,
     );
   }
-
   @UseGuards(AuthenticationGuard)
   @Post('cart')
   @ApiBearerAuth()
@@ -262,14 +266,14 @@ export class OrdersController {
   async addProductToCart(
     @Body()
     orderedProductsDto: OrderedProductsDto,
-    @CurrentUser() currentUser: UserEntity,
+    @CurrentUser()
+    currentUser: UserEntity,
   ) {
     return await this.ordersService.addProductToCart(
       orderedProductsDto,
       currentUser,
     );
   }
-
   @UseGuards(AuthenticationGuard)
   @Delete('cart/remove/:id')
   @ApiBearerAuth()
@@ -282,15 +286,16 @@ export class OrdersController {
       'The product has been successfully removed from the cart.',
   })
   async removeProductFromCart(
-    @Param('id', ParseIntPipe) id: number,
-    @CurrentUser() currentUser: UserEntity,
+    @Param('id', ParseIntPipe)
+    id: number,
+    @CurrentUser()
+    currentUser: UserEntity,
   ) {
     return this.ordersService.removeProductFromCart(
       id,
       currentUser,
     );
   }
-
   @UseGuards(AuthenticationGuard)
   @Post('cart/checkout')
   @ApiBearerAuth()
@@ -301,8 +306,10 @@ export class OrdersController {
       'The cart has been successfully checked out.',
   })
   async checkout(
-    @Body() createShippingDto: CreateShippingDto,
-    @CurrentUser() currentUser: UserEntity,
+    @Body()
+    createShippingDto: CreateShippingDto,
+    @CurrentUser()
+    currentUser: UserEntity,
   ) {
     return await this.ordersService.checkout(
       createShippingDto,

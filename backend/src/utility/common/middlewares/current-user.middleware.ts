@@ -9,9 +9,8 @@ import {
   Response,
 } from 'express';
 import { verify } from 'jsonwebtoken';
-import { UserEntity } from 'src/users/entities/user.entity';
-import { UsersService } from 'src/users/users.service';
-
+import { UserEntity } from './../../../users/entities/user.entity';
+import { UsersService } from './../../../users/users.service';
 declare global {
   namespace Express {
     interface Request {
@@ -19,7 +18,6 @@ declare global {
     }
   }
 }
-
 @Injectable()
 export class CurrentUserMiddleware
   implements NestMiddleware
@@ -66,7 +64,6 @@ export class CurrentUserMiddleware
     }
   }
 }
-
 interface JwtPayload {
   id: string;
 }

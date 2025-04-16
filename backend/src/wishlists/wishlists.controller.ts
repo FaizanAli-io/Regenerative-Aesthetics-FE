@@ -16,17 +16,15 @@ import {
   ApiBearerAuth,
 } from '@nestjs/swagger';
 import { WishlistsService } from './wishlists.service';
-import { UserEntity } from 'src/users/entities/user.entity';
-import { AuthenticationGuard } from 'src/utility/common/guards/authentication.guard';
-import { CurrentUser } from 'src/utility/common/decorators/current-user.decorator';
-
+import { UserEntity } from './../users/entities/user.entity';
+import { AuthenticationGuard } from './../utility/common/guards/authentication.guard';
+import { CurrentUser } from './../utility/common/decorators/current-user.decorator';
 @ApiTags('Wishlists')
 @Controller('wishlists')
 export class WishlistsController {
   constructor(
     private readonly wishlistsService: WishlistsService,
   ) {}
-
   @UseGuards(AuthenticationGuard)
   @Post('add')
   @ApiBearerAuth()
@@ -44,7 +42,8 @@ export class WishlistsController {
       'Product already in the wishlist.',
   })
   async addToWishlist(
-    @CurrentUser() currentUser: UserEntity,
+    @CurrentUser()
+    currentUser: UserEntity,
     @Body('productId', ParseIntPipe)
     productId: number,
   ) {
@@ -53,7 +52,6 @@ export class WishlistsController {
       productId,
     );
   }
-
   @UseGuards(AuthenticationGuard)
   @Get()
   @ApiBearerAuth()
@@ -72,15 +70,16 @@ export class WishlistsController {
       'No products found in the wishlist.',
   })
   async getUserWishlist(
-    @CurrentUser() currentUser: UserEntity,
-    @Query() query: any,
+    @CurrentUser()
+    currentUser: UserEntity,
+    @Query()
+    query: any,
   ) {
     return await this.wishlistsService.getUserWishlist(
       currentUser.id,
       query,
     );
   }
-
   @UseGuards(AuthenticationGuard)
   @Delete('remove/:productId')
   @ApiBearerAuth()
@@ -98,7 +97,8 @@ export class WishlistsController {
       'Product not found in the wishlist.',
   })
   async removeFromWishlist(
-    @CurrentUser() currentUser: UserEntity,
+    @CurrentUser()
+    currentUser: UserEntity,
     @Param('productId', ParseIntPipe)
     productId: number,
   ) {
@@ -107,7 +107,6 @@ export class WishlistsController {
       productId,
     );
   }
-
   @UseGuards(AuthenticationGuard)
   @Get('check/:productId')
   @ApiBearerAuth()
@@ -126,7 +125,8 @@ export class WishlistsController {
     description: 'Product not found.',
   })
   async checkIfWishlisted(
-    @CurrentUser() currentUser: UserEntity,
+    @CurrentUser()
+    currentUser: UserEntity,
     @Param('productId', ParseIntPipe)
     productId: number,
   ) {

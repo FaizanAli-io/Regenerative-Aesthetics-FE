@@ -18,13 +18,11 @@
 // import { get } from 'http';
 // import { AuthorizeGuard } from 'src/utility/common/guards/authorization.guard';
 // import { Roles } from 'src/utility/common/user-roles.enum';
-
 // @Controller('reviews')
 // export class ReviewsController {
 //   constructor(
 //     private readonly reviewsService: ReviewsService,
 //   ) {}
-
 //   @UseGuards(AuthenticationGuard)
 //   @Post()
 //   async create(
@@ -36,12 +34,10 @@
 //       currentUser,
 //     );
 //   }
-
 //   @Get('all')
 //   async findAll(): Promise<ReviewEntity[]> {
 //     return await this.reviewsService.findAll();
 //   }
-
 //   @Get()
 //   async findAllByProduct(
 //     @Body('productId') productId: number,
@@ -50,14 +46,12 @@
 //       +productId,
 //     );
 //   }
-
 //   @Get(':id')
 //   async findOne(
 //     @Param('id') id: string,
 //   ): Promise<ReviewEntity> {
 //     return await this.reviewsService.findOne(+id);
 //   }
-
 //   @UseGuards(AuthenticationGuard)
 //   @Patch(':id')
 //   update(
@@ -71,7 +65,6 @@
 //       currentUser,
 //     );
 //   }
-
 //   @UseGuards(
 //     AuthenticationGuard,
 //     AuthorizeGuard([Roles.ADMIN]),
@@ -81,7 +74,6 @@
 //     return this.reviewsService.remove(+id);
 //   }
 // }
-
 import {
   Controller,
   Get,
@@ -102,20 +94,18 @@ import {
 import { ReviewsService } from './reviews.service';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
-import { AuthenticationGuard } from 'src/utility/common/guards/authentication.guard';
-import { CurrentUser } from 'src/utility/common/decorators/current-user.decorator';
-import { UserEntity } from 'src/users/entities/user.entity';
+import { AuthenticationGuard } from './../utility/common/guards/authentication.guard';
+import { CurrentUser } from './../utility/common/decorators/current-user.decorator';
+import { UserEntity } from './../users/entities/user.entity';
 import { ReviewEntity } from './entities/review.entity';
-import { AuthorizeGuard } from 'src/utility/common/guards/authorization.guard';
-import { Roles } from 'src/utility/common/user-roles.enum';
-
+import { AuthorizeGuard } from './../utility/common/guards/authorization.guard';
+import { Roles } from './../utility/common/user-roles.enum';
 @ApiTags('Reviews')
 @Controller('reviews')
 export class ReviewsController {
   constructor(
     private readonly reviewsService: ReviewsService,
   ) {}
-
   @UseGuards(AuthenticationGuard)
   @Post()
   @ApiBearerAuth()
@@ -129,15 +119,16 @@ export class ReviewsController {
     type: ReviewEntity,
   })
   async create(
-    @Body() createReviewDto: CreateReviewDto,
-    @CurrentUser() currentUser: UserEntity,
+    @Body()
+    createReviewDto: CreateReviewDto,
+    @CurrentUser()
+    currentUser: UserEntity,
   ): Promise<ReviewEntity> {
     return await this.reviewsService.create(
       createReviewDto,
       currentUser,
     );
   }
-
   @Get('all')
   @ApiOperation({ summary: 'Get all reviews' })
   @ApiResponse({
@@ -148,7 +139,6 @@ export class ReviewsController {
   async findAll(): Promise<ReviewEntity[]> {
     return await this.reviewsService.findAll();
   }
-
   @Get()
   @ApiOperation({
     summary: 'Get reviews by product ID',
@@ -160,13 +150,13 @@ export class ReviewsController {
     type: [ReviewEntity],
   })
   async findAllByProduct(
-    @Body('productId') productId: number,
+    @Body('productId')
+    productId: number,
   ): Promise<ReviewEntity[]> {
     return await this.reviewsService.findAllByProduct(
       +productId,
     );
   }
-
   @Get(':id')
   @ApiOperation({ summary: 'Get a review by ID' })
   @ApiResponse({
@@ -179,11 +169,11 @@ export class ReviewsController {
     description: 'Review not found.',
   })
   async findOne(
-    @Param('id') id: string,
+    @Param('id')
+    id: string,
   ): Promise<ReviewEntity> {
     return await this.reviewsService.findOne(+id);
   }
-
   @UseGuards(AuthenticationGuard)
   @Patch(':id')
   @ApiBearerAuth()
@@ -197,9 +187,12 @@ export class ReviewsController {
     type: ReviewEntity,
   })
   async update(
-    @Param('id') id: string,
-    @Body() updateReviewDto: UpdateReviewDto,
-    @CurrentUser() currentUser: UserEntity,
+    @Param('id')
+    id: string,
+    @Body()
+    updateReviewDto: UpdateReviewDto,
+    @CurrentUser()
+    currentUser: UserEntity,
   ) {
     return this.reviewsService.update(
       +id,
@@ -207,7 +200,6 @@ export class ReviewsController {
       currentUser,
     );
   }
-
   @UseGuards(
     AuthenticationGuard,
     AuthorizeGuard([Roles.ADMIN]),
@@ -226,7 +218,10 @@ export class ReviewsController {
     status: 404,
     description: 'Review not found.',
   })
-  async remove(@Param('id') id: string) {
+  async remove(
+    @Param('id')
+    id: string,
+  ) {
     return this.reviewsService.remove(+id);
   }
 }

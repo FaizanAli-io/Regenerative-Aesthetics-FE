@@ -8,20 +8,17 @@ import {
   DeleteResult,
   Repository,
 } from 'typeorm';
-import { ProductEntity } from 'src/products/entities/product.entity';
+import { ProductEntity } from './../products/entities/product.entity';
 import { WishlistItemEntity } from './entities/wishlists-items.entity';
-
 @Injectable()
 export class WishlistsService {
   constructor(
     @InjectRepository(WishlistItemEntity)
     private readonly wishlistRepository: Repository<WishlistItemEntity>,
-
     // Change this line:
     @InjectRepository(ProductEntity)
     private readonly productRepository: Repository<ProductEntity>,
   ) {}
-
   async addToWishlist(
     userId: number,
     productId: number,
@@ -35,7 +32,6 @@ export class WishlistsService {
       throw new NotFoundException(
         'Product not found',
       );
-
     // Check if already in wishlist
     const existing =
       await this.wishlistRepository.findOne({
@@ -48,18 +44,15 @@ export class WishlistsService {
       throw new ConflictException(
         'Product already in wishlist',
       );
-
     const wishlistItem =
       this.wishlistRepository.create({
         user: { id: userId },
         product: { id: productId },
       });
-
     return await this.wishlistRepository.save(
       wishlistItem,
     );
   }
-
   async getUserWishlist(
     userId: number,
     query: any,
@@ -79,10 +72,8 @@ export class WishlistsService {
         userId,
       })
       .orderBy('wishlistItem.createdAt', 'DESC');
-
     const totalItems =
       await queryBuilder.getCount();
-
     if (query.search) {
       queryBuilder.andWhere(
         'product.title ILIKE :search',
@@ -91,7 +82,6 @@ export class WishlistsService {
         },
       );
     }
-
     if (query.category) {
       queryBuilder.andWhere(
         'product.categoryId = :categoryId',
@@ -100,14 +90,11 @@ export class WishlistsService {
         },
       );
     }
-
     queryBuilder.take(limit);
     if (query.offset)
       queryBuilder.skip(query.offset);
-
     const wishlistItems =
       await queryBuilder.getMany();
-
     return {
       wishlistItems: wishlistItems.map(
         (item) => ({
@@ -119,7 +106,6 @@ export class WishlistsService {
       limit,
     };
   }
-
   async removeFromWishlist(
     userId: number,
     productId: number,
@@ -129,16 +115,13 @@ export class WishlistsService {
         user: { id: userId },
         product: { id: productId },
       });
-
     if (result.affected === 0) {
       throw new NotFoundException(
         'Wishlist item not found',
       );
     }
-
     return result;
   }
-
   async checkIfWishlisted(
     userId: number,
     productId: number,

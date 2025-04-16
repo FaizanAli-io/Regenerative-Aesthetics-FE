@@ -6,7 +6,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { UserEntity } from 'src/users/entities/user.entity';
+import { UserEntity } from './../users/entities/user.entity';
 import {
   InjectEntityManager,
   InjectRepository,
@@ -19,17 +19,16 @@ import {
 } from 'typeorm';
 import { OrdersProductsEntity } from './entities/orders-products.entity';
 import { ShippingEntity } from './entities/shipping.entity';
-import { ProductEntity } from 'src/products/entities/product.entity';
-import { ProductsService } from 'src/products/products.service';
+import { ProductEntity } from './../products/entities/product.entity';
+import { ProductsService } from './../products/products.service';
 import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
 import { OrderStatus } from './enum/order-status.enum';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from './../users/users.service';
 import { CreateCartDto } from './dto/create-cart.dto';
 import { UpdateCartDto } from './dto/update-cart.dto';
 import { OrderedProductsDto } from './dto/ordered-products.dto';
 import { CreateShippingDto } from './dto/create-shipping.dto';
-import { EmailsService } from 'src/emails/emails.service';
-
+import { EmailsService } from './../emails/emails.service';
 @Injectable()
 export class OrdersService {
   constructor(
@@ -44,7 +43,6 @@ export class OrdersService {
     private readonly userService: UsersService,
     private readonly emailService: EmailsService,
   ) {}
-
   async create(
     createOrderDto: CreateOrderDto,
     currentUser: UserEntity,
@@ -58,29 +56,24 @@ export class OrdersService {
           shippingEntity,
           createOrderDto.shippingAddress,
         );
-
         // Create order entity
         const orderEntity = new OrderEntity();
         orderEntity.shippingAddress =
           shippingEntity;
         orderEntity.user = currentUser;
-
         // Save order within transaction
         const orderTbl =
           await transactionalEntityManager.save(
             orderEntity,
           );
-
         // Prepare order-product relationships
         const opEntities: Partial<OrdersProductsEntity>[] =
           [];
-
         for (const productDto of createOrderDto.products) {
           const product =
             await this.productService.findOne(
               productDto.id,
             );
-
           // Check product availability
           if (
             product.stock <
@@ -90,7 +83,6 @@ export class OrdersService {
               `Product ${product.id} is out of stock.`,
             );
           }
-
           // Build order-product entry
           opEntities.push({
             order: orderTbl,
@@ -100,13 +92,11 @@ export class OrdersService {
             product_unit_price: product.price,
           });
         }
-
         // Save all order-product relationships
         await transactionalEntityManager.save(
           OrdersProductsEntity,
           opEntities,
         );
-
         // Fetch complete order with relations
         const fullOrder =
           await transactionalEntityManager.findOne(
@@ -121,12 +111,10 @@ export class OrdersService {
               ],
             },
           );
-
         return fullOrder;
       },
     );
   }
-
   async findAll(
     limit: number = 10,
     offset: number = 0,
@@ -140,7 +128,6 @@ export class OrdersService {
     const whereClause: any = {};
     if (status) whereClause.status = status;
     if (userId) whereClause.user = { id: userId };
-
     const orders =
       await this.orderRepository.find({
         take: limit,
@@ -154,16 +141,13 @@ export class OrdersService {
           },
         },
       });
-
     if (!orders || orders.length === 0) {
       throw new NotFoundException(
         'No orders found.',
       );
     }
-
     return orders;
   }
-
   async findOne(
     id: number,
   ): Promise<OrderEntity> {
@@ -178,15 +162,12 @@ export class OrdersService {
           },
         },
       });
-
     if (!order)
       throw new NotFoundException(
         'Order not found.',
       );
-
     return order;
   }
-
   async findOneByProductId(id: number) {
     return await this.opRepository.findOne({
       relations: {
@@ -195,21 +176,18 @@ export class OrdersService {
       where: { product: { id: id } },
     });
   }
-
   async update(
     id: number,
     updateOrderStatusDto: UpdateOrderStatusDto,
     currentUser: UserEntity,
   ) {
     let order = await this.findOne(id);
-
     // Handle no status change
     if (
       updateOrderStatusDto.status === order.status
     ) {
       return order;
     }
-
     // Define valid state transitions
     const allowedTransitions = {
       [OrderStatus.CART]: [
@@ -223,7 +201,6 @@ export class OrdersService {
         OrderStatus.DELIVERED,
       ],
     };
-
     // Validate status transition
     if (
       !allowedTransitions[order.status]?.includes(
@@ -234,7 +211,6 @@ export class OrdersService {
         `Invalid status transition: ${order.status} → ${updateOrderStatusDto.status}`,
       );
     }
-
     // Update timestamps based on status changes
     if (
       updateOrderStatusDto.status ===
@@ -247,15 +223,12 @@ export class OrdersService {
     ) {
       order.deliveredAt = new Date();
     }
-
     // Update order properties
     order.status = updateOrderStatusDto.status;
     order.updatedBy = currentUser;
-
     // Save updated order
     order =
       await this.orderRepository.save(order);
-
     // Handle stock updates for delivered orders
     if (
       updateOrderStatusDto.status ===
@@ -266,7 +239,6 @@ export class OrdersService {
         OrderStatus.DELIVERED,
       );
     }
-
     // 🚀 Send status change email
     const newStatus = updateOrderStatusDto.status;
     const userEmail = order.user.email;
@@ -293,39 +265,30 @@ export class OrdersService {
         'delivered',
       );
     }
-
     return order;
   }
-
   async cancelled(
     id: number,
     currentUser: UserEntity,
   ) {
     let order = await this.findOne(id);
-
     if (order.status === OrderStatus.CANCELLED)
       return order;
-
     order.status = OrderStatus.CANCELLED;
     order.updatedBy = currentUser;
-
     order =
       await this.orderRepository.save(order);
-
     await this.stockUpdate(
       order,
       OrderStatus.CANCELLED,
     );
-
     await this.emailService.sendOrderStatusEmail(
       order.user.email,
       order.id,
       'cancelled',
     );
-
     return order;
   }
-
   async remove(id: number) {
     const order = await this.findOne(id);
     if (order.status !== OrderStatus.PROCESSING) {
@@ -338,7 +301,6 @@ export class OrdersService {
       message: 'Order deleted successfully.',
     };
   }
-
   async stockUpdate(
     order: OrderEntity,
     status: string,
@@ -351,7 +313,6 @@ export class OrdersService {
       );
     }
   }
-
   async getOrCreateUserCart(
     userId: number,
   ): Promise<OrderEntity> {
@@ -367,7 +328,6 @@ export class OrdersService {
         ], // Include relationships
       },
     );
-
     if (!cart) {
       cart = new OrderEntity();
       cart.user = {
@@ -377,20 +337,16 @@ export class OrdersService {
       cart =
         await this.orderRepository.save(cart);
     }
-
     cart = await this.orderRepository.findOne({
       where: { id: cart.id },
       relations: ['products', 'products.product'],
     });
-
     if (!cart)
       throw new NotFoundException(
         `Cart for user ${userId} could not be created.`,
       );
-
     return cart;
   }
-
   async addProductToCart(
     orderedProductsDto: OrderedProductsDto,
     currentUser: UserEntity,
@@ -402,7 +358,6 @@ export class OrdersService {
     const cart = await this.getOrCreateUserCart(
       currentUser.id,
     );
-
     if (
       product.stock <
       orderedProductsDto.product_quantity
@@ -411,13 +366,11 @@ export class OrdersService {
         `Product ${product.id} is out of stock.`,
       );
     }
-
     // Check if product already exists in cart
     let existingProduct = cart.products.find(
       (p) =>
         p.product.id === orderedProductsDto.id,
     );
-
     if (existingProduct) {
       // Update quantity only
       existingProduct.product_quantity =
@@ -435,14 +388,12 @@ export class OrdersService {
         orderedProductsDto.product_quantity;
       orderedProduct.product_unit_price =
         product.price;
-
       const savedProduct =
         await this.opRepository.save(
           orderedProduct,
         );
       cart.products.push(savedProduct);
     }
-
     // Calculate the total price of the cart
     const totalPrice = cart.products.reduce(
       (sum, product) => {
@@ -454,10 +405,8 @@ export class OrdersService {
       },
       0,
     );
-
     const savedCart =
       await this.orderRepository.save(cart);
-
     return {
       ...savedCart,
       totalPrice,
@@ -466,7 +415,6 @@ export class OrdersService {
       ), // Remove circular ref
     };
   }
-
   async removeProductFromCart(
     productId: number,
     user: UserEntity,
@@ -475,28 +423,23 @@ export class OrdersService {
     const cart = await this.getOrCreateUserCart(
       user.id,
     );
-
     // 2. Find the product in the cart
     const orderedProduct = cart.products.find(
       (p) => p.product.id === productId,
     );
-
     if (!orderedProduct) {
       throw new NotFoundException(
         'Product not found in cart',
       );
     }
-
     // 3. Remove the product from the orders_products table
     await this.opRepository.remove(
       orderedProduct,
     ); // This removes the relation, not the product itself
-
     return {
       message: 'Product removed from cart',
     };
   }
-
   async checkout(
     createShippingDto: CreateShippingDto,
     currentUser: UserEntity,
@@ -504,15 +447,12 @@ export class OrdersService {
     const cart = await this.getOrCreateUserCart(
       currentUser.id,
     );
-
     if (cart.products.length === 0) {
       throw new BadRequestException(
         'Cart is empty.',
       );
     }
-
     cart.status = OrderStatus.PROCESSING;
-
     const shipping = new ShippingEntity();
     shipping.order = cart;
     shipping.name = createShippingDto.name;
@@ -523,18 +463,14 @@ export class OrdersService {
     shipping.city = createShippingDto.city;
     shipping.state = createShippingDto.state;
     shipping.country = createShippingDto.country;
-
     cart.shippingAddress = shipping;
-
     const savedCart =
       await this.orderRepository.save(cart);
-
     await this.emailService.sendOrderStatusEmail(
       currentUser.email,
       cart.id,
       'processing',
     );
-
     // **Manually remove circular references**
     return {
       ...savedCart,
