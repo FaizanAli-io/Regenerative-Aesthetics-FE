@@ -1,8 +1,8 @@
-import { CategoryEntity } from 'src/categories/entities/category.entity';
-import { OrdersProductsEntity } from 'src/orders/entities/orders-products.entity';
-import { ReviewEntity } from 'src/reviews/entities/review.entity';
-import { UserEntity } from 'src/users/entities/user.entity';
-import { WishlistItemEntity } from 'src/wishlists/entities/wishlists-items.entity';
+import { CategoryEntity } from './../../categories/entities/category.entity';
+import { OrdersProductsEntity } from './../../orders/entities/orders-products.entity';
+import { ReviewEntity } from './../../reviews/entities/review.entity';
+import { UserEntity } from './../../users/entities/user.entity';
+import { WishlistItemEntity } from './../../wishlists/entities/wishlists-items.entity';
 import {
   Column,
   CreateDateColumn,
@@ -13,18 +13,14 @@ import {
   Timestamp,
   UpdateDateColumn,
 } from 'typeorm';
-
 @Entity({ name: 'products' })
 export class ProductEntity {
   @PrimaryGeneratedColumn()
   id: number;
-
   @Column()
   title: string;
-
   @Column()
   description: string;
-
   @Column({
     type: 'decimal',
     precision: 10,
@@ -32,26 +28,20 @@ export class ProductEntity {
     default: 0,
   })
   price: number;
-
   @Column()
   stock: number;
-
   @Column('simple-array')
   images: string[];
-
   @CreateDateColumn()
   createdAt: Timestamp;
-
   @UpdateDateColumn()
   updatedAt: Timestamp;
-
   @ManyToOne(
     () => UserEntity,
     (user) => user.products,
     { onDelete: 'SET NULL' },
   )
   addedBy: UserEntity;
-
   @ManyToOne(
     () => CategoryEntity,
     (category) => category.products,
@@ -61,19 +51,16 @@ export class ProductEntity {
     },
   )
   category: CategoryEntity | null;
-
   @OneToMany(
     () => ReviewEntity,
     (rev) => rev.product,
   )
   reviews: ReviewEntity[];
-
   @OneToMany(
     () => OrdersProductsEntity,
     (op) => op.product,
   )
   products: OrdersProductsEntity[];
-
   @OneToMany(
     () => WishlistItemEntity,
     (wishlistItem) => wishlistItem.product,

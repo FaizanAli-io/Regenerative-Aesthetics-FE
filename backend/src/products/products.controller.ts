@@ -21,13 +21,11 @@
 // import { DeleteResult } from 'typeorm';
 // import { SerializeIncludes } from 'src/utility/common/interceptors/serialize.interceptor';
 // import { ProductsDto } from './dto/products.dto';
-
 // @Controller('products')
 // export class ProductsController {
 //   constructor(
 //     private readonly productsService: ProductsService,
 //   ) {}
-
 //   @UseGuards(
 //     AuthenticationGuard,
 //     AuthorizeGuard([Roles.ADMIN]),
@@ -42,7 +40,6 @@
 //       currentUser,
 //     );
 //   }
-
 //   @SerializeIncludes(ProductsDto)
 //   @Get('all')
 //   async findAll(
@@ -52,14 +49,12 @@
 //       query,
 //     );
 //   }
-
 //   @Get(':id')
 //   async findOne(@Param('id') id: string) {
 //     return await this.productsService.findOne(
 //       +id,
 //     );
 //   }
-
 //   @UseGuards(
 //     AuthenticationGuard,
 //     AuthorizeGuard([Roles.ADMIN]),
@@ -76,13 +71,11 @@
 //       currentUser,
 //     );
 //   }
-
 //   @Delete(':id')
 //   async remove(@Param('id') id: string) {
 //     return await this.productsService.remove(+id);
 //   }
 // }
-
 import {
   Controller,
   Get,
@@ -103,23 +96,21 @@ import {
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { CurrentUser } from 'src/utility/common/decorators/current-user.decorator';
-import { UserEntity } from 'src/users/entities/user.entity';
-import { AuthenticationGuard } from 'src/utility/common/guards/authentication.guard';
-import { AuthorizeGuard } from 'src/utility/common/guards/authorization.guard';
-import { Roles } from 'src/utility/common/user-roles.enum';
+import { CurrentUser } from './../utility/common/decorators/current-user.decorator';
+import { UserEntity } from './../users/entities/user.entity';
+import { AuthenticationGuard } from './../utility/common/guards/authentication.guard';
+import { AuthorizeGuard } from './../utility/common/guards/authorization.guard';
+import { Roles } from './../utility/common/user-roles.enum';
 import { ProductEntity } from './entities/product.entity';
 import { DeleteResult } from 'typeorm';
-import { SerializeIncludes } from 'src/utility/common/interceptors/serialize.interceptor';
+import { SerializeIncludes } from './../utility/common/interceptors/serialize.interceptor';
 import { ProductsDto } from './dto/products.dto';
-
 @ApiTags('Products')
 @Controller('products')
 export class ProductsController {
   constructor(
     private readonly productsService: ProductsService,
   ) {}
-
   @UseGuards(
     AuthenticationGuard,
     AuthorizeGuard([Roles.ADMIN]),
@@ -136,15 +127,16 @@ export class ProductsController {
     type: ProductEntity,
   })
   async create(
-    @Body() createProductDto: CreateProductDto,
-    @CurrentUser() currentUser: UserEntity,
+    @Body()
+    createProductDto: CreateProductDto,
+    @CurrentUser()
+    currentUser: UserEntity,
   ): Promise<ProductEntity> {
     return await this.productsService.create(
       createProductDto,
       currentUser,
     );
   }
-
   @SerializeIncludes(ProductsDto)
   @Get('all')
   @ApiOperation({ summary: 'Get all products' })
@@ -155,13 +147,13 @@ export class ProductsController {
     type: ProductsDto,
   })
   async findAll(
-    @Query() query: any,
+    @Query()
+    query: any,
   ): Promise<ProductsDto> {
     return await this.productsService.findAll(
       query,
     );
   }
-
   @Get(':id')
   @ApiOperation({
     summary: 'Get a single product by ID',
@@ -176,13 +168,13 @@ export class ProductsController {
     description: 'Product not found.',
   })
   async findOne(
-    @Param('id') id: string,
+    @Param('id')
+    id: string,
   ): Promise<ProductEntity> {
     return await this.productsService.findOne(
       +id,
     );
   }
-
   @UseGuards(
     AuthenticationGuard,
     AuthorizeGuard([Roles.ADMIN]),
@@ -199,9 +191,12 @@ export class ProductsController {
     type: ProductEntity,
   })
   async update(
-    @Param('id') id: string,
-    @Body() updateProductDto: UpdateProductDto,
-    @CurrentUser() currentUser: UserEntity,
+    @Param('id')
+    id: string,
+    @Body()
+    updateProductDto: UpdateProductDto,
+    @CurrentUser()
+    currentUser: UserEntity,
   ): Promise<ProductEntity> {
     return await this.productsService.update(
       +id,
@@ -209,7 +204,6 @@ export class ProductsController {
       currentUser,
     );
   }
-
   @UseGuards(
     AuthenticationGuard,
     AuthorizeGuard([Roles.ADMIN]),
@@ -226,7 +220,10 @@ export class ProductsController {
       'The product has been successfully deleted.',
     type: ProductEntity,
   })
-  async remove(@Param('id') id: string) {
+  async remove(
+    @Param('id')
+    id: string,
+  ) {
     return await this.productsService.remove(+id);
   }
 }

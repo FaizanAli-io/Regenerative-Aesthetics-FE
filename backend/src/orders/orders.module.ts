@@ -8,10 +8,9 @@ import { OrdersController } from './orders.controller';
 import { OrderEntity } from './entities/order.entity';
 import { OrdersProductsEntity } from './entities/orders-products.entity';
 import { ShippingEntity } from './entities/shipping.entity';
-import { ProductsModule } from 'src/products/products.module';
-import { UsersModule } from 'src/users/users.module';
-import { EmailsModule } from 'src/emails/emails.module';
-
+import { ProductsModule } from './../products/products.module';
+import { UsersModule } from './../users/users.module';
+import { EmailsModule } from './../emails/emails.module';
 @Module({
   imports: [
     TypeOrmModule.forFeature([

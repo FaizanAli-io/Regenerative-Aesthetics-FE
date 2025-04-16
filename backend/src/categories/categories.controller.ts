@@ -17,21 +17,19 @@ import {
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
-import { CurrentUser } from 'src/utility/common/decorators/current-user.decorator';
-import { UserEntity } from 'src/users/entities/user.entity';
-import { AuthenticationGuard } from 'src/utility/common/guards/authentication.guard';
-import { AuthorizeGuard } from 'src/utility/common/guards/authorization.guard';
-import { Roles } from 'src/utility/common/user-roles.enum';
+import { CurrentUser } from './../utility/common/decorators/current-user.decorator';
+import { UserEntity } from './../users/entities/user.entity';
+import { AuthenticationGuard } from './../utility/common/guards/authentication.guard';
+import { AuthorizeGuard } from './../utility/common/guards/authorization.guard';
+import { Roles } from './../utility/common/user-roles.enum';
 import { CategoryEntity } from './entities/category.entity';
 import { DeleteResult } from 'typeorm';
-
 @ApiTags('Categories')
 @Controller('categories')
 export class CategoriesController {
   constructor(
     private readonly categoriesService: CategoriesService,
   ) {}
-
   @UseGuards(
     AuthenticationGuard,
     AuthorizeGuard([Roles.ADMIN]),
@@ -48,15 +46,16 @@ export class CategoriesController {
     type: CategoryEntity,
   })
   async create(
-    @Body() createCategoryDto: CreateCategoryDto,
-    @CurrentUser() currentUser: UserEntity,
+    @Body()
+    createCategoryDto: CreateCategoryDto,
+    @CurrentUser()
+    currentUser: UserEntity,
   ): Promise<CategoryEntity> {
     return await this.categoriesService.create(
       createCategoryDto,
       currentUser,
     );
   }
-
   @Get('all')
   @ApiOperation({ summary: 'Get all categories' })
   @ApiResponse({
@@ -67,7 +66,6 @@ export class CategoriesController {
   async findAll(): Promise<CategoryEntity[]> {
     return await this.categoriesService.findAll();
   }
-
   @Get(':id')
   @ApiOperation({
     summary: 'Get a single category by ID',
@@ -82,13 +80,13 @@ export class CategoriesController {
     description: 'Category not found.',
   })
   async findOne(
-    @Param('id') id: string,
+    @Param('id')
+    id: string,
   ): Promise<CategoryEntity> {
     return await this.categoriesService.findOne(
       +id,
     );
   }
-
   @Get(':id/children')
   @ApiOperation({
     summary:
@@ -105,13 +103,13 @@ export class CategoriesController {
     description: 'Category not found.',
   })
   async getChildren(
-    @Param('id') id: string,
+    @Param('id')
+    id: string,
   ): Promise<CategoryEntity[]> {
     const category =
       await this.categoriesService.findOne(+id);
     return category.children || [];
   }
-
   @UseGuards(
     AuthenticationGuard,
     AuthorizeGuard([Roles.ADMIN]),
@@ -128,15 +126,16 @@ export class CategoriesController {
     type: CategoryEntity,
   })
   async update(
-    @Param('id') id: string,
-    @Body() updateCategoryDto: UpdateCategoryDto,
+    @Param('id')
+    id: string,
+    @Body()
+    updateCategoryDto: UpdateCategoryDto,
   ): Promise<CategoryEntity> {
     return await this.categoriesService.update(
       +id,
       updateCategoryDto,
     );
   }
-
   @UseGuards(
     AuthenticationGuard,
     AuthorizeGuard([Roles.ADMIN]),
@@ -153,7 +152,8 @@ export class CategoriesController {
     type: DeleteResult,
   })
   async remove(
-    @Param('id') id: string,
+    @Param('id')
+    id: string,
   ): Promise<DeleteResult> {
     return await this.categoriesService.remove(
       +id,

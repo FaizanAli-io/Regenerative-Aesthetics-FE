@@ -10,19 +10,16 @@ import {
   Timestamp,
 } from 'typeorm';
 import { OrderStatus } from '../enum/order-status.enum';
-import { UserEntity } from 'src/users/entities/user.entity';
+import { UserEntity } from './../../users/entities/user.entity';
 import { ShippingEntity } from './shipping.entity';
 import { OrdersProductsEntity } from './orders-products.entity';
 import { Expose, Type } from 'class-transformer';
-
 @Entity({ name: 'orders' })
 export class OrderEntity {
   @PrimaryGeneratedColumn()
   id: number;
-
   @CreateDateColumn()
   orderAt: Timestamp;
-
   @Column({
     type: 'enum',
     enum: OrderStatus,
@@ -30,20 +27,16 @@ export class OrderEntity {
     enumName: 'order_status_enum',
   })
   status: string;
-
   @Column({ nullable: true })
   shippedAt: Date;
-
   @Column({ nullable: true })
   deliveredAt: Date;
-
   @ManyToOne(
     () => UserEntity,
     (user) => user.ordersUpdateBy,
     { onDelete: 'SET NULL' },
   )
   updatedBy: UserEntity;
-
   @OneToOne(
     () => ShippingEntity,
     (ship) => ship.order,
@@ -51,7 +44,6 @@ export class OrderEntity {
   )
   @JoinColumn()
   shippingAddress?: ShippingEntity;
-
   @OneToMany(
     () => OrdersProductsEntity,
     (op) => op.order,
@@ -59,7 +51,6 @@ export class OrderEntity {
   )
   @Type(() => OrdersProductsEntity)
   products: OrdersProductsEntity[];
-
   @Expose()
   get totalAmount(): number {
     if (!this.products) return 0;
@@ -71,7 +62,6 @@ export class OrderEntity {
       );
     }, 0);
   }
-
   @ManyToOne(
     () => UserEntity,
     (user) => user.orders,

@@ -22,21 +22,19 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { UserSignUpDto } from './dto/user-signup.dto';
 import { UserEntity } from './entities/user.entity';
 import { UserSignInDto } from './dto/user-signin.dto';
-import { CurrentUser } from 'src/utility/common/decorators/current-user.decorator';
-import { AuthenticationGuard } from 'src/utility/common/guards/authentication.guard';
-import { Roles } from 'src/utility/common/user-roles.enum';
-import { AuthorizeGuard } from 'src/utility/common/guards/authorization.guard';
+import { CurrentUser } from './../utility/common/decorators/current-user.decorator';
+import { AuthenticationGuard } from './../utility/common/guards/authentication.guard';
+import { Roles } from './../utility/common/user-roles.enum';
+import { AuthorizeGuard } from './../utility/common/guards/authorization.guard';
 import { AddContactDetailsDto } from './dto/add-contact-details.dto';
 import { AddressBookEntity } from './entities/address-book.entity';
 import { UpdateContactDetailsDto } from './dto/update-contact-details.dto';
-
 @ApiTags('Users')
 @Controller('users')
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
   ) {}
-
   @Post('signup')
   @ApiOperation({ summary: 'User Sign Up' })
   @ApiResponse({
@@ -46,15 +44,17 @@ export class UsersController {
     type: UserEntity,
   })
   async signup(
-    @Body() userSignUpDto: UserSignUpDto,
-  ): Promise<{ user: UserEntity }> {
+    @Body()
+    userSignUpDto: UserSignUpDto,
+  ): Promise<{
+    user: UserEntity;
+  }> {
     return {
       user: await this.usersService.signup(
         userSignUpDto,
       ),
     };
   }
-
   @Post('signin')
   @ApiOperation({ summary: 'User Sign In' })
   @ApiResponse({
@@ -63,7 +63,8 @@ export class UsersController {
     type: UserEntity,
   })
   async signin(
-    @Body() userSignInDto: UserSignInDto,
+    @Body()
+    userSignInDto: UserSignInDto,
   ): Promise<{
     accessToken: string;
     user: UserEntity;
@@ -75,7 +76,6 @@ export class UsersController {
       await this.usersService.accessToken(user);
     return { accessToken, user };
   }
-
   // IMP: email service is not yet complete so this is commented:
   @Get('verify-email')
   @ApiOperation({ summary: 'Verify User Email' })
@@ -84,7 +84,8 @@ export class UsersController {
     description: 'Email verified successfully.',
   })
   async verifyEmail(
-    @Query('token') token: string,
+    @Query('token')
+    token: string,
   ) {
     await this.usersService.verifyEmailToken(
       token,
@@ -93,7 +94,6 @@ export class UsersController {
       message: 'Email verified successfully',
     };
   }
-
   @Post('forgot-password')
   @ApiOperation({
     summary: 'Request password reset link',
@@ -104,7 +104,8 @@ export class UsersController {
       'Reset link sent to email if user exists.',
   })
   async forgotPassword(
-    @Body('email') email: string,
+    @Body('email')
+    email: string,
   ) {
     await this.usersService.requestPasswordReset(
       email,
@@ -114,7 +115,6 @@ export class UsersController {
         'If your email is registered, you will receive a password reset link shortly.',
     };
   }
-
   @Post('reset-password')
   @ApiOperation({
     summary: 'Reset password with token',
@@ -124,8 +124,10 @@ export class UsersController {
     description: 'Password reset successful.',
   })
   async resetPassword(
-    @Body('token') token: string,
-    @Body('newPassword') newPassword: string,
+    @Body('token')
+    token: string,
+    @Body('newPassword')
+    newPassword: string,
   ) {
     await this.usersService.resetPassword(
       token,
@@ -136,7 +138,6 @@ export class UsersController {
         'Password has been reset successfully.',
     };
   }
-
   @UseGuards(
     AuthenticationGuard,
     AuthorizeGuard([Roles.ADMIN]),
@@ -154,7 +155,6 @@ export class UsersController {
   async findAll(): Promise<UserEntity[]> {
     return await this.usersService.findAll();
   }
-
   @Get('single/:id')
   @ApiOperation({
     summary: 'Get a single user by ID',
@@ -168,7 +168,10 @@ export class UsersController {
     status: 404,
     description: 'User not found.',
   })
-  async findOne(@Param('id') id: string) {
+  async findOne(
+    @Param('id')
+    id: string,
+  ) {
     const user =
       await this.usersService.findOne(+id);
     if (!user)
@@ -177,7 +180,6 @@ export class UsersController {
       );
     return user;
   }
-
   @UseGuards(AuthenticationGuard)
   @Patch('')
   @ApiBearerAuth()
@@ -191,15 +193,16 @@ export class UsersController {
     type: UserEntity,
   })
   async update(
-    @Body() updateUserDto: UpdateUserDto,
-    @CurrentUser() currentUser: UserEntity,
+    @Body()
+    updateUserDto: UpdateUserDto,
+    @CurrentUser()
+    currentUser: UserEntity,
   ) {
     return await this.usersService.update(
       currentUser.id,
       updateUserDto,
     );
   }
-
   @UseGuards(AuthenticationGuard)
   @Get('me')
   @ApiBearerAuth()
@@ -213,11 +216,11 @@ export class UsersController {
     type: UserEntity,
   })
   getProfile(
-    @CurrentUser() currentUser: UserEntity,
+    @CurrentUser()
+    currentUser: UserEntity,
   ) {
     return currentUser;
   }
-
   @UseGuards(AuthenticationGuard)
   @Post('contact')
   @ApiBearerAuth()
@@ -225,7 +228,8 @@ export class UsersController {
     summary: 'Add contact details for a user.',
   })
   async addContactDetails(
-    @CurrentUser() currentUser: UserEntity,
+    @CurrentUser()
+    currentUser: UserEntity,
     @Body()
     addContactDetailsDto: AddContactDetailsDto,
   ): Promise<AddressBookEntity> {
@@ -234,7 +238,6 @@ export class UsersController {
       addContactDetailsDto,
     );
   }
-
   @UseGuards(AuthenticationGuard)
   @Get('contact')
   @ApiBearerAuth()
@@ -243,13 +246,13 @@ export class UsersController {
       'Get all saved contact details of a user',
   })
   async getContactDetails(
-    @CurrentUser() currentUser: UserEntity,
+    @CurrentUser()
+    currentUser: UserEntity,
   ): Promise<AddressBookEntity[]> {
     return await this.usersService.getContactDetails(
       currentUser,
     );
   }
-
   @UseGuards(AuthenticationGuard)
   @Patch('contact/:id')
   @ApiBearerAuth()
@@ -258,8 +261,10 @@ export class UsersController {
       'Update contact details of a user by instance id.',
   })
   async updateContactDetails(
-    @Param('id', ParseIntPipe) id: number,
-    @CurrentUser() currentUser: UserEntity,
+    @Param('id', ParseIntPipe)
+    id: number,
+    @CurrentUser()
+    currentUser: UserEntity,
     @Body()
     updateContactDetailsDto: UpdateContactDetailsDto,
   ) {
@@ -269,7 +274,6 @@ export class UsersController {
       updateContactDetailsDto,
     );
   }
-
   @UseGuards(AuthenticationGuard)
   @Delete('contact/:id')
   @ApiBearerAuth()
@@ -278,8 +282,10 @@ export class UsersController {
       'Delete contact details by instance id.',
   })
   async deleteContactDetails(
-    @Param('id', ParseIntPipe) id: number,
-    @CurrentUser() currentUser: UserEntity,
+    @Param('id', ParseIntPipe)
+    id: number,
+    @CurrentUser()
+    currentUser: UserEntity,
   ) {
     return await this.usersService.deleteContactDetails(
       id,
