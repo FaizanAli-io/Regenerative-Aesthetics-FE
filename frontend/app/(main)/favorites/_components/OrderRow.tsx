@@ -35,7 +35,6 @@ const CartItem = ({
         />
         <div>
           <h2 className='text-lg font-semibold'>{title}</h2>
-          {/* <p className='text-gray-600'>{code}</p> */}
         </div>
       </div>
       <div className='flex space-x-5 items-center'>

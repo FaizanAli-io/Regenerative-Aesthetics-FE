@@ -5,6 +5,7 @@ import useSidebarStore from '@/lib/stores/dashboard-sidebar-store';
 import OrdersSection from './_sections/OrdersSection';
 import UsersSection from './_sections/UsersSecton';
 import ProductsSection from './_sections/ProductsSection';
+import CategoriesSection from './_sections/CategoriesSection';
 
 export default function AdminPanel() {
   const activeIndex = useSidebarStore(state => state.activeIndex);
@@ -17,8 +18,8 @@ export default function AdminPanel() {
         return <ProductsSection />;
       case 2:
         return <UsersSection />;
-      default:
-        return <OrdersSection />;
+      case 3:
+        return <CategoriesSection />;
     }
   };
 

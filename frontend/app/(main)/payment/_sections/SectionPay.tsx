@@ -48,6 +48,7 @@ const SectionPay = () => {
     cartItems.forEach((item, index) => {
       addToCart(item, {
         onSuccess: () => {
+          console.log('success', index);
           if (index === cartItems.length - 1) handleCheckApi();
         },
         onError: () => {

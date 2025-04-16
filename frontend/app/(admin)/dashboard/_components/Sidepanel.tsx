@@ -17,6 +17,10 @@ const sections = [
     icon: 'users',
     label: 'Users',
   },
+  {
+    icon: 'categories',
+    label: 'Categories',
+  },
 ];
 
 const Sidepanel = () => {
