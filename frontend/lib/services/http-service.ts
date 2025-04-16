@@ -31,7 +31,7 @@ class HttpService {
     return { request, cancel: () => controller.abort() };
   }
 
-  delete(id: number, url = '/') {
+  delete(id: number, url = '') {
     return apiClient.delete(`${this.endpoint}${url}/${String(id)}`);
   }
 

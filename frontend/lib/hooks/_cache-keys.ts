@@ -4,6 +4,7 @@ const WISH_LIST_KEY = ['wishlist'];
 const ORDERS_KEY = ['orders'];
 const USERS_KEY = ['users'];
 const CART_KEY = ['cart'];
+const USER_DETAILS_KEY = ['user-details'];
 
 export {
   CATEGORIES_KEY,
@@ -12,4 +13,5 @@ export {
   ORDERS_KEY,
   USERS_KEY,
   CART_KEY,
+  USER_DETAILS_KEY,
 };

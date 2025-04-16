@@ -17,8 +17,11 @@ import { toast } from 'sonner';
 import { useCheckout } from '@/lib/hooks/cart/use-checkout';
 import { HTMLAttributes } from 'react';
 import { useCart } from '@/lib/stores/cart';
+import { useUserDetails } from '@/lib/hooks/user-details/use-user-details';
+import { useAddUserDetails } from '@/lib/hooks/user-details/use-add-user-details';
 
 const FormSchema = z.object({
+  label: z.string().min(1, 'Label is required'),
   phone: z.string().min(1, 'Phone number is required'),
   name: z.string().min(1, 'Name is required'),
   address: z.string().min(1, 'Address is required'),
@@ -29,11 +32,12 @@ const FormSchema = z.object({
 });
 
 function AddressForm({ className, ...props }: HTMLAttributes<HTMLFormElement>) {
-  const setAddress = useCart(state => state.setAddress);
+  const { mutate: addUserDetails } = useAddUserDetails();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
+      label: '',
       phone: '',
       name: '',
       address: '',
@@ -45,8 +49,15 @@ function AddressForm({ className, ...props }: HTMLAttributes<HTMLFormElement>) {
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    setAddress(data);
-    toast.success('Address added successfully!');
+    addUserDetails(data, {
+      onSuccess: () => {
+        toast.success('Address added successfully!');
+        form.reset();
+      },
+      onError: () => {
+        toast.error('Failed to add address!');
+      },
+    });
   }
 
   return (
@@ -56,6 +67,24 @@ function AddressForm({ className, ...props }: HTMLAttributes<HTMLFormElement>) {
         {...props}
         onSubmit={form.handleSubmit(onSubmit)}
       >
+        <FormField
+          control={form.control}
+          name='label'
+          render={({ field }) => (
+            <FormItem className='grid gap-2'>
+              <FormLabel>Label</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder='Label eg. Home / Office'
+                  {...field}
+                  type='text'
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         <FormField
           control={form.control}
           name='name'
@@ -69,7 +98,6 @@ function AddressForm({ className, ...props }: HTMLAttributes<HTMLFormElement>) {
             </FormItem>
           )}
         />
-
         <FormField
           control={form.control}
           name='phone'
@@ -87,7 +115,6 @@ function AddressForm({ className, ...props }: HTMLAttributes<HTMLFormElement>) {
             </FormItem>
           )}
         />
-
         <FormField
           control={form.control}
           name='address'
@@ -101,7 +128,6 @@ function AddressForm({ className, ...props }: HTMLAttributes<HTMLFormElement>) {
             </FormItem>
           )}
         />
-
         <div className='flex gap-2'>
           <FormField
             control={form.control}
@@ -131,7 +157,6 @@ function AddressForm({ className, ...props }: HTMLAttributes<HTMLFormElement>) {
             )}
           />
         </div>
-
         <div className='flex gap-2'>
           <FormField
             control={form.control}
@@ -161,7 +186,6 @@ function AddressForm({ className, ...props }: HTMLAttributes<HTMLFormElement>) {
             )}
           />
         </div>
-
         <Button
           type='submit'
           className='w-full bg-primary-variant2 cursor-pointer'

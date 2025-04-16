@@ -1,8 +1,11 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { Edit3, X } from 'lucide-react';
+import { useDeleteUserDetails } from '@/lib/hooks/user-details/use-delete-user-details';
+import { toast } from 'sonner';
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
+  id: string;
   title: string;
   label: string;
   address: string;
@@ -10,6 +13,7 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const AddressItem = ({
+  id,
   title,
   label,
   address,
@@ -17,6 +21,19 @@ const AddressItem = ({
   className,
   ...props
 }: Props) => {
+  const { mutate: deleteUserDetails } = useDeleteUserDetails();
+
+  const handleDeleteAddress = () => {
+    deleteUserDetails(+id, {
+      onSuccess: () => {
+        toast.success('Address deleted successfully!');
+      },
+      onError: () => {
+        toast.error('Failed to delete address!');
+      },
+    });
+  };
+
   return (
     <div
       className={cn(
@@ -52,7 +69,7 @@ const AddressItem = ({
       </div>
       <div className='flex space-x-2'>
         <Edit3 />
-        <X />
+        <X onClick={handleDeleteAddress} />
       </div>
     </div>
   );

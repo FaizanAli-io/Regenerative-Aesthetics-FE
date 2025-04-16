@@ -1,4 +1,5 @@
-import React from 'react';
+'use client';
+import React, { useEffect } from 'react';
 import {
   DialogHeader,
   Dialog,
@@ -9,37 +10,34 @@ import {
 } from '@/components/ui/dialog';
 import AddressItem from '../_components/AddressItem';
 import AddressForm from '../_forms/AddressForm';
-
-const data = [
-  {
-    title: '2118 Thornridge',
-    label: 'Home',
-    address: '2118 Thornridge Cir. Syracuse, Connecticut 35624',
-    phone: '(209) 555-0104',
-  },
-  {
-    title: 'Headoffice',
-    label: 'Office',
-    address: '2715 Ash Dr. San Jose, South Dakota 83475',
-    phone: '(704) 555-0127',
-  },
-];
+import { useUserDetails } from '@/lib/hooks/user-details/use-user-details';
 
 const SectionAddress = () => {
+  const { data: userDetails, isLoading } = useUserDetails();
+
+  const renderAddresses = () => {
+    if (isLoading) return <p>Loading...</p>;
+    if (!userDetails || userDetails.length === 0) {
+      return <p>No addresses found.</p>;
+    }
+    return userDetails.map((item, index) => (
+      <AddressItem
+        title={item.label}
+        label={item.label}
+        address={item.address}
+        phone={item.phone}
+        id={String(item.id)}
+        key={index}
+      />
+    ));
+  };
+
   return (
     <section className='px-20 py-28'>
       <Dialog>
         <h2 className='text-2xl font-semibold mb-8'>Select Address</h2>
         <div className='space-y-5'>
-          {data.map((item, index) => (
-            <AddressItem
-              title={item.title}
-              label={item.label}
-              address={item.address}
-              phone={item.phone}
-              key={index}
-            />
-          ))}
+          {renderAddresses()}
           <DialogTrigger asChild>
             <img
               src='/icons/add-new-address.svg'
