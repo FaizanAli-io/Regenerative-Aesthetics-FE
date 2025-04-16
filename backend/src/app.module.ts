@@ -1,7 +1,7 @@
 import {
-  MiddlewareConsumer,
   Module,
   RequestMethod,
+  MiddlewareConsumer,
 } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { dataSourceOptions } from '../db/data-source';
