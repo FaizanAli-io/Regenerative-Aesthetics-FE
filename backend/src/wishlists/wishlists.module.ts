@@ -1,17 +1,16 @@
-// src/wishlists/wishlists.module.ts
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { WishlistsController } from './wishlists.controller';
 import { WishlistsService } from './wishlists.service';
 import { WishlistItemEntity } from './entities/wishlists-items.entity';
-import { ProductsModule } from '../products/products.module'; // Add this
+import { ProductsModule } from '../products/products.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       WishlistItemEntity,
     ]),
-    ProductsModule, // Add this line
+    ProductsModule,
   ],
   controllers: [WishlistsController],
   providers: [WishlistsService],

@@ -10,8 +10,8 @@ export class EmailsService {
       {
         service: 'gmail',
         auth: {
-          user: process.env.GMAIL_USER, // your_email@gmail.com
-          pass: process.env.GMAIL_APP_PASSWORD, // app password, not your Gmail password
+          user: process.env.GMAIL_USER,
+          pass: process.env.GMAIL_APP_PASSWORD,
         },
       },
     );

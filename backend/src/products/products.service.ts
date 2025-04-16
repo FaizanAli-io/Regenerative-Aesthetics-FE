@@ -1,23 +1,20 @@
 import {
-  BadRequestException,
-  forwardRef,
   Inject,
   Injectable,
+  forwardRef,
   NotFoundException,
+  BadRequestException,
 } from '@nestjs/common';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
+import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ProductEntity } from './entities/product.entity';
-import {
-  createQueryBuilder,
-  Repository,
-} from 'typeorm';
+import { CreateProductDto } from './dto/create-product.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
 import { UserEntity } from 'src/users/entities/user.entity';
-import { CategoriesService } from 'src/categories/categories.service';
 import { OrderStatus } from 'src/orders/enum/order-status.enum';
-import dataSource from 'db/data-source';
 import { OrdersService } from 'src/orders/orders.service';
+import { CategoriesService } from 'src/categories/categories.service';
+import dataSource from 'db/data-source';
 
 @Injectable()
 export class ProductsService {
