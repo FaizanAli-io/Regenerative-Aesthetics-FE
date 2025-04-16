@@ -1,5 +1,5 @@
 const appConfig = {
-  apiBaseUrl: 'http://localhost:3000/api/v1',
+  apiBaseUrl: 'http://51.20.104.204:3000/api/v1',
 };
 
 export default appConfig;
