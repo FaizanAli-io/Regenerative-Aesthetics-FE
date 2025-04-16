@@ -1,4 +1,13 @@
-import 'tsconfig-paths/register';
+import { register } from 'tsconfig-paths';
+import { join } from 'path';
+
+register({
+  baseUrl: join(__dirname, '..'),
+  paths: {
+    'src/*': ['src/*'],
+    'db/*': ['db/*'],
+  },
+});
 
 import {
   NestFactory,
