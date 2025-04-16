@@ -1,15 +1,11 @@
 'use client';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { useUsers } from '@/lib/hooks/use-all-users';
 import UserRow from '../_components/UserRow';
 
 const UsersSection: React.FC = () => {
   const { data: users, isFetched, isLoading } = useUsers();
-
-  useEffect(() => {
-    console.log(users);
-  }, [users]);
 
   const renderOrders = () => {
     if (isLoading) {

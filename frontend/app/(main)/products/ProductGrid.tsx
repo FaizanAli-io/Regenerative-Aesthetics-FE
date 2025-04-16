@@ -3,7 +3,7 @@
 import React from 'react';
 import { Label } from '@/components/ui/label';
 import ProductSortDropdown from './ProductSortDropdown';
-import { useProducts } from '@/lib/hooks/use-products';
+import { useProducts } from '@/lib/hooks/products/use-products';
 import Loader from '@/app/components/Loader';
 import ProductCard from '@/app/components/ProductCard';
 
