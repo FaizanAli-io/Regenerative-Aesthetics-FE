@@ -1,3 +1,5 @@
+import 'tsconfig-paths/register';
+
 import {
   NestFactory,
   Reflector,
