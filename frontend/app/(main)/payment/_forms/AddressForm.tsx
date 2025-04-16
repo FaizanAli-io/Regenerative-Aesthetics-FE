@@ -14,11 +14,11 @@ import {
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
-import { useCheckout } from '@/lib/hooks/cart/use-checkout';
-import { HTMLAttributes } from 'react';
-import { useCart } from '@/lib/stores/cart';
-import { useUserDetails } from '@/lib/hooks/user-details/use-user-details';
+import { HTMLAttributes, useEffect } from 'react';
 import { useAddUserDetails } from '@/lib/hooks/user-details/use-add-user-details';
+// import { useUpdateUserDetails } from '@/lib/hooks/user-details/use-update-user-details';
+import { UserDetailsRes } from '@/lib/services/user-contact-service';
+import { useUpdateUserDetails } from '@/lib/hooks/user-details/use-edit-user-details';
 
 const FormSchema = z.object({
   label: z.string().min(1, 'Label is required'),
@@ -31,8 +31,22 @@ const FormSchema = z.object({
   country: z.string().min(1, 'Country is required'),
 });
 
-function AddressForm({ className, ...props }: HTMLAttributes<HTMLFormElement>) {
+interface AddressFormProps extends HTMLAttributes<HTMLFormElement> {
+  addressData?: UserDetailsRes | null;
+  onComplete?: () => void;
+}
+
+function AddressForm({
+  addressData,
+  onComplete,
+  className,
+  ...props
+}: AddressFormProps) {
   const { mutate: addUserDetails } = useAddUserDetails();
+  const { mutate: updateUserDetails } = useUpdateUserDetails();
+
+  // const { mutate: updateUserDetails } = useUpdateUserDetails();
+  const isEditMode = !!addressData;
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -48,16 +62,85 @@ function AddressForm({ className, ...props }: HTMLAttributes<HTMLFormElement>) {
     },
   });
 
+  // Set form values when editing an existing address
+  useEffect(() => {
+    if (addressData) {
+      console.log('Populating form with address data:', addressData);
+      // Get all fields that are available in the data and set defaults for missing ones
+      form.reset({
+        label: addressData.label || '',
+        phone: addressData.phone || '',
+        // The user field might be missing in the API response
+        name: addressData.user?.name || '',
+        address: addressData.address || '',
+        city: addressData.city || '',
+        postalCode: addressData.postalCode || '',
+        state: addressData.state || '',
+        country: addressData.country || '',
+      });
+    } else {
+      form.reset({
+        label: '',
+        phone: '',
+        name: '',
+        address: '',
+        city: '',
+        postalCode: '',
+        state: '',
+        country: '',
+      });
+    }
+  }, [addressData, form]);
+
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    addUserDetails(data, {
-      onSuccess: () => {
-        toast.success('Address added successfully!');
-        form.reset();
-      },
-      onError: () => {
-        toast.error('Failed to add address!');
-      },
-    });
+    if (isEditMode && addressData) {
+      console.log('editing address');
+      updateUserDetails(
+        {
+          label: data.label,
+          phone: data.phone,
+          address: data.address,
+          city: data.city,
+          postalCode: data.postalCode,
+          state: data.state,
+          country: data.country,
+          id: addressData.id,
+        },
+        {
+          onSuccess: () => {
+            toast.success('Address updated successfully!');
+            form.reset();
+            if (onComplete) onComplete();
+          },
+          onError: () => {
+            toast.error('Failed to update address!');
+          },
+        }
+      );
+    } else {
+      // Add new address
+      addUserDetails(
+        {
+          label: data.label,
+          phone: data.phone,
+          address: data.address,
+          city: data.city,
+          postalCode: data.postalCode,
+          state: data.state,
+          country: data.country,
+        },
+        {
+          onSuccess: () => {
+            toast.success('Address added successfully!');
+            form.reset();
+            if (onComplete) onComplete();
+          },
+          onError: () => {
+            toast.error('Failed to add address!');
+          },
+        }
+      );
+    }
   }
 
   return (
@@ -190,7 +273,7 @@ function AddressForm({ className, ...props }: HTMLAttributes<HTMLFormElement>) {
           type='submit'
           className='w-full bg-primary-variant2 cursor-pointer'
         >
-          Add New Address
+          {isEditMode ? 'Update Address' : 'Add New Address'}
         </Button>
       </form>
     </Form>

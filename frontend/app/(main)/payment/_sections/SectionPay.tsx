@@ -10,52 +10,35 @@ import { useCheckout } from '@/lib/hooks/cart/use-checkout';
 import { useRouter } from 'next/navigation';
 
 const SectionPay = () => {
-  const address = useCart(state => state.address);
+  const address = useCart(state => state.selectedAddress);
+  const selectedAddress = useCart(state => state.selectedAddress);
   const router = useRouter(); // Use useRouter for navigation
 
   const { items: products } = useCart(state => state.cart);
-  const { mutate: addToCart, isPending: pendingCart } = useAddToCart();
   const { mutate: checkout, isPending: pendingCheckout } = useCheckout();
-
-  const handleCheckApi = () => {
-    if (!address) return;
-
-    checkout(address, {
-      onSuccess: () => {
-        toast.success('Order placed successfully!');
-        router.push('/favorites');
-      },
-      onError: () => {
-        toast.error('Failed to place order!');
-      },
-    });
-  };
-
   const handleCheckout = () => {
     if (products.length < 0) return toast.error('Your cart is empty!');
 
-    if (!address) {
-      console.log(address);
-      toast.error('Please add your address!');
+    if (!selectedAddress && !address) {
+      toast.error('Please select a delivery address!');
       return;
     }
 
-    const cartItems = products.map(item => ({
-      id: item.id,
-      product_quantity: item.quantity,
-    }));
-
-    cartItems.forEach((item, index) => {
-      addToCart(item, {
-        onSuccess: () => {
-          console.log('success', index);
-          if (index === cartItems.length - 1) handleCheckApi();
+    if (selectedAddress)
+      checkout(
+        {
+          ...selectedAddress,
         },
-        onError: () => {
-          toast.error('Failed to add items to cart! ' + index);
-        },
-      });
-    });
+        {
+          onSuccess: () => {
+            toast.success('Order placed successfully!');
+            router.push('/favorites');
+          },
+          onError: () => {
+            toast.error('Failed to place order!');
+          },
+        }
+      );
   };
 
   return (
@@ -96,7 +79,7 @@ const SectionPay = () => {
         <ButtonOutline
           className='flex-1 bg-primary-variant2 text-white mt-5'
           onClick={handleCheckout}
-          disabled={pendingCart || pendingCheckout}
+          // disabled={pendingCart || pendingCheckout}
         >
           Confirm Order
         </ButtonOutline>

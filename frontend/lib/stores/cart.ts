@@ -21,14 +21,22 @@ interface CartStore {
 
   address: Omit<Address, 'id'> | null;
   setAddress: (address: Omit<Address, 'id'>) => void;
+
+  selectedAddress: Address | null;
+  setSelectedAddress: (address: any) => void;
 }
 
 export const useCart = create<CartStore>(set => ({
   cart: { items: [], totalPrice: 0 },
   address: null,
+  selectedAddress: null,
 
   setAddress: (address: Omit<Address, 'id'>): void => {
     set(cart => ({ ...cart, address }));
+  },
+
+  setSelectedAddress: (selectedAddress: any): void => {
+    set(cart => ({ ...cart, selectedAddress }));
   },
 
   addToCart: (item: CartItem): void =>
