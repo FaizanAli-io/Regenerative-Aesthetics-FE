@@ -51,19 +51,20 @@ const RelatedProducts = () => {
   return (
     <section className='px-20 py-28'>
       <h2 className='text-4xl font-medium mb-15'>Related Products</h2>
-      <div className='flex  space-x-5 w-full'>
+      {/* <div className='flex  space-x-5 w-full'>
         {data.map((product, index) => (
           <ProductCard
             className='w-full'
             key={index}
-            image={product.image}
-            price={product.price}
-            theme='light'
+            product={{
+              ...product
+
+            }}
           >
             {product.children}
           </ProductCard>
         ))}
-      </div>
+      </div> */}
     </section>
   );
 };

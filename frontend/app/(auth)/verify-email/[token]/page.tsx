@@ -2,13 +2,13 @@ import api from '@/lib/services/api-client';
 import axios from 'axios';
 import React from 'react';
 type Props = {
-  params: {
+  params: Promise<{
     token: string;
-  };
+  }>;
 };
 
 const page = async ({ params }: Props) => {
-  const { token } = params;
+  const { token } = await params;
 
   try {
     const res = await axios.post(
