@@ -1,6 +1,5 @@
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
-import { Checkbox } from '@/components/ui/checkbox';
 
 interface OrderRowProps {
   id: string;

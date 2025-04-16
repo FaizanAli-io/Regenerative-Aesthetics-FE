@@ -2,15 +2,14 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { useCart } from '@/lib/stores/cart';
 import { toast } from 'sonner';
 import { redirect } from 'next/navigation';
-// import TextFieldLablel from '@/app/components/TextFieldLable';
-// import TextField from '@/app/components/TextField';
 
-const OrderSummary = () => {
-  const total = useCart(state => state.cart.totalPrice);
+interface Props {
+  total: number;
+}
 
+const OrderSummary = ({ total }: Props) => {
   const handleCheckout = () => {
     if (total > 0) redirect('/payment');
     else toast.error('Your cart is empty!');
