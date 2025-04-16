@@ -1,5 +1,3 @@
-import 'tsconfig-paths/register';
-
 import {
   NestFactory,
   Reflector,
@@ -18,7 +16,10 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
-    origin: 'http://localhost:3001',
+    origin:
+      process.env.NODE_ENV === 'PROD'
+        ? process.env.FE_URL
+        : true,
     methods: [
       'GET',
       'POST',
@@ -45,20 +46,20 @@ async function bootstrap() {
   );
   app.setGlobalPrefix('api/v1');
 
-  // Swagger configuration
-  const config = new DocumentBuilder()
-    .setTitle('Regenerative Aesthetics API')
-    .setDescription(
-      'Regenerative Aesthetics API Description',
-    )
-    .setVersion('1.0')
-    .build();
-
-  const document = SwaggerModule.createDocument(
-    app,
-    config,
-  );
-  SwaggerModule.setup('api/v1', app, document); // Serve at /api/v1
+  if (process.env.NODE_ENV !== 'PROD') {
+    const config = new DocumentBuilder()
+      .setTitle('Regenerative Aesthetics API')
+      .setDescription(
+        'Regenerative Aesthetics API Description',
+      )
+      .setVersion('1.0')
+      .build();
+    const document = SwaggerModule.createDocument(
+      app,
+      config,
+    );
+    SwaggerModule.setup('api/v1', app, document);
+  }
 
   await app.listen(process.env.PORT ?? 3000);
 }
