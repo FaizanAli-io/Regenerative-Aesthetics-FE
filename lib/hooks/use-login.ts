@@ -1,10 +1,10 @@
-import { useMutation } from '@tanstack/react-query';
-import api from '../services/api-client';
+import { useMutation } from "@tanstack/react-query";
+import api from "../services/api-client";
 // import { setToken } from '../auth';
-import { Login } from '../services/auth-service';
-import { AxiosError } from 'axios';
-import { setToken, setUser } from '../auth';
-import { toast } from 'sonner';
+import { Login } from "../services/auth-service";
+import { AxiosError } from "axios";
+import { setToken, setUser } from "../auth";
+import { toast } from "sonner";
 
 interface LoginInput {
   email: string;
@@ -12,7 +12,9 @@ interface LoginInput {
 }
 
 const login = async (data: LoginInput): Promise<Login> => {
-  const res = await api.post<Login>('/users/signin', data);
+  console.log(data);
+  const res = await api.post<Login>("/users/signin", data);
+  console.log(res);
   return res.data;
 };
 
@@ -21,28 +23,28 @@ export const useLogin = () => {
     mutationFn: login,
 
     onMutate: () => {
-      console.log('Login mutation started');
+      console.log("Login mutation started");
       // Optionally, you can show a loading spinner or disable the login button here
     },
 
-    onSuccess: data => {
+    onSuccess: (data) => {
       setToken(data.accessToken);
       setUser(data.user);
 
-      api.interceptors.request.use(config => {
+      api.interceptors.request.use((config) => {
         if (data.accessToken) {
           config.headers.Authorization = `Bearer ${data.accessToken}`;
         }
         return config;
       });
     },
-    onError: error => {
+    onError: (error) => {
       if (error.status === 400) {
-        toast.error('Invalid username or password');
+        toast.error("Invalid username or password");
       } else {
-        toast.error('Login failed. Please try again.');
+        toast.error("Login failed. Please try again.");
       }
       // Handle login error, e.g., show an error message
-    },
+    }
   });
 };
