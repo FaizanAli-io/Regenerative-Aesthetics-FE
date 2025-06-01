@@ -8,15 +8,12 @@ const useProducts = () =>
     queryFn: async () => {
       try {
         const response = await products.getOdd<DBProduct>('/all').request;
-        console.log(response);
         return response.data?.products || [];
       } catch (error) {
         console.error('Error fetching products:', error);
         return [];
       }
     },
-    // staleTime: 5 * 60 * 1000, // 5 minutes
-    // retry: 3,
     initialData: [],
   });
 

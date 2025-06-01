@@ -1,5 +1,5 @@
 const appConfig = {
-  apiBaseUrl: 'https://simple-personally-fowl.ngrok-free.app/api/v1',
+  apiBaseUrl: 'http://13.60.219.199:3000/api/v1',
 };
 
 export default appConfig;

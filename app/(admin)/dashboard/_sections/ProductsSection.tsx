@@ -161,7 +161,7 @@ const ProductsSection = () => {
               ))
             ) : products && products.length > 0 ? (
               // Data loaded
-              products.map(product => (
+              products.map((product: Product) => (
                 <TableRow key={product.id}>
                   <TableCell className='font-medium'>{product.title}</TableCell>
                   <TableCell>${parseFloat(product.price).toFixed(2)}</TableCell>

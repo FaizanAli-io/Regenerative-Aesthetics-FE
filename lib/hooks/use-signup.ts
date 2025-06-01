@@ -26,7 +26,8 @@ export const useSignup = () => {
 
     onSuccess: data => {
       setUser(data.user);
-    },    onError: error => {
+    },
+    onError: error => {
       if (error.status === 400) {
         toast.error('Email already exists. Please use a different email.');
       } else {
