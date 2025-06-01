@@ -7,13 +7,13 @@ const Footer = () => {
   return (
     <footer className='bg-primary-variant2 text-white text-lg'>
       <div className='px-20 py-28 '>
-        <div className='grid grid-cols-3'>
-          <div className='space-y-5'>
+        <div className='grid grid-cols-3'>          <div className='space-y-5'>
             <Image
               src='/images/logo-white.svg'
-              alt='Favorites'
-              width='200'
-              height='100'
+              alt='Regenerative Aesthetics Logo'
+              width={200}
+              height={60}
+              className="w-auto h-auto"
             />
             <p>
               We bring you premium hair and skincare essentials, carefully
@@ -42,21 +42,33 @@ const Footer = () => {
               <li>Terms of use of the site</li>
             </ul>
           </div>
-        </div>
-        <div className='flex space-x-8'>
+        </div>        <div className='flex space-x-8'>
           <Link href='#'>
             <Image
               src='/icons/twitter.svg'
               alt='Twitter'
               width={40}
               height={40}
+              className="w-10 h-10"
             />
           </Link>
           <Link href='#'>
-            <Image src='/icons/fb.svg' alt='Facebook' width={20} height={20} />
+            <Image 
+              src='/icons/fb.svg' 
+              alt='Facebook' 
+              width={40} 
+              height={40}
+              className="w-10 h-10"
+            />
           </Link>
           <Link href='#'>
-            <Image src='/icons/tiktok.svg' alt='tikto' width={35} height={35} />
+            <Image 
+              src='/icons/tiktok.svg' 
+              alt='TikTok' 
+              width={40} 
+              height={40}
+              className="w-10 h-10"
+            />
           </Link>
           <Link href='#'>
             <Instagram size={40} />

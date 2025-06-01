@@ -8,7 +8,7 @@ import Loader from '@/app/components/Loader';
 import ProductCard from '@/app/components/ProductCard';
 
 const ProductGrid = () => {
-  const { data: products, isLoading } = useProducts();
+  const { data: products, isLoading, isError } = useProducts();
 
   return (
     <div className='space-y-10'>
@@ -16,20 +16,29 @@ const ProductGrid = () => {
         <Label className='text-body text-lg'>
           Selected Products:{' '}
           <span className='text-black text-2xl'>
-            {products && products.length}
+            {products && Array.isArray(products) ? products.length : 0}
           </span>
         </Label>
         <ProductSortDropdown />
       </div>
       <div className='grid grid-cols-4 grid-rows-3 gap-5'>
         {isLoading && <Loader />}
-
-        {products &&
-          products?.map(product => (
+        {isError && (
+          <div className="col-span-4 text-center text-red-500 p-4">
+            Failed to load products
+          </div>
+        )}
+        {products && Array.isArray(products) &&
+          products.map(product => (
             <ProductCard product={product} theme={'light'} key={product.id}>
               <p>{product.title}</p>
             </ProductCard>
           ))}
+        {!isLoading && !isError && (!products || products.length === 0) && (
+          <div className="col-span-4 text-center text-gray-500 p-4">
+            No products found
+          </div>
+        )}
       </div>
     </div>
   );

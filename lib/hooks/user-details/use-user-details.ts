@@ -9,6 +9,8 @@ const useUserDetails = () =>
       contact
         .getOdd<Omit<UserDetailsRes[], 'user'>>('/')
         .request.then(res => res.data),
+    initialData: [],
+    retry: 2,
   });
 
 export { useUserDetails };

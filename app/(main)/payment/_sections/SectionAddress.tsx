@@ -15,7 +15,7 @@ import { useUserDetails } from '@/lib/hooks/user-details/use-user-details';
 import { useCart } from '@/lib/stores/cart';
 
 const SectionAddress = () => {
-  const { data: userDetails, isLoading } = useUserDetails();
+  const { data: userDetails, isLoading, isError } = useUserDetails();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingAddress, setEditingAddress] = useState<any>(null);
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(
@@ -36,28 +36,27 @@ const SectionAddress = () => {
     setDialogOpen(false);
     setEditingAddress(null);
   };
-
   const handleSelectAddress = (id: string) => {
     setSelectedAddressId(id);
     // Find the selected address data
-    const selectedAddressData = userDetails?.find(
-      item => String(item.id) === id
-    );
-    setSelectedAddress(selectedAddressData);
-    console.log('Selected address:', selectedAddressData);
+    if (userDetails && Array.isArray(userDetails)) {
+      const selectedAddressData = userDetails.find(
+        item => String(item.id) === id
+      );
+      setSelectedAddress(selectedAddressData);
+      console.log('Selected address:', selectedAddressData);
+    }
   };
-
   // Set default selected address if available
   useEffect(() => {
-    if (userDetails?.length && !selectedAddressId && !selectedAddress) {
+    if (userDetails && Array.isArray(userDetails) && userDetails.length > 0 && !selectedAddressId && !selectedAddress) {
       setSelectedAddressId(String(userDetails[0].id));
       setSelectedAddress(userDetails[0]);
     }
-  }, [userDetails, selectedAddressId, selectedAddress, setSelectedAddress]);
-
-  const renderAddresses = () => {
-    if (isLoading) return <p>Loading...</p>;
-    if (!userDetails || userDetails.length === 0) {
+  }, [userDetails, selectedAddressId, selectedAddress, setSelectedAddress]);  const renderAddresses = () => {
+    if (isLoading) return <p>Loading addresses...</p>;
+    if (isError) return <p>Failed to load addresses. Please try again.</p>;
+    if (!userDetails || !Array.isArray(userDetails) || userDetails.length === 0) {
       return <p>No addresses found.</p>;
     }
     return userDetails.map((item, index) => (

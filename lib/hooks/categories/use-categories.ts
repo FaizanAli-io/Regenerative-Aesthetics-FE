@@ -6,6 +6,8 @@ const useCategories = () =>
   useQuery({
     queryKey: CATEGORIES_KEY,
     queryFn: () => category.getAll<Category>().request.then(res => res.data),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    retry: 3,
   });
 
 export { useCategories };

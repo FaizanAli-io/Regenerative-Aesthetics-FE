@@ -5,12 +5,22 @@ import ProductPriceFilterAccordion from './ProductPriceFilterAccordion';
 import ProductSidebarAccordion from './ProductSidebarAccordion';
 
 function ProductSidebar() {
-  const { data: categories } = useCategories();
+  const { data: categories, isLoading, isError } = useCategories();
 
   return (
     <div className='divide-y divide-gray-200'>
       <ProductPriceFilterAccordion />
-      {categories &&
+      {isLoading && (
+        <div className="p-4 text-center text-gray-500">
+          Loading categories...
+        </div>
+      )}
+      {isError && (
+        <div className="p-4 text-center text-red-500">
+          Failed to load categories
+        </div>
+      )}
+      {categories && Array.isArray(categories) &&
         categories.map(category => (
           <ProductSidebarAccordion
             key={category.id}

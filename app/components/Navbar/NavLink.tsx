@@ -19,11 +19,11 @@ const NavLink = ({ href, children }: { href: string; children: ReactNode }) => {
 
   return (
     <NavigationMenuItem>
-      <Link href={href}>
-        <NavigationMenuLink className={cn('text-md', activeClass)}>
+      <NavigationMenuLink asChild className={cn('text-md', activeClass)}>
+        <Link href={href}>
           {children}
-        </NavigationMenuLink>
-      </Link>
+        </Link>
+      </NavigationMenuLink>
     </NavigationMenuItem>
   );
 };

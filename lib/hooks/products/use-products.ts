@@ -7,6 +7,8 @@ const useProducts = () =>
     queryKey: PRODUCTS_KEY,
     queryFn: () =>
       products.getOdd<DBProduct>('/all').request.then(res => res.data.products),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    retry: 3,
   });
 
 export { useProducts };

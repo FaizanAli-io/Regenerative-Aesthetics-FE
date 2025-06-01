@@ -35,7 +35,7 @@ interface ProductFormData extends Omit<Product, 'id' | 'category' | 'price'> {
 }
 
 const ProductsSection = () => {
-  const { data: products, isLoading } = useProducts();
+  const { data: products, isLoading, isError } = useProducts();
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
