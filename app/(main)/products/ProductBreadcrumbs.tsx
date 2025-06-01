@@ -16,15 +16,16 @@ function ProductBreadcrumbs({
 }: HTMLAttributes<HTMLDivElement>) {
   return (
     <Breadcrumb className={className} {...props}>
+      {' '}
       <BreadcrumbList className='text-lg font-semibold'>
         <BreadcrumbItem>
-          <BreadcrumbLink>
+          <BreadcrumbLink asChild>
             <Link href='/'>Home</Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
-          <BreadcrumbLink>
+          <BreadcrumbLink asChild>
             <Link href='/products'>Products</Link>
           </BreadcrumbLink>
         </BreadcrumbItem>

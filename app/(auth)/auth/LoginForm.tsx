@@ -58,12 +58,16 @@ function LoginForm({ className, navigateToSignup, ...props }: Props) {
       password: '',
     },
   });
-
   function onSubmit(data: z.infer<typeof FormSchema>) {
     login(data, {
       onSuccess: () => {
         toast.success('Login successful!');
         router.push('/products'); // Replace redirect with router.push
+      },
+      onError: (error: any) => {
+        // The error toast is already handled in the login hook
+        // but we can add form-specific error handling here if needed
+        console.error('Login error:', error);
       },
     });
   }

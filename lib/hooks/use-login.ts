@@ -4,6 +4,7 @@ import api from '../services/api-client';
 import { Login } from '../services/auth-service';
 import { AxiosError } from 'axios';
 import { setToken, setUser } from '../auth';
+import { toast } from 'sonner';
 
 interface LoginInput {
   email: string;
@@ -35,12 +36,11 @@ export const useLogin = () => {
         return config;
       });
     },
-
     onError: error => {
       if (error.status === 400) {
-        console.error('Invalid Credentials');
+        toast.error('Invalid username or password');
       } else {
-        console.error('Login failed:', error.message);
+        toast.error('Login failed. Please try again.');
       }
       // Handle login error, e.g., show an error message
     },

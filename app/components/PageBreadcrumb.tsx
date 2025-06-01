@@ -1,3 +1,4 @@
+import React from 'react';
 import Link from 'next/link';
 
 import {
@@ -20,14 +21,14 @@ function PageBreadcrumbs({ items, currentItem, className, ...props }: Props) {
     <Breadcrumb className={className} {...props}>
       <BreadcrumbList className='text-lg font-semibold'>
         {items.map((item, index) => (
-          <>
-            <BreadcrumbItem key={index}>
-              <BreadcrumbLink>
+          <React.Fragment key={index}>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
                 <Link href={item.href}>{item.name}</Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
-          </>
+          </React.Fragment>
         ))}
         <BreadcrumbItem>
           <BreadcrumbPage className='font-semibold text-primary-darker'>

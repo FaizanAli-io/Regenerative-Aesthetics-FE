@@ -18,9 +18,10 @@ function AccountBreadCrumbs({
   return (
     <ProtectedPage>
       <Breadcrumb className={className} {...props}>
+        {' '}
         <BreadcrumbList className='text-lg font-semibold'>
           <BreadcrumbItem>
-            <BreadcrumbLink>
+            <BreadcrumbLink asChild>
               <Link href='/'>Account</Link>
             </BreadcrumbLink>
           </BreadcrumbItem>

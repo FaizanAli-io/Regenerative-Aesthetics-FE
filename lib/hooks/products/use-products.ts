@@ -5,10 +5,19 @@ import products, { DBProduct } from '@/lib/services/products-service';
 const useProducts = () =>
   useQuery({
     queryKey: PRODUCTS_KEY,
-    queryFn: () =>
-      products.getOdd<DBProduct>('/all').request.then(res => res.data.products),
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    retry: 3,
+    queryFn: async () => {
+      try {
+        const response = await products.getOdd<DBProduct>('/all').request;
+        console.log(response);
+        return response.data?.products || [];
+      } catch (error) {
+        console.error('Error fetching products:', error);
+        return [];
+      }
+    },
+    // staleTime: 5 * 60 * 1000, // 5 minutes
+    // retry: 3,
+    initialData: [],
   });
 
 export { useProducts };

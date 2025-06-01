@@ -3,6 +3,7 @@ import api from '../services/api-client';
 import { AxiosError } from 'axios';
 import { setUser } from '../auth';
 import { Signup } from '../services/auth-service';
+import { toast } from 'sonner';
 
 interface Input {
   email: string;
@@ -25,11 +26,12 @@ export const useSignup = () => {
 
     onSuccess: data => {
       setUser(data.user);
-    },
-
-    onError: error => {
-      //  TODO: implement email not found on signup form.
-      console.error('SignUp failed: email not available', error.message);
+    },    onError: error => {
+      if (error.status === 400) {
+        toast.error('Email already exists. Please use a different email.');
+      } else {
+        toast.error('Signup failed. Please try again.');
+      }
     },
   });
 };

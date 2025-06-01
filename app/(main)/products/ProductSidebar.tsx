@@ -11,16 +11,17 @@ function ProductSidebar() {
     <div className='divide-y divide-gray-200'>
       <ProductPriceFilterAccordion />
       {isLoading && (
-        <div className="p-4 text-center text-gray-500">
+        <div className='p-4 text-center text-gray-500'>
           Loading categories...
         </div>
       )}
       {isError && (
-        <div className="p-4 text-center text-red-500">
+        <div className='p-4 text-center text-red-500'>
           Failed to load categories
         </div>
       )}
-      {categories && Array.isArray(categories) &&
+      {categories &&
+        Array.isArray(categories) &&
         categories.map(category => (
           <ProductSidebarAccordion
             key={category.id}

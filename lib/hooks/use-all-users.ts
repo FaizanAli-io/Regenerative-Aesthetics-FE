@@ -11,7 +11,18 @@ interface Res extends User {
 const useUsers = () =>
   useQuery({
     queryKey: USERS_KEY,
-    queryFn: () => api.get<Res[]>('/users/all').then(res => res.data),
+    queryFn: async () => {
+      try {
+        const response = await api.get<Res[]>('/users/all');
+        return response.data || [];
+      } catch (error) {
+        console.error('Error fetching users:', error);
+        return [];
+      }
+    },
+    initialData: [],
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    retry: 3,
   });
 
 export { useUsers };

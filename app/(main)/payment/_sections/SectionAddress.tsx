@@ -49,14 +49,25 @@ const SectionAddress = () => {
   };
   // Set default selected address if available
   useEffect(() => {
-    if (userDetails && Array.isArray(userDetails) && userDetails.length > 0 && !selectedAddressId && !selectedAddress) {
+    if (
+      userDetails &&
+      Array.isArray(userDetails) &&
+      userDetails.length > 0 &&
+      !selectedAddressId &&
+      !selectedAddress
+    ) {
       setSelectedAddressId(String(userDetails[0].id));
       setSelectedAddress(userDetails[0]);
     }
-  }, [userDetails, selectedAddressId, selectedAddress, setSelectedAddress]);  const renderAddresses = () => {
+  }, [userDetails, selectedAddressId, selectedAddress, setSelectedAddress]);
+  const renderAddresses = () => {
     if (isLoading) return <p>Loading addresses...</p>;
     if (isError) return <p>Failed to load addresses. Please try again.</p>;
-    if (!userDetails || !Array.isArray(userDetails) || userDetails.length === 0) {
+    if (
+      !userDetails ||
+      !Array.isArray(userDetails) ||
+      userDetails.length === 0
+    ) {
       return <p>No addresses found.</p>;
     }
     return userDetails.map((item, index) => (

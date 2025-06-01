@@ -71,13 +71,17 @@ function SignupForm({ className, navigateToLogin, ...props }: Props) {
       confirmPassword: '',
     },
   });
-
   function onSubmit(data: z.infer<typeof FormSchema>) {
     signup(
       { name: data.fullName, email: data.email, password: data.password },
       {
         onSuccess: () => {
-          toast.success('verification mail sent!');
+          toast.success('Verification mail sent!');
+        },
+        onError: (error: any) => {
+          // The error toast is already handled in the signup hook
+          // but we can add form-specific error handling here if needed
+          console.error('Signup error:', error);
         },
       }
     );

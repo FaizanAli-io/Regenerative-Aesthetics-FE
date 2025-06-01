@@ -1,13 +1,20 @@
 'use client';
-import React, { useRef } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 
 const SectionAnimation = () => {
   const container = useRef<HTMLDivElement>(null);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   useGSAP(
     () => {
+      if (!isClient) return;
+
       const tl = gsap.timeline({ repeat: -1 });
 
       tl.from('.blob', {
@@ -33,16 +40,22 @@ const SectionAnimation = () => {
         '<'
       );
     },
-    { scope: container }
+    { scope: container, dependencies: [isClient] }
   );
 
   return (
-    <div ref={container} className='relative w-full overflow-hidden'>
+    <div ref={container} className='relative w-full overflow-hidden h-[400px]'>
       <img
         src='/blob.png'
-        className='w-full h-auto absolute top-1/2 left-1/2 -translate-1/2 blob'
+        className='w-full h-auto absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 blob'
+        alt='Background blob'
+        style={{ transform: 'translate(-50%, -50%)' }}
       />
-      <img src='/product.png' className='w-[1000px] h-auto ml-auto product' />
+      <img
+        src='/product.png'
+        className='w-[1000px] h-auto ml-auto product'
+        alt='Product showcase'
+      />
     </div>
   );
 };
