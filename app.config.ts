@@ -1,5 +1,5 @@
 const appConfig = {
-  apiBaseUrl: 'http://13.60.219.199:3000/api/v1',
+  apiBaseUrl: 'https://be.regen-aesthetics.com/api/v1',
 };
 
 export default appConfig;

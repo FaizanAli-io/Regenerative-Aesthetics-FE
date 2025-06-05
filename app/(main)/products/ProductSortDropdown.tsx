@@ -18,29 +18,36 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import { ProductSort, useProductsStore } from '@/lib/stores/products-store';
 
 const sortLabels = [
   {
-    value: 'rating',
+    value: ProductSort.rating,
     label: 'By Rating',
   },
   {
-    value: 'popularity',
+    value: ProductSort.popularity,
     label: 'By Popularity',
   },
   {
-    value: 'price',
+    value: ProductSort.price,
     label: 'By Price',
   },
   {
-    value: 'date',
+    value: ProductSort.date,
     label: 'By Date',
   },
 ];
 
 function ProductSortDropdown() {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState('');
+  const sortBy = useProductsStore(state => state.sortBy);
+  const setSortBy = useProductsStore(state => state.setSortBy);
+
+  const handleSelect = (currentValue: string) => {
+    setSortBy?.(currentValue as ProductSort);
+    setOpen(false);
+  };
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -51,8 +58,8 @@ function ProductSortDropdown() {
           aria-expanded={open}
           className='w-[200px] justify-between'
         >
-          {value
-            ? sortLabels.find(label => label.value === value)?.label
+          {sortBy
+            ? sortLabels.find(label => label.value === sortBy)?.label
             : 'Sort By'}
           <ChevronDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
         </Button>
@@ -67,15 +74,12 @@ function ProductSortDropdown() {
                 <CommandItem
                   key={label.value}
                   value={label.value}
-                  onSelect={currentValue => {
-                    setValue(currentValue === value ? '' : currentValue);
-                    setOpen(false);
-                  }}
+                  onSelect={handleSelect}
                 >
                   <Check
                     className={cn(
                       'mr-2 h-4 w-4',
-                      value === label.value ? 'opacity-100' : 'opacity-0'
+                      sortBy === label.value ? 'opacity-100' : 'opacity-0'
                     )}
                   />
                   {label.label}

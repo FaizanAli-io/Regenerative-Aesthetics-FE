@@ -6,9 +6,38 @@ import ProductSortDropdown from './ProductSortDropdown';
 import { useProducts } from '@/lib/hooks/products/use-products';
 import Loader from '@/app/components/Loader';
 import ProductCard from '@/app/components/ProductCard';
+import { ProductSort, useProductsStore } from '@/lib/stores/products-store';
+import { Product } from '@/lib/services/products-service';
 
 const ProductGrid = () => {
   const { data: products, isLoading, isError } = useProducts();
+  const { min, max } = useProductsStore(state => state.priceFilter);
+  const sortBy = useProductsStore(state => state.sortBy);
+
+  const handleSort = (
+    a: Omit<Product, 'category'>,
+    b: Omit<Product, 'category'>
+  ) => {
+    const aPrice = +a.price;
+    const bPrice = +b.price;
+
+    if (sortBy === ProductSort.price) {
+      if (aPrice < bPrice) return -1;
+      if (aPrice > bPrice) return 1;
+    }
+    if (sortBy === ProductSort.rating || sortBy === ProductSort.popularity) {
+      if (a.reviewCount! < b.reviewCount!) return 1;
+      if (a.reviewCount! > b.reviewCount!) return -1;
+    }
+
+    if (sortBy === ProductSort.date) {
+      const aDate = new Date(a.updatedAt!).getTime();
+      const bDate = new Date(b.updatedAt!).getTime();
+      return aDate - bDate;
+    }
+
+    return 0;
+  };
 
   return (
     <div className='space-y-10'>
@@ -30,11 +59,14 @@ const ProductGrid = () => {
         )}
         {products &&
           Array.isArray(products) &&
-          products.map(product => (
-            <ProductCard product={product} theme={'light'} key={product.id}>
-              <p>{product.title}</p>
-            </ProductCard>
-          ))}
+          products
+            .filter(product => +product.price >= min && +product.price <= max)
+            .sort((a, b) => handleSort(a, b))
+            .map(product => (
+              <ProductCard product={product} theme={'light'} key={product.id}>
+                <p>{product.title}</p>
+              </ProductCard>
+            ))}
         {!isLoading && !isError && (!products || products.length === 0) && (
           <div className='col-span-4 text-center text-gray-500 p-4'>
             No products found
