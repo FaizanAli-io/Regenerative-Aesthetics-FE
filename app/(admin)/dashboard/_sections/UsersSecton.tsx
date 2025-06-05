@@ -7,7 +7,7 @@ import UserRow from '../_components/UserRow';
 const UsersSection: React.FC = () => {
   const { data: users, isFetched, isLoading } = useUsers();
 
-  const renderOrders = () => {
+  const renderUsers = () => {
     if (isLoading) {
       return (
         <tr>
@@ -21,7 +21,7 @@ const UsersSection: React.FC = () => {
     if (!isFetched || !users || !users.length) {
       return (
         <tr>
-          <td colSpan={6}>No orders found</td>
+          <td colSpan={6}>No users found</td>
         </tr>
       );
     }
@@ -49,7 +49,7 @@ const UsersSection: React.FC = () => {
                 <th className='p-3 text-left'>Join Date</th>
               </tr>
             </thead>
-            <tbody>{renderOrders()}</tbody>
+            <tbody>{renderUsers()}</tbody>
           </table>
         </div>
       </CardContent>

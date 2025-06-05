@@ -17,8 +17,6 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
 import type { Category } from '@/lib/services/category-services';
 import categoryService from '@/lib/services/category-services';
-import { useQueryClient } from '@tanstack/react-query';
-import { CATEGORIES_KEY } from '@/lib/hooks/_cache-keys';
 import {
   Table,
   TableBody,

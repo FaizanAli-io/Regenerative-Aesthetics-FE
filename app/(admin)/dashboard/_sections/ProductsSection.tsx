@@ -28,6 +28,7 @@ import { useAddProduct } from '@/lib/hooks/products/use-add-product';
 import { useEditCategory } from '@/lib/hooks/categories/use-edit-categories';
 import { useEditProduct } from '@/lib/hooks/products/use-edit-product';
 import { useDeleteProduct } from '@/lib/hooks/products/use-delete-product';
+import { useUsers } from '@/lib/hooks/use-all-users';
 
 interface ProductFormData extends Omit<Product, 'id' | 'category' | 'price'> {
   categoryId: number;
