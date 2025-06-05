@@ -1,0 +1,15 @@
+ssh -i regen-fe.pem ubuntu@13.49.23.181
+
+cd Regenerative-Aesthetics-FE/
+
+git fetch
+git pull origin
+
+npm install
+
+pm2 restart all
+
+Launch commands for pm2:
+
+- pm2 start npm --name next-fe -- run dev
+- pm2 start ./start-ngrok.sh --name ngrok
