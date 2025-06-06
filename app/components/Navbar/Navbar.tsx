@@ -33,7 +33,7 @@ const Navbar = () => {
           <div className='flex gap-4 justify-center items-center'>
             <NavLink href='/'>Home</NavLink>
             <NavLink href='/products'>Products</NavLink>
-            <NavLink href='/contact'>Contact Us</NavLink>
+            <NavLink href='/blogs'>Blogs</NavLink>
           </div>
 
           <div className='flex gap-2 justify-center items-center'>

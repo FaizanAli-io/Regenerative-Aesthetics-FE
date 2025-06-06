@@ -12,15 +12,20 @@ interface Props {
   itemsPerAccordion?: number;
 }
 
-const ProductSidebarSkeleton = ({ 
-  accordionCount = 3, 
-  itemsPerAccordion = 4 
+const ProductSidebarSkeleton = ({
+  accordionCount = 3,
+  itemsPerAccordion = 4,
 }: Props) => {
   return (
     <>
       {/* Category Accordions Skeleton */}
       {Array.from({ length: accordionCount }).map((_, accordionIndex) => (
-        <Accordion key={accordionIndex} type='single' collapsible className='w-full'>
+        <Accordion
+          key={accordionIndex}
+          type='single'
+          collapsible
+          className='w-full'
+        >
           <AccordionItem value={`skeleton-${accordionIndex}`}>
             <AccordionTrigger className='text-[1rem] text-primary-darker'>
               <Skeleton className='h-5 w-24' />
@@ -30,7 +35,7 @@ const ProductSidebarSkeleton = ({
               <div className='pt-2'>
                 <Skeleton className='h-10 w-full rounded-md' />
               </div>
-              
+
               {/* Category items skeleton */}
               {Array.from({ length: itemsPerAccordion }).map((_, itemIndex) => (
                 <div className='flex items-center space-x-2' key={itemIndex}>

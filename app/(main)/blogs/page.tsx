@@ -3,11 +3,11 @@
 import React from 'react';
 import Block from '@/app/components/Block';
 import BlogCard from '@/app/components/BlogCard';
+import BlogGridSkeleton from '@/app/components/BlogGridSkeleton';
 import { useBlogs } from '@/lib/hooks/blogs/use-blogs';
-import { Skeleton } from '@/components/ui/skeleton';
 
 const BlogsGrid = () => {
-  const { data: blogs, isLoading } = useBlogs();
+  const { data: blogs, isLoading, isFetching } = useBlogs();
 
   return (
     <main className='min-h-screen bg-white'>
@@ -21,25 +21,14 @@ const BlogsGrid = () => {
               beauty from our experts
             </p>
           </div>
-
           {/* Blogs Grid */}
           <div className='space-y-12'>
-            {isLoading ? (
-              // Loading Skeletons
-              <div className='grid gap-8'>
-                {Array.from({ length: 3 }).map((_, i) => (
-                  <div key={i} className='grid grid-cols-2 gap-5'>
-                    <Skeleton className='w-full h-64 rounded-lg' />
-                    <div className='flex flex-col space-y-3'>
-                      <Skeleton className='h-8 w-3/4' />
-                      <Skeleton className='h-4 w-full' />
-                      <Skeleton className='h-4 w-full' />
-                      <Skeleton className='h-4 w-2/3' />
-                      <Skeleton className='h-12 w-32 rounded-full' />
-                    </div>
-                  </div>
-                ))}
-              </div>
+            {isLoading || isFetching ? (
+              <BlogGridSkeleton
+                itemCount={3}
+                variant='horizontal'
+                showHeader={false}
+              />
             ) : blogs && blogs.length > 0 ? (
               // Blogs List
               <div className='grid gap-12'>
