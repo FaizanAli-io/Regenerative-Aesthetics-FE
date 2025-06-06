@@ -28,12 +28,12 @@ function ProductBreadcrumbs({
             <Link href='/products'>Products</Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
-        <BreadcrumbSeparator />
-        <BreadcrumbItem>
-          {/* <BreadcrumbPage className='font-semibold text-primary-darker'>
+        {/* <BreadcrumbSeparator /> */}
+        {/* <BreadcrumbItem>
+           <BreadcrumbPage className='font-semibold text-primary-darker'>
             Hair Products
-          </BreadcrumbPage> */}
-        </BreadcrumbItem>
+          </BreadcrumbPage> 
+        </BreadcrumbItem> */}
       </BreadcrumbList>
     </Breadcrumb>
   );

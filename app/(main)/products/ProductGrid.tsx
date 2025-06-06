@@ -10,7 +10,7 @@ import { ProductSort, useProductsStore } from '@/lib/stores/products-store';
 import { Product } from '@/lib/services/products-service';
 
 const ProductGrid = () => {
-  const { data: products, isLoading, isError } = useProducts();
+  const { data: products, isLoading, isError, isFetched } = useProducts();
   const { min, max } = useProductsStore(state => state.priceFilter);
   const sortBy = useProductsStore(state => state.sortBy);
   const categoryFilters = useProductsStore(state => state.categoryFilter);
@@ -69,7 +69,7 @@ const ProductGrid = () => {
                 <p>{product.title}</p>
               </ProductCard>
             ))}
-        {!isLoading && !isError && (!products || products.length === 0) && (
+        {!isError && isFetched && (!products || products.length === 0) && (
           <div className='col-span-4 text-center text-gray-500 p-4'>
             No products found
           </div>

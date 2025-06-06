@@ -1,5 +1,6 @@
 import ButtonOutline from '@/app/components/ButtonOutline';
 import Image from 'next/image';
+import Link from 'next/link';
 import React from 'react';
 
 const OurProducts = () => {
@@ -27,7 +28,7 @@ const OurProducts = () => {
               lacus lectus.
             </p>
             <ButtonOutline className=' text-md py-6 font-semibold mt-5'>
-              Shop Now
+              <Link href='/products'>Shop Now</Link>
             </ButtonOutline>
           </div>
         </div>
@@ -50,7 +51,7 @@ const OurProducts = () => {
               lacus lectus.
             </p>
             <ButtonOutline className='border-white bg-transparent text-md py-6 font-semibold mt-5'>
-              Shop Now
+              <Link href='/products'>Shop Now</Link>
             </ButtonOutline>
           </div>
         </div>
