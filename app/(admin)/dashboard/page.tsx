@@ -6,11 +6,11 @@ import OrdersSection from './_sections/OrdersSection';
 import UsersSection from './_sections/UsersSecton';
 import ProductsSection from './_sections/ProductsSection';
 import CategoriesSection from './_sections/CategoriesSection';
+import BlogsSection from './_sections/BlogsSection';
 import { ProtectedPage } from '@/app/components/ProtectedPage';
 
 export default function AdminPanel() {
   const activeIndex = useSidebarStore(state => state.activeIndex);
-
   const renderContent = () => {
     switch (activeIndex) {
       case 0:
@@ -21,6 +21,8 @@ export default function AdminPanel() {
         return <UsersSection />;
       case 3:
         return <CategoriesSection />;
+      case 4:
+        return <BlogsSection />;
     }
   };
 

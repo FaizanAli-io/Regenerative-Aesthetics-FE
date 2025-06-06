@@ -21,6 +21,10 @@ const sections = [
     icon: 'categories',
     label: 'Categories',
   },
+  {
+    icon: 'blogs',
+    label: 'Blogs',
+  },
 ];
 
 const Sidepanel = () => {
