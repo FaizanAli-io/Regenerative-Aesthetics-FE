@@ -4,8 +4,8 @@ import React, { useEffect } from 'react';
 import { Label } from '@/components/ui/label';
 import ProductSortDropdown from './ProductSortDropdown';
 import { useProducts } from '@/lib/hooks/products/use-products';
-import Loader from '@/app/components/Loader';
 import ProductCard from '@/app/components/ProductCard';
+import ProductGridSkeleton from '@/app/components/ProductGridSkeleton';
 import { ProductSort, useProductsStore } from '@/lib/stores/products-store';
 import { Product } from '@/lib/services/products-service';
 
@@ -39,42 +39,52 @@ const ProductGrid = () => {
 
     return 0;
   };
-
   return (
     <div className='space-y-10'>
-      <div className='flex justify-between w-full items-end'>
-        <Label className='text-body text-lg'>
-          Selected Products:{' '}
-          <span className='text-black text-2xl'>
-            {products && Array.isArray(products) ? products.length : 0}
-          </span>
-        </Label>
-        <ProductSortDropdown />
-      </div>
-      <div className='grid grid-cols-4 grid-rows-3 gap-5'>
-        {isLoading && <Loader />}
-        {isError && (
-          <div className='col-span-4 text-center text-red-500 p-4'>
-            Failed to load products
+      {isLoading || !products.length ? (
+        <ProductGridSkeleton itemCount={12} theme='light' />
+      ) : (
+        <>
+          <div className='flex justify-between w-full items-end'>
+            <Label className='text-body text-lg'>
+              Selected Products:{' '}
+              <span className='text-black text-2xl'>
+                {products && Array.isArray(products) ? products.length : 0}
+              </span>
+            </Label>
+            <ProductSortDropdown />
           </div>
-        )}
-        {products &&
-          Array.isArray(products) &&
-          products
-            .filter(product => categoryFilters[product.category.title])
-            .filter(product => +product.price >= min && +product.price <= max)
-            .sort((a, b) => handleSort(a, b))
-            .map(product => (
-              <ProductCard product={product} theme={'light'} key={product.id}>
-                <p>{product.title}</p>
-              </ProductCard>
-            ))}
-        {!isError && isFetched && (!products || products.length === 0) && (
-          <div className='col-span-4 text-center text-gray-500 p-4'>
-            No products found
+          <div className='grid grid-cols-4 gap-5'>
+            {isError && (
+              <div className='col-span-4 text-center text-red-500 p-4'>
+                Failed to load products
+              </div>
+            )}
+            {products &&
+              Array.isArray(products) &&
+              products
+                .filter(product => categoryFilters[product.category.title])
+                .filter(
+                  product => +product.price >= min && +product.price <= max
+                )
+                .sort((a, b) => handleSort(a, b))
+                .map(product => (
+                  <ProductCard
+                    product={product}
+                    theme={'light'}
+                    key={product.id}
+                  >
+                    <p>{product.title}</p>
+                  </ProductCard>
+                ))}
+            {!isError && isFetched && (!products || products.length === 0) && (
+              <div className='col-span-4 text-center text-gray-500 p-4'>
+                No products found
+              </div>
+            )}
           </div>
-        )}
-      </div>
+        </>
+      )}
     </div>
   );
 };
