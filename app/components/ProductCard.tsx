@@ -96,7 +96,7 @@ const ProductCard = ({
           'bg-dark': theme === 'dark',
           'bg-[#f6f6f6] border-0': theme === 'light',
         },
-        'px-4',
+        'px-4 py-4',
         className
       )}
       {...props}

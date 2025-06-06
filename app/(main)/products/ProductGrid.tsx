@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Label } from '@/components/ui/label';
 import ProductSortDropdown from './ProductSortDropdown';
 import { useProducts } from '@/lib/hooks/products/use-products';
@@ -13,6 +13,7 @@ const ProductGrid = () => {
   const { data: products, isLoading, isError } = useProducts();
   const { min, max } = useProductsStore(state => state.priceFilter);
   const sortBy = useProductsStore(state => state.sortBy);
+  const categoryFilters = useProductsStore(state => state.categoryFilter);
 
   const handleSort = (
     a: Omit<Product, 'category'>,
@@ -60,6 +61,7 @@ const ProductGrid = () => {
         {products &&
           Array.isArray(products) &&
           products
+            .filter(product => categoryFilters[product.category.title])
             .filter(product => +product.price >= min && +product.price <= max)
             .sort((a, b) => handleSort(a, b))
             .map(product => (

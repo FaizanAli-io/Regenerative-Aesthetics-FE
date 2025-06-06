@@ -7,6 +7,8 @@ enum ProductSort {
   date = 'date',
 }
 
+type CategoryFilter = Record<string, boolean>;
+
 interface BearState {
   priceFilter: {
     min: number;
@@ -16,6 +18,9 @@ interface BearState {
 
   sortBy?: ProductSort;
   setSortBy?: (sortBy: ProductSort) => void;
+
+  categoryFilter: CategoryFilter;
+  setCategoryFilter: (category: string, value: boolean) => void;
 }
 
 const useProductsStore = create<BearState>()(set => ({
@@ -35,6 +40,15 @@ const useProductsStore = create<BearState>()(set => ({
   setSortBy: (sortBy: ProductSort) =>
     set(() => ({
       sortBy,
+    })),
+
+  categoryFilter: {},
+  setCategoryFilter: (category: string, value: boolean) =>
+    set(state => ({
+      categoryFilter: {
+        ...state.categoryFilter,
+        [category]: value,
+      },
     })),
 }));
 

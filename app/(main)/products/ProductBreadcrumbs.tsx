@@ -5,7 +5,7 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
-  BreadcrumbPage,
+  // BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { HTMLAttributes } from 'react';
@@ -16,7 +16,6 @@ function ProductBreadcrumbs({
 }: HTMLAttributes<HTMLDivElement>) {
   return (
     <Breadcrumb className={className} {...props}>
-      {' '}
       <BreadcrumbList className='text-lg font-semibold'>
         <BreadcrumbItem>
           <BreadcrumbLink asChild>
@@ -31,9 +30,9 @@ function ProductBreadcrumbs({
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
-          <BreadcrumbPage className='font-semibold text-primary-darker'>
+          {/* <BreadcrumbPage className='font-semibold text-primary-darker'>
             Hair Products
-          </BreadcrumbPage>
+          </BreadcrumbPage> */}
         </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>
