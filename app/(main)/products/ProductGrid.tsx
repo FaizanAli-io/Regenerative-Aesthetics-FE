@@ -42,7 +42,7 @@ const ProductGrid = () => {
   return (
     <div className='space-y-10'>
       {isLoading || !products.length ? (
-        <ProductGridSkeleton itemCount={12} theme='light' />
+        <ProductGridSkeleton itemCount={10} theme='light' />
       ) : (
         <>
           <div className='flex justify-between w-full items-end'>
