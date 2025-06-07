@@ -33,7 +33,6 @@ import { useDeleteCategory } from '@/lib/hooks/categories/use-delete-category';
 interface CategoryFormData {
   title: string;
   description: string;
-  parentCategoryId?: number;
 }
 
 // Component for a single category row with its children
@@ -84,7 +83,6 @@ const CategoryRow = ({
         <TableCell className='max-w-md truncate'>
           {category.description}
         </TableCell>
-        <TableCell>{category.parentCategory?.title || 'None'}</TableCell>
         <TableCell>
           <div className='flex items-center gap-2'>
             <Button
@@ -229,7 +227,6 @@ const CategoriesSection = () => {
             <TableRow>
               <TableHead>Title</TableHead>
               <TableHead>Description</TableHead>
-              <TableHead>Parent Category</TableHead>
               <TableHead className='w-[100px]'>Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -238,9 +235,6 @@ const CategoriesSection = () => {
               // Loading state
               Array.from({ length: 5 }).map((_, index) => (
                 <TableRow key={index}>
-                  <TableCell>
-                    <Skeleton className='h-6 w-[180px]' />
-                  </TableCell>
                   <TableCell>
                     <Skeleton className='h-6 w-[250px]' />
                   </TableCell>

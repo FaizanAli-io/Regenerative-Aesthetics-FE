@@ -6,12 +6,12 @@ import ProductCard from '@/app/components/ProductCard';
 import { useWishlist } from '@/lib/hooks/wishlist/use-wishlist';
 
 const FavoritesGrid = () => {
-  const { data: wishlist, isLoading } = useWishlist();
+  const { data: wishlist, isLoading, isFetching } = useWishlist();
 
   return (
     <div className='space-y-10'>
       <div className='grid grid-cols-4 grid-rows-3 gap-5'>
-        {isLoading && <Loader />}
+        {isLoading || isFetching ? <Loader /> : <p>No Favorites found</p>}
 
         {wishlist &&
           wishlist.wishlistItems.length &&
