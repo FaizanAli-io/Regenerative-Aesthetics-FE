@@ -16,7 +16,6 @@ import { Plus, Edit, Trash2, ChevronRight, ChevronDown } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
 import type { Category } from '@/lib/services/category-services';
-import categoryService from '@/lib/services/category-services';
 import {
   Table,
   TableBody,
@@ -174,20 +173,16 @@ const CategoriesSection = () => {
     if (!categoryToEdit) return;
 
     editCategory({ ...formData, id: categoryToEdit.id });
+
+    toast.success('Category updated successfully');
   };
 
   const handleDeleteCategory = async (id: number) => {
     if (!categoryToDelete) return;
 
     deleteCategory(id);
-    // try {
-    //   await categoryService.delete(id).request;
-    //   toast.success('Category deleted successfully');
-    //   queryClient.invalidateQueries({ queryKey: CATEGORIES_KEY });
-    // } catch (error) {
-    //   console.error('Failed to delete category:', error);
-    //   toast.error('Failed to delete category');
-    // }
+
+    toast.success('Category deleted successfully');
   };
 
   if (error) {
