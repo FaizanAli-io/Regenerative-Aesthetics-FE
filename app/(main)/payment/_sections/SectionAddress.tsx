@@ -111,9 +111,9 @@ const SectionAddress = () => {
               onClick={() => setEditingAddress(null)}
             />
           </DialogTrigger>
-        </div>
-        <DialogContent className='sm:max-w-[425px]'>
-          <DialogHeader>
+        </div>{' '}
+        <DialogContent className='sm:max-w-[425px] max-h-[85vh] overflow-hidden flex flex-col'>
+          <DialogHeader className='flex-shrink-0'>
             <DialogTitle>
               {editingAddress
                 ? 'Edit shipping details'
@@ -123,11 +123,13 @@ const SectionAddress = () => {
               Make sure to provide the correct details for shipping.
             </DialogDescription>
           </DialogHeader>
-          <div className='grid gap-4 py-4'>
-            <AddressForm
-              addressData={editingAddress}
-              onComplete={handleAddressFormComplete}
-            />
+          <div className='flex-1 overflow-y-auto pr-1'>
+            <div className='grid gap-4 py-4'>
+              <AddressForm
+                addressData={editingAddress}
+                onComplete={handleAddressFormComplete}
+              />
+            </div>
           </div>
         </DialogContent>
       </Dialog>

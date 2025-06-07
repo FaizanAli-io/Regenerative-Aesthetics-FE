@@ -196,7 +196,7 @@ const CategoriesSection = () => {
   return (
     <div className='space-y-6'>
       <div className='flex items-center justify-between'>
-        <h2 className='text-3xl font-bold tracking-tight'>Categories</h2>
+        <h2 className='text-3xl font-bold tracking-tight'>Categories</h2>{' '}
         <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
           <DialogTrigger asChild>
             <Button>
@@ -204,18 +204,19 @@ const CategoriesSection = () => {
               Add Category
             </Button>
           </DialogTrigger>
-          <DialogContent className='sm:max-w-[700px]'>
-            <DialogHeader>
+          <DialogContent className='sm:max-w-[700px] max-h-[85vh] overflow-hidden flex flex-col'>
+            <DialogHeader className='flex-shrink-0'>
               <DialogTitle>Add New Category</DialogTitle>
               <DialogDescription>
                 Fill in the details to create a new product category.
               </DialogDescription>
             </DialogHeader>
-            <CategoryForm onSubmit={handleAddCategory} />
+            <div className='flex-1 overflow-y-auto pr-1'>
+              <CategoryForm onSubmit={handleAddCategory} />
+            </div>
           </DialogContent>
         </Dialog>
       </div>
-
       <div className='rounded-md border'>
         <Table>
           <TableHeader>
@@ -270,7 +271,6 @@ const CategoriesSection = () => {
           </TableBody>
         </Table>
       </div>
-
       {/* View All Categories Button */}
       {!isLoading && categories && categories.length > 0 && (
         <div className='flex justify-end'>
@@ -298,30 +298,30 @@ const CategoriesSection = () => {
               : 'Expand All'}
           </Button>
         </div>
-      )}
-
+      )}{' '}
       {/* Edit Category Modal */}
       <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
-        <DialogContent className='sm:max-w-[700px]'>
-          <DialogHeader>
+        <DialogContent className='sm:max-w-[700px] max-h-[85vh] overflow-hidden flex flex-col'>
+          <DialogHeader className='flex-shrink-0'>
             <DialogTitle>Edit Category</DialogTitle>
             <DialogDescription>
               Update the details of this category.
             </DialogDescription>
           </DialogHeader>
-          {categoryToEdit && (
-            <CategoryForm
-              initialData={{
-                title: categoryToEdit.title,
-                description: categoryToEdit.description,
-                parentCategoryId: categoryToEdit.parentCategory?.id,
-              }}
-              onSubmit={handleEditCategory}
-            />
-          )}
+          <div className='flex-1 overflow-y-auto pr-1'>
+            {categoryToEdit && (
+              <CategoryForm
+                initialData={{
+                  title: categoryToEdit.title,
+                  description: categoryToEdit.description,
+                  parentCategoryId: categoryToEdit.parentCategory?.id,
+                }}
+                onSubmit={handleEditCategory}
+              />
+            )}
+          </div>
         </DialogContent>
       </Dialog>
-
       {/* Delete Confirmation Dialog */}
       <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
         <DialogContent className='sm:max-w-[425px]'>

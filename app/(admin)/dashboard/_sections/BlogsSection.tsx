@@ -108,8 +108,7 @@ const BlogsSection = () => {
         <div>
           <h2 className='text-2xl font-bold text-gray-900'>Blogs Management</h2>
           <p className='text-gray-600'>Manage your blog posts and articles</p>
-        </div>
-
+        </div>{' '}
         <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
           <DialogTrigger asChild>
             <Button>
@@ -117,22 +116,23 @@ const BlogsSection = () => {
               Add Blog
             </Button>
           </DialogTrigger>
-          <DialogContent className='max-w-2xl'>
-            <DialogHeader>
+          <DialogContent className='max-w-2xl max-h-[85vh] overflow-hidden flex flex-col'>
+            <DialogHeader className='flex-shrink-0'>
               <DialogTitle>Create New Blog</DialogTitle>
               <DialogDescription>
                 Add a new blog post to your website. Fill in the details below.
               </DialogDescription>
             </DialogHeader>
-            <BlogForm
-              onSubmit={handleAddBlog}
-              isLoading={isAddingBlog}
-              onCancel={() => setIsAddModalOpen(false)}
-            />
+            <div className='flex-1 overflow-y-auto pr-1'>
+              <BlogForm
+                onSubmit={handleAddBlog}
+                isLoading={isAddingBlog}
+                onCancel={() => setIsAddModalOpen(false)}
+              />
+            </div>
           </DialogContent>
         </Dialog>
       </div>
-
       {/* Blogs Table */}
       <div className='bg-white rounded-lg border'>
         <Table>
@@ -221,29 +221,29 @@ const BlogsSection = () => {
             )}
           </TableBody>
         </Table>
-      </div>
-
+      </div>{' '}
       {/* Edit Blog Dialog */}
       <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
-        <DialogContent className='max-w-2xl'>
-          <DialogHeader>
+        <DialogContent className='max-w-2xl max-h-[85vh] overflow-hidden flex flex-col'>
+          <DialogHeader className='flex-shrink-0'>
             <DialogTitle>Edit Blog</DialogTitle>
             <DialogDescription>
               Update the blog post details below.
             </DialogDescription>
           </DialogHeader>
-          <BlogForm
-            onSubmit={handleEditBlog}
-            initialData={blogToEdit || undefined}
-            isLoading={isUpdatingBlog}
-            onCancel={() => {
-              setIsEditModalOpen(false);
-              setBlogToEdit(null);
-            }}
-          />
+          <div className='flex-1 overflow-y-auto pr-1'>
+            <BlogForm
+              onSubmit={handleEditBlog}
+              initialData={blogToEdit || undefined}
+              isLoading={isUpdatingBlog}
+              onCancel={() => {
+                setIsEditModalOpen(false);
+                setBlogToEdit(null);
+              }}
+            />
+          </div>
         </DialogContent>
       </Dialog>
-
       {/* Delete Confirmation Dialog */}
       <AlertDialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
         <AlertDialogContent>

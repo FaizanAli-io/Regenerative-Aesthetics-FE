@@ -107,7 +107,7 @@ const ProductsSection = () => {
   return (
     <div className='space-y-6'>
       <div className='flex items-center justify-between'>
-        <h2 className='text-3xl font-bold tracking-tight'>Products</h2>
+        <h2 className='text-3xl font-bold tracking-tight'>Products</h2>{' '}
         <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
           <DialogTrigger asChild>
             <Button>
@@ -115,18 +115,19 @@ const ProductsSection = () => {
               Add Product
             </Button>
           </DialogTrigger>
-          <DialogContent className='sm:max-w-[700px]'>
-            <DialogHeader>
+          <DialogContent className='sm:max-w-[700px] max-h-[85vh] overflow-hidden flex flex-col'>
+            <DialogHeader className='flex-shrink-0'>
               <DialogTitle>Add New Product</DialogTitle>
               <DialogDescription>
                 Fill in the details to create a new product.
               </DialogDescription>
             </DialogHeader>
-            <ProductsForm onSubmit={handleAddProduct} />
+            <div className='flex-1 overflow-y-auto pr-1'>
+              <ProductsForm onSubmit={handleAddProduct} />
+            </div>
           </DialogContent>
         </Dialog>
       </div>
-
       <div className='rounded-md border'>
         <Table>
           <TableHeader>
@@ -206,33 +207,33 @@ const ProductsSection = () => {
             )}
           </TableBody>
         </Table>
-      </div>
-
+      </div>{' '}
       {/* Edit Product Modal */}
       <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
-        <DialogContent className='sm:max-w-[700px]'>
-          <DialogHeader>
+        <DialogContent className='sm:max-w-[700px] max-h-[85vh] overflow-hidden flex flex-col'>
+          <DialogHeader className='flex-shrink-0'>
             <DialogTitle>Edit Product</DialogTitle>
             <DialogDescription>
               Update the details of this product.
             </DialogDescription>
           </DialogHeader>
-          {productToEdit && (
-            <ProductsForm
-              initialData={{
-                title: productToEdit.title,
-                description: productToEdit.description,
-                price: parseFloat(productToEdit.price),
-                stock: productToEdit.stock,
-                images: productToEdit.images.map(img => ''),
-                categoryId: productToEdit.category?.id,
-              }}
-              onSubmit={handleEditProduct}
-            />
-          )}
+          <div className='flex-1 overflow-y-auto pr-1'>
+            {productToEdit && (
+              <ProductsForm
+                initialData={{
+                  title: productToEdit.title,
+                  description: productToEdit.description,
+                  price: parseFloat(productToEdit.price),
+                  stock: productToEdit.stock,
+                  images: productToEdit.images.map(img => ''),
+                  categoryId: productToEdit.category?.id,
+                }}
+                onSubmit={handleEditProduct}
+              />
+            )}
+          </div>
         </DialogContent>
       </Dialog>
-
       {/* Delete Confirmation Dialog */}
       <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
         <DialogContent className='sm:max-w-[425px]'>
