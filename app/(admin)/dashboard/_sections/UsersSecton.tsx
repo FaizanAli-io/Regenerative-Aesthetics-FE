@@ -5,10 +5,10 @@ import { useUsers } from '@/lib/hooks/use-all-users';
 import UserRow from '../_components/UserRow';
 
 const UsersSection: React.FC = () => {
-  const { data: users, isFetched, isLoading } = useUsers();
+  const { data: users, isFetched, isLoading, isFetching } = useUsers();
 
   const renderUsers = () => {
-    if (isLoading) {
+    if (isLoading || isFetching) {
       return (
         <tr>
           <td colSpan={6} className='text-center py-2'>
