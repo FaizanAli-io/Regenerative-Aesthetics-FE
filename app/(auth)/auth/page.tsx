@@ -1,8 +1,10 @@
 'use client';
-import React, { ReactNode, useRef } from 'react';
+import React, { ReactNode, useEffect, useRef } from 'react';
 import LoginForm from './LoginForm';
 import HTMLFlipBook from 'react-pageflip';
 import SignupForm from '../signup/SignUpForm';
+import { getUser } from '@/lib/auth';
+import { useRouter } from 'next/navigation';
 
 const BookPage = React.forwardRef<
   HTMLDivElement,
@@ -16,6 +18,12 @@ const BookPage = React.forwardRef<
 });
 
 const Page = () => {
+  const router = useRouter();
+  useEffect(() => {
+    const user = getUser();
+    if (user) router.replace('/products');
+  }, []);
+
   const pageFlip = useRef<any>(null);
 
   const turnNext = () => {
