@@ -34,7 +34,6 @@ export const useAddWishlist = () => {
     { previousWishlist: WishlistResponse; tempId?: number }
   >({
     mutationFn: fn,
-
     onMutate: async newItem => {
       queryClient.cancelQueries({ queryKey: WISH_LIST_KEY });
 

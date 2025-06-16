@@ -1,12 +1,17 @@
 'use client';
 
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import ProductCard from '@/app/components/ProductCard';
 import ProductCardSkeleton from '@/app/components/ProductCardSkeleton';
 import { useWishlist } from '@/lib/hooks/wishlist/use-wishlist';
 
 const FavoritesGrid = () => {
   const { data: wishlist, isLoading, isFetching } = useWishlist();
+
+  useEffect(() => {
+    console.log('Wishlist data:', wishlist);
+  }, [wishlist]);
+
   const renderContent = useCallback(() => {
     if ((isLoading || isFetching) && !wishlist)
       return Array.from({ length: 12 }).map((_, index) => (

@@ -44,8 +44,11 @@ export const useDeleteWishlist = () => {
         return old;
       });
 
-      // Return a context object with the snapshotted value
-      return { previousWishlist };
+      // Return a context object with the snapshotted value      return { previousWishlist };
+    },
+
+    onSuccess: () => {
+      toast.success('Removed from wishlist!');
     },
 
     onError: (error, variables, context) => {

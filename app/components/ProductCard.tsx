@@ -67,17 +67,24 @@ const ProductCard = ({
       }
     );
   };
-
   const handleFavorite = () => {
     if (!user) return;
 
-    if (isFavourite)
+    if (isFavourite) {
+      // Optimistically update local state
+      setIsFavourite(false);
+
       return removeWishlist(product.id, {
-        onSuccess: () => {
-          setIsFavourite(false);
-          toast.success('Removed from wishlist');
+        onError: () => {
+          // Revert local state on error since optimistic update in hook will revert cache
+          setIsFavourite(true);
         },
       });
+    }
+
+    // Optimistically update local state for add
+    setIsFavourite(true);
+    toast.success('Added to wishlist');
 
     addToWishlist(
       {
@@ -85,11 +92,9 @@ const ProductCard = ({
         userId: user.id,
       },
       {
-        onSuccess: () => {
-          toast.success('Added to wishlist');
-        },
         onError: () => {
-          toast.error('Failed to add to wishlist');
+          // Revert local state on error
+          setIsFavourite(false);
         },
       }
     );
