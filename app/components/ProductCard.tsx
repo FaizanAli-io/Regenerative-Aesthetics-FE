@@ -12,6 +12,7 @@ import { useAddWishlist } from '@/lib/hooks/wishlist/use-add-wishlist';
 import { useWishlist } from '@/lib/hooks/wishlist/use-wishlist';
 import { useAddToCart } from '@/lib/hooks/cart/use-add-to-cart';
 import { getUser } from '@/lib/auth';
+import { useDeleteWishlist } from '@/lib/hooks/wishlist/delete-wishlist';
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
   product: Omit<Product, 'category'>; // Removed 'category' from Product type
@@ -31,6 +32,7 @@ const ProductCard = ({
   const { data: wishlist } = useWishlist();
 
   const { mutate: addToCart } = useAddToCart();
+  const { mutate: removeWishlist } = useDeleteWishlist();
 
   const [user, setUser] = useState<User | null>(null);
   const [isAdded, setIsAdded] = useState(false);
@@ -41,8 +43,6 @@ const ProductCard = ({
   }, []);
 
   useEffect(() => {
-    console.log(wishlist);
-
     if (favorite || !wishlist || !wishlist.wishlistItems.length) return;
 
     const isProductInWishlist = wishlist.wishlistItems.find(
@@ -69,7 +69,15 @@ const ProductCard = ({
   };
 
   const handleFavorite = () => {
-    if (isFavourite || !user) return;
+    if (!user) return;
+
+    if (isFavourite)
+      return removeWishlist(product.id, {
+        onSuccess: () => {
+          setIsFavourite(false);
+          toast.success('Removed from wishlist');
+        },
+      });
 
     addToWishlist(
       {
