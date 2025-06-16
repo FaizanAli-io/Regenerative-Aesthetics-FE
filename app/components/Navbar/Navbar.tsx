@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NavigationMenu } from '@/components/ui/navigation-menu';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -12,6 +12,10 @@ import { useAuth } from '@/lib/hooks/use-auth';
 
 const Navbar = () => {
   const { isAuthenticated } = useAuth();
+
+  useEffect(() => {
+    console.log(isAuthenticated);
+  }, [isAuthenticated]);
 
   return (
     <>

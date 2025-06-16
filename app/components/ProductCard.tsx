@@ -30,9 +30,7 @@ const ProductCard = ({
   const { mutate: addToWishlist } = useAddWishlist();
   const { data: wishlist } = useWishlist();
 
-  // const addToCart = useCart(state => state.addToCart);
   const { mutate: addToCart } = useAddToCart();
-  // const items = useCart(state => state.cart.items);
 
   const [user, setUser] = useState<User | null>(null);
   const [isAdded, setIsAdded] = useState(false);
@@ -43,6 +41,8 @@ const ProductCard = ({
   }, []);
 
   useEffect(() => {
+    console.log(wishlist);
+
     if (favorite || !wishlist || !wishlist.wishlistItems.length) return;
 
     const isProductInWishlist = wishlist.wishlistItems.find(

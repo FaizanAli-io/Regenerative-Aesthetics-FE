@@ -1,6 +1,13 @@
-import wishlist, { WishlistItemRequest } from '@/lib/services/wishlist-service';
-import { useMutation } from '@tanstack/react-query';
+import wishlist, {
+  WishlistItem,
+  WishlistItemRequest,
+  WishlistResponse,
+  WLProduct,
+} from '@/lib/services/wishlist-service';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
+import { PRODUCTS_KEY, WISH_LIST_KEY } from '../_cache-keys';
+import { Product } from '@/lib/services/products-service';
 
 interface Res {
   id: number;
@@ -19,39 +26,82 @@ const fn = async (data: WishlistItemRequest): Promise<Res> => {
 };
 
 export const useAddWishlist = () => {
-  return useMutation<Res, AxiosError, WishlistItemRequest>({
+  const queryClient = useQueryClient();
+  return useMutation<
+    Res,
+    AxiosError,
+    WishlistItemRequest,
+    { previousWishlist: WishlistResponse; tempId?: number }
+  >({
     mutationFn: fn,
 
     onMutate: async newItem => {
-      console.log('adding started');
-      // Optimistic update logic
-      // await queryClient.cancelQueries(['wishlist']);
-      // const previousWishlist = queryClient.getQueryData<Res[]>(['wishlist']);
-      // queryClient.setQueryData<Res[]>(['wishlist'], old => [
-      //   ...(old || []),
-      //   {
-      //     id: Date.now(),
-      //     createdAt: new Date().toISOString(),
-      //     user: { id: newItem.userId },
-      //     product: { id: newItem.productId },
-      //   },
-      // ]);
-      // return { previousWishlist };
-    },
+      queryClient.cancelQueries({ queryKey: WISH_LIST_KEY });
 
-    onSuccess: data => {
-      console.log('added to wishlist', data);
-    },
+      const previousWishlist =
+        queryClient.getQueryData<WishlistResponse>(WISH_LIST_KEY);
 
+      if (!previousWishlist) return undefined;
+
+      const products = queryClient.getQueryData<Product[]>(PRODUCTS_KEY);
+      if (!products) return { previousWishlist };
+
+      const tempProduct = products.find(item => item.id === newItem.productId);
+
+      if (!tempProduct) {
+        console.warn(`Product with ID ${newItem.productId} not found in cache`);
+        return { previousWishlist };
+      }
+      const product: WLProduct = {
+        ...tempProduct,
+        createdAt: new Date().toISOString(),
+        updatedAt: tempProduct.updatedAt || new Date().toISOString(),
+      };
+
+      const tempId = Date.now(); // Store temp ID for later reference
+
+      const wishlistItem: WishlistItem = {
+        id: tempId,
+        createdAt: new Date().toISOString(),
+        product,
+      };
+
+      queryClient.setQueryData<WishlistResponse>(WISH_LIST_KEY, old => {
+        if (old) {
+          return {
+            ...old,
+            totalItems: old.totalItems + 1,
+            wishlistItems: [...old.wishlistItems, wishlistItem],
+          };
+        }
+        return old;
+      });
+
+      return { previousWishlist, tempId };
+    },
+    onSuccess: (data, variables, context) => {
+      queryClient.setQueryData<WishlistResponse>(WISH_LIST_KEY, old => {
+        if (old && context?.tempId) {
+          return {
+            ...old,
+            wishlistItems: old.wishlistItems.map(item =>
+              item.id === context.tempId
+                ? { ...item, id: data.id, createdAt: data.createdAt }
+                : item
+            ),
+          };
+        }
+        return old;
+      });
+    },
     onError: (error, newItem, context) => {
-      console.error(error.message, error);
-      //   if (context?.previousWishlist) {
-      //     queryClient.setQueryData(['wishlist'], context.previousWishlist);
-      //   }
+      if (context?.previousWishlist) {
+        queryClient.setQueryData(WISH_LIST_KEY, context.previousWishlist);
+      }
     },
 
     onSettled: () => {
-      // queryClient.invalidateQueries(['wishlist']);
+      queryClient.invalidateQueries({ queryKey: WISH_LIST_KEY });
     },
   });
 };
