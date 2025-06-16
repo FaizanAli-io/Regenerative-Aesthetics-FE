@@ -6,13 +6,12 @@ import { HeartIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Product } from '@/lib/services/products-service';
-import { useCart } from '@/lib/stores/cart';
 import { toast } from 'sonner';
-import { getUser } from '@/lib/auth';
 import { User } from '@/lib/services/auth-service';
 import { useAddWishlist } from '@/lib/hooks/wishlist/use-add-wishlist';
 import { useWishlist } from '@/lib/hooks/wishlist/use-wishlist';
 import { useAddToCart } from '@/lib/hooks/cart/use-add-to-cart';
+import { getUser } from '@/lib/auth';
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
   product: Omit<Product, 'category'>; // Removed 'category' from Product type
@@ -40,7 +39,7 @@ const ProductCard = ({
   const [isFavourite, setIsFavourite] = useState(false);
 
   useEffect(() => {
-    // if (items.length && items.find(i => i.id === product.id)) setIsAdded(true);
+    setUser(getUser());
   }, []);
 
   useEffect(() => {
@@ -123,8 +122,8 @@ const ProductCard = ({
           </span>
         </div>
         <Image
-          // !temp
-          src='/images/home/shampoo.png'
+          // src='/images/home/shampoo.png'
+          src={product.images[0] || '/images/home/shampoo.png'}
           alt={product.title}
           width={250}
           height={250}

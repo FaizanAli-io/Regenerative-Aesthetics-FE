@@ -7,7 +7,8 @@ const useProducts = () =>
     queryKey: PRODUCTS_KEY,
     queryFn: async () => {
       try {
-        const response = await products.getOdd<DBProduct>('/all').request;
+        const response = await products.getOdd<DBProduct>('/all?limit=100')
+          .request;
         return response.data?.products || [];
       } catch (error) {
         console.error('Error fetching products:', error);
