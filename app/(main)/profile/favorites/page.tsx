@@ -7,7 +7,7 @@ import { useWishlist } from '@/lib/hooks/wishlist/use-wishlist';
 import PaginationUI from '@/app/components/PaginationUI';
 
 const ITEMS_PER_PAGE = 12;
-const FavoritesGrid = () => {
+const Page = () => {
   const { data: wishlist, isLoading, isFetching } = useWishlist();
   const [currentPage, setCurrentPage] = React.useState(1);
 
@@ -16,7 +16,6 @@ const FavoritesGrid = () => {
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
 
-  // Reset page if current page exceeds available pages after items are removed
   useEffect(() => {
     if (totalPages > 0 && currentPage > totalPages) {
       setCurrentPage(Math.max(1, totalPages));
@@ -57,10 +56,16 @@ const FavoritesGrid = () => {
     ));
   }, [isLoading, isFetching, wishlist, startIndex, endIndex]);
 
+  const renderItemsCount = () => {
+    if (wishlist && wishlist.totalItems <= ITEMS_PER_PAGE) return null;
+
+    return `Showing ${startIndex + 1}-${endIndex} of ${totalItems}`;
+  };
+
   return (
     <div className='space-y-10'>
+      <p className='text-gray-500'>{renderItemsCount()}</p>
       <div className='grid grid-cols-4 gap-5'>{renderContent()}</div>
-
       {wishlist && wishlist.totalItems > ITEMS_PER_PAGE && (
         <PaginationUI
           limit={wishlist.totalItems}
@@ -73,4 +78,4 @@ const FavoritesGrid = () => {
   );
 };
 
-export default FavoritesGrid;
+export default Page;

@@ -1,33 +1,27 @@
 'use client';
 import useAccountSidebarStore from '@/lib/stores/account-sidebar-store';
 import { cn } from '@/lib/utils';
-import React, { useState } from 'react';
-
-// const data = ['Personal Information', 'Orders', 'Favorites', 'Reviews'];
-const data = ['Personal Information', 'Orders', 'Favorites'];
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import React from 'react';
+import { navItems } from '../../profile/navItems';
 
 const AccountSidebar = () => {
-  const setActiveIndex = useAccountSidebarStore(state => state.setActiveIndex);
-  const activeIndex = useAccountSidebarStore(state => state.activeIndex);
-
-  const handleClick = (index: number) => {
-    setActiveIndex(index);
-  };
+  const pathname = usePathname();
 
   return (
     <ul className='divide-y divide-gray-500'>
-      {data.map((item, index) => (
+      {Object.entries(navItems).map(([path, name], index) => (
         <li
           key={index}
           className={cn(
             'flex items-center justify-between py-4 px-6 text-xl font-medium hover:bg-gray-100 cursor-pointer',
-            activeIndex === index
+            pathname === path
               ? 'bg-gray-100 text-primary font-semibold border-l-4 border-primary'
               : 'text-primary-darker'
           )}
-          onClick={() => handleClick(index)}
         >
-          {item}
+          <Link href={path}>{name}</Link>
         </li>
       ))}
     </ul>

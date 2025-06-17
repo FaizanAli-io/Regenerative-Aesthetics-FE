@@ -74,7 +74,6 @@ const ProductGrid = () => {
         <ProductGridSkeleton itemCount={10} theme='light' />
       ) : (
         <>
-          {' '}
           <div className='flex justify-between w-full items-end'>
             <Label className='text-body text-lg'>
               Selected Products:{' '}

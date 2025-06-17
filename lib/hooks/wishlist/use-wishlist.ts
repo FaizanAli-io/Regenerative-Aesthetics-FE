@@ -7,7 +7,9 @@ const useWishlist = () =>
   useQuery({
     queryKey: WISH_LIST_KEY,
     queryFn: () =>
-      wishlist.getOdd<WishlistResponse>('/').request.then(res => res.data),
+      wishlist
+        .getOdd<WishlistResponse>('/?limit=1000')
+        .request.then(res => res.data),
   });
 
 export { useWishlist };

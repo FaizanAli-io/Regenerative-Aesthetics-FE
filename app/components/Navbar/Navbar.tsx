@@ -13,10 +13,6 @@ import { useAuth } from '@/lib/hooks/use-auth';
 const Navbar = () => {
   const { isAuthenticated } = useAuth();
 
-  useEffect(() => {
-    console.log(isAuthenticated);
-  }, [isAuthenticated]);
-
   return (
     <>
       <NavigationMenu className='px-10 w-full justify-stretch my-2'>
@@ -41,10 +37,14 @@ const Navbar = () => {
           </div>
 
           <div className='flex gap-2 justify-center items-center'>
-            <NavIcon href='/favorites' src='/icons/heart.svg' alt='Favorites' />
+            <NavIcon
+              href='/profile/favorites'
+              src='/icons/heart.svg'
+              alt='Favorites'
+            />
             <NavIcon href='/cart' src='/icons/cart.svg' alt='Cart' />
             {isAuthenticated ? (
-              <NavIcon href='/favorites' src='/icons/user.svg' alt='Profile' />
+              <NavIcon href='/profile' src='/icons/user.svg' alt='Profile' />
             ) : (
               <NavIcon href='/auth' src='/icons/user.svg' alt='Login' />
             )}
