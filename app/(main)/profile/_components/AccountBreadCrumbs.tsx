@@ -13,7 +13,7 @@ import {
 import { HTMLAttributes } from 'react';
 import { ProtectedPage } from '@/app/components/ProtectedPage';
 import { usePathname } from 'next/navigation';
-import { navItems } from '../../profile/navItems';
+import { navItems } from '../navItems';
 
 function AccountBreadCrumbs({
   className,
