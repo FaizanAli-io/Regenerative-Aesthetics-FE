@@ -194,7 +194,7 @@ function SignupForm({ className, navigateToLogin, ...props }: Props) {
                   className='w-full bg-primary-variant2 cursor-pointer'
                   disabled={isPending || isSuccess}
                 >
-                  Sign Up
+                  {isPending ? 'Signing up...' : 'Sign up'}
                 </Button>
                 <Button variant='outline' className='w-full'>
                   Sign Up with Google
