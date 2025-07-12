@@ -1,13 +1,14 @@
-import React from 'react';
-import HomeCover from './Home/HomeCover';
-import SectionIntro from './Home/SectionIntro';
-import OurProducts from './Home/OurProducts';
-import SpecialOffer from './Home/SpecialOffer';
-// import BlogHighlight from './Home/BlogHighlight';
-import NaturallyCrafted from './Home/NaturallyCrafted';
-import GetInTouch from './Home/GetInTouch';
-import Reviews from './Home/Reviews';
-import SectionAnimation from './Home/SectionAnimation';
+import React from "react";
+import HomeCover from "./Home/HomeCover";
+import SectionIntro from "./Home/SectionIntro";
+import OurProducts from "./Home/OurProducts";
+import SpecialOffer from "./Home/SpecialOffer";
+// import BlogHighlight from "./Home/BlogHighlight";
+import NaturallyCrafted from "./Home/NaturallyCrafted";
+import GetInTouch from "./Home/GetInTouch";
+import Reviews from "./Home/Reviews";
+import SectionAnimation from "./Home/SectionAnimation";
+import ProductShowcase from "./Home/ProductShowcase";
 
 const Page = () => {
   return (
@@ -17,6 +18,7 @@ const Page = () => {
       <OurProducts />
       <SpecialOffer />
       <SectionAnimation />
+      <ProductShowcase />
       {/* <BlogHighlight /> */}
       <NaturallyCrafted />
       <Reviews />
