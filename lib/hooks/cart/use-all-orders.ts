@@ -12,7 +12,16 @@ interface Res extends Order {
 const useAllOrders = () =>
   useQuery({
     queryKey: ORDERS_KEY,
-    queryFn: () => order.getAll<Res>().request.then(res => res.data),
+    queryFn: async () => {
+      try {
+        const response = await order.getOdd<Res[]>('/all?limit=1000').request;
+        return response.data || ([] as Res[]);
+      } catch (error) {
+        console.error('Error fetching orders:', error);
+        return [] as Res[];
+      }
+    },
+    initialData: [],
   });
 
 export { useAllOrders };

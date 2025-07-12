@@ -4,7 +4,6 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { useAuth } from '@/lib/hooks/use-auth'; // Assuming a hook to check authentication
-import { useRouter } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -60,7 +59,6 @@ const FormSchema = z
 function SignupForm({ className, navigateToLogin, ...props }: Props) {
   const { isAuthenticated } = useAuth();
   const { mutate: signup, isPending, isSuccess } = useSignup();
-  const router = useRouter(); // Use useRouter for navigation
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),

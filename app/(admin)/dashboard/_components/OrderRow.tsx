@@ -4,19 +4,21 @@ import { Badge } from '@/components/ui/badge';
 interface OrderRowProps {
   id: string;
   date: string;
-  customer: string;
+  customer?: string;
   paymentStatus: 'paid' | 'processing' | 'failed';
   fulfillmentStatus: 'fulfilled' | 'unfulfilled' | 'partially-fulfilled';
+  email?: string;
   total: string;
 }
 
 const OrderRow: React.FC<OrderRowProps> = ({
   id,
   date,
-  customer,
+  customer = 'Anonymous',
   paymentStatus,
   fulfillmentStatus,
   total,
+  email = 'Unknown',
 }) => {
   return (
     <tr className='border-b hover:bg-gray-50'>
@@ -28,6 +30,9 @@ const OrderRow: React.FC<OrderRowProps> = ({
       </td>
       <td className='p-3'>
         <span className='text-sm text-gray-600'>{customer}</span>
+      </td>
+      <td className='p-3'>
+        <span className='text-sm text-gray-600'>{email}</span>
       </td>
       <td className='p-3'>
         <PaymentStatusBadge status={paymentStatus} />

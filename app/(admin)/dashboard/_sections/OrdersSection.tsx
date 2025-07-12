@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent } from '@/components/ui/card';
 import OrderRow from '../_components/OrderRow';
@@ -7,6 +7,10 @@ import { useAllOrders } from '@/lib/hooks/cart/use-all-orders';
 
 const OrdersSection: React.FC = () => {
   const { data: orders, isFetched, isLoading } = useAllOrders();
+
+  useEffect(() => {
+    console.log('Fetched orders:', orders);
+  }, [orders]);
 
   const renderOrders = () => {
     if (isLoading) {
@@ -86,12 +90,13 @@ const OrdersSection: React.FC = () => {
         key={order.id}
         id={`#${order.id}`}
         date={new Date(order.orderAt!).toLocaleDateString() || 'Unknown Date'}
-        customer={order.user.name || 'Unknown Customer'}
+        customer={order.user?.name || 'Anonymous'}
         paymentStatus={order.status as 'paid' | 'processing' | 'failed'}
         fulfillmentStatus={
           order.status === 'paid' ? 'fulfilled' : 'unfulfilled'
         }
         total={`$${order.totalAmount?.toFixed(2) || '0.00'}`}
+        email={order.user?.email || 'Unknown Email'}
       />
     ));
   };
@@ -103,6 +108,7 @@ const OrdersSection: React.FC = () => {
           <table className='w-full'>
             <thead>
               <tr className='border-b'>
+                <th className='p-3 text-left'>Order ID</th>
                 <th className='p-3 text-left'>Date</th>
                 <th className='p-3 text-left'>Customer</th>
                 <th className='p-3 text-left'>Email</th>

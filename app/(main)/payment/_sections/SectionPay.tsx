@@ -16,6 +16,7 @@ const SectionPay = () => {
 
   const { items: products } = useCart(state => state.cart);
   const { mutate: checkout, isPending: pendingCheckout } = useCheckout();
+
   const handleCheckout = () => {
     if (products.length < 0) return toast.error('Your cart is empty!');
 
@@ -32,7 +33,7 @@ const SectionPay = () => {
         {
           onSuccess: () => {
             toast.success('Order placed successfully!');
-            router.push('/favorites');
+            router.replace('/profile');
           },
           onError: () => {
             toast.error('Failed to place order!');

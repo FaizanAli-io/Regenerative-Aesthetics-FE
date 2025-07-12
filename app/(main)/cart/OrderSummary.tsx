@@ -11,8 +11,9 @@ interface Props {
 
 const OrderSummary = ({ total }: Props) => {
   const handleCheckout = () => {
-    if (total > 0) redirect('/payment');
-    else toast.error('Your cart is empty!');
+    if (total > 0) return redirect('/payment');
+
+    toast.error('Your cart is empty!');
   };
 
   return (
