@@ -4,6 +4,8 @@ import { Edit3, X } from 'lucide-react';
 import { useDeleteUserDetails } from '@/lib/hooks/user-details/use-delete-user-details';
 import { toast } from 'sonner';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { getUser } from '@/lib/auth';
+import { useCart } from '@/lib/stores/cart';
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   id: string;
@@ -29,8 +31,14 @@ const AddressItem = ({
   ...props
 }: Props) => {
   const { mutate: deleteUserDetails } = useDeleteUserDetails();
+  const setAddress = useCart(state => state.setAddress);
 
   const handleDeleteAddress = () => {
+    if (!getUser()) {
+      setAddress(null);
+      return toast.success('Address deleted successfully!');
+    }
+
     deleteUserDetails(+id, {
       onSuccess: () => {
         toast.success('Address deleted successfully!');

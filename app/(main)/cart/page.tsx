@@ -12,8 +12,6 @@ const Page = () => {
   const { items, totalPrice } = useCartStore(state => state.cart); // Ensure cache is initialized
   const { isAuthenticated } = useAuth();
 
-  console.log('Cart data:', items);
-
   const renderCartItems = () => {
     if (isAuthenticated && isLoading) {
       return (

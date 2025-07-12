@@ -1,13 +1,23 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import SummaryItem from './_components/SummaryItem';
 import { useCart } from '@/lib/hooks/cart/use-cart';
+import { useCart as useCartStore } from '@/lib/stores/cart';
+import { getUser } from '@/lib/auth';
 
 const OrderSummary = () => {
   const { data } = useCart();
+  const [subtotal, setSubtotal] = useState(0);
   const products = data?.products || [];
   const totalAmount = data?.totalAmount || 0;
+  const { totalPrice, items } = useCartStore(state => state.cart);
+
+  useEffect(() => {
+    if (getUser()) return setSubtotal(totalAmount);
+
+    setSubtotal(totalPrice);
+  }, [products, totalPrice]);
 
   return (
     <div className='border-1 border-gray-300 rounded-md p-15 space-y-5'>
@@ -42,22 +52,22 @@ const OrderSummary = () => {
 
       <div className='flex justify-between'>
         <p className='font-semibold text-xl'>Subtotal</p>
-        <p className='font-semibold text-xl'>${totalAmount}</p>
+        <p className='font-semibold text-xl'>${subtotal}</p>
       </div>
 
       <div className='flex justify-between'>
         <p className='text-black/70 text-lg'>Estimated Tax</p>
-        <p className='font-semibold text-xl'>${!totalAmount ? 0 : '50'}</p>
+        <p className='font-semibold text-xl'>${!subtotal ? 0 : '50'}</p>
       </div>
       <div className='flex justify-between'>
         <p className='text-black/70 text-lg'>Estimated shipping & Handling</p>
-        <p className='font-semibold text-xl'>${!totalAmount ? 0 : '50'}</p>
+        <p className='font-semibold text-xl'>${!subtotal ? 0 : '50'}</p>
       </div>
 
       <div className='flex justify-between'>
         <p className='font-semibold text-xl'>Total</p>
         <p className='font-semibold text-xl'>
-          ${totalAmount ? totalAmount + 100 : 0}
+          ${subtotal ? subtotal + 100 : 0}
         </p>
       </div>
     </div>

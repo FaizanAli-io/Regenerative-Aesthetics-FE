@@ -19,9 +19,19 @@ import { useAddUserDetails } from '@/lib/hooks/user-details/use-add-user-details
 // import { useUpdateUserDetails } from '@/lib/hooks/user-details/use-update-user-details';
 import { UserDetailsRes } from '@/lib/services/user-contact-service';
 import { useUpdateUserDetails } from '@/lib/hooks/user-details/use-edit-user-details';
+import { useCart } from '@/lib/stores/cart';
+import { getUser } from '@/lib/auth';
+import { clear } from 'console';
 
 const FormSchema = z.object({
-  label: z.string().min(1, 'Label is required'),
+  label: z.string().refine(val => {
+    if (!getUser()) {
+      return z.string().email().min(1, 'Email is required').safeParse(val)
+        .success;
+    }
+    return val.length > 0;
+  }, 'Must be valid'), // If user is not authenticated, treat label as email
+  // min(1, 'Label is required'),
   phone: z.string().min(1, 'Phone number is required'),
   name: z.string().min(1, 'Name is required'),
   address: z.string().min(1, 'Address is required'),
@@ -44,6 +54,7 @@ function AddressForm({
 }: AddressFormProps) {
   const { mutate: addUserDetails } = useAddUserDetails();
   const { mutate: updateUserDetails } = useUpdateUserDetails();
+  const setAddress = useCart(state => state.setAddress);
 
   // const { mutate: updateUserDetails } = useUpdateUserDetails();
   const isEditMode = !!addressData;
@@ -65,13 +76,11 @@ function AddressForm({
   // Set form values when editing an existing address
   useEffect(() => {
     if (addressData) {
-      console.log('Populating form with address data:', addressData);
-      // Get all fields that are available in the data and set defaults for missing ones
       form.reset({
         label: addressData.label || '',
         phone: addressData.phone || '',
         // The user field might be missing in the API response
-        name: addressData.user?.name || '',
+        name: addressData.name || '',
         address: addressData.address || '',
         city: addressData.city || '',
         postalCode: addressData.postalCode || '',
@@ -92,9 +101,40 @@ function AddressForm({
     }
   }, [addressData, form]);
 
+  const setGuestAddress = (data: z.infer<typeof FormSchema>) => {
+    setAddress({
+      phone: data.phone,
+      name: data.name,
+      address: data.address,
+      city: data.city,
+      postalCode: data.postalCode,
+      state: data.state,
+      country: data.country,
+      email: data.label,
+    });
+  };
+
   function onSubmit(data: z.infer<typeof FormSchema>) {
+    if (!getUser()) {
+      setGuestAddress({
+        label: data.label,
+        phone: data.phone,
+        address: data.address,
+        city: data.city,
+        postalCode: data.postalCode,
+        state: data.state,
+        country: data.country,
+        name: data.name,
+      });
+
+      toast.success('Address updated successfully!');
+      form.reset();
+      if (onComplete) onComplete();
+      return;
+    }
+
     if (isEditMode && addressData) {
-      console.log('editing address');
+      // edit address
       updateUserDetails(
         {
           label: data.label,
@@ -117,30 +157,31 @@ function AddressForm({
           },
         }
       );
-    } else {
-      // Add new address
-      addUserDetails(
-        {
-          label: data.label,
-          phone: data.phone,
-          address: data.address,
-          city: data.city,
-          postalCode: data.postalCode,
-          state: data.state,
-          country: data.country,
-        },
-        {
-          onSuccess: () => {
-            toast.success('Address added successfully!');
-            form.reset();
-            if (onComplete) onComplete();
-          },
-          onError: () => {
-            toast.error('Failed to add address!');
-          },
-        }
-      );
+      return;
     }
+    // Add new address
+    addUserDetails(
+      {
+        label: data.label,
+        phone: data.phone,
+        address: data.address,
+        city: data.city,
+        postalCode: data.postalCode,
+        state: data.state,
+        country: data.country,
+        name: data.name,
+      },
+      {
+        onSuccess: () => {
+          toast.success('Address added successfully!');
+          form.reset();
+          if (onComplete) onComplete();
+        },
+        onError: () => {
+          toast.error('Failed to add address!');
+        },
+      }
+    );
   }
 
   return (
@@ -152,13 +193,15 @@ function AddressForm({
       >
         <FormField
           control={form.control}
-          name='label'
+          name={'label'}
           render={({ field }) => (
             <FormItem className='grid gap-2'>
-              <FormLabel>Label</FormLabel>
+              <FormLabel>{getUser() ? 'Label' : 'Email'}</FormLabel>
               <FormControl>
                 <Input
-                  placeholder='Label eg. Home / Office'
+                  placeholder={
+                    getUser() ? 'Label eg. Home / Office' : 'user@example.com'
+                  }
                   {...field}
                   type='text'
                 />

@@ -8,10 +8,6 @@ import { useAllOrders } from '@/lib/hooks/cart/use-all-orders';
 const OrdersSection: React.FC = () => {
   const { data: orders, isFetched, isLoading } = useAllOrders();
 
-  useEffect(() => {
-    console.log('Fetched orders:', orders);
-  }, [orders]);
-
   const renderOrders = () => {
     if (isLoading) {
       return (

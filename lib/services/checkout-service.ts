@@ -10,6 +10,7 @@ interface Address {
   postalCode: string;
   state: string;
   country: string;
+  email?: string;
 }
 
 interface OrderedProduct {

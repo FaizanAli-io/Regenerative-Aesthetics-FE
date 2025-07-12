@@ -13,6 +13,8 @@ import AddressItem from '../_components/AddressItem';
 import AddressForm from '../_forms/AddressForm';
 import { useUserDetails } from '@/lib/hooks/user-details/use-user-details';
 import { useCart } from '@/lib/stores/cart';
+import { getUser } from '@/lib/auth';
+import { Address } from '@/lib/services/checkout-service';
 
 const SectionAddress = () => {
   const { data: userDetails, isLoading, isError } = useUserDetails();
@@ -22,13 +24,20 @@ const SectionAddress = () => {
     null
   );
 
-  // Using the cart store for selectedAddress instead of local state
+  const address = useCart(state => state.address);
   const selectedAddress = useCart(state => state.selectedAddress);
   const setSelectedAddress = useCart(state => state.setSelectedAddress);
 
   const handleEditAddress = (address: any) => {
-    console.log('Edit address clicked:', address);
-    setEditingAddress(address);
+    if (getUser()) setEditingAddress(address);
+    else {
+      console.log('Editing guest address:', address);
+      setEditingAddress({
+        ...address,
+        label: address.email,
+        name: address.name,
+      });
+    }
     setDialogOpen(true);
   };
 
@@ -36,15 +45,14 @@ const SectionAddress = () => {
     setDialogOpen(false);
     setEditingAddress(null);
   };
+
   const handleSelectAddress = (id: string) => {
     setSelectedAddressId(id);
-    // Find the selected address data
     if (userDetails && Array.isArray(userDetails)) {
       const selectedAddressData = userDetails.find(
         item => String(item.id) === id
       );
       setSelectedAddress(selectedAddressData);
-      console.log('Selected address:', selectedAddressData);
     }
   };
   // Set default selected address if available
@@ -60,9 +68,34 @@ const SectionAddress = () => {
       setSelectedAddress(userDetails[0]);
     }
   }, [userDetails, selectedAddressId, selectedAddress, setSelectedAddress]);
+
+  const renderGuestAddress = () => {
+    if (!address) return <p>No guest address available.</p>;
+
+    const { address: addr, phone } = address;
+
+    return (
+      <AddressItem
+        title={'Guest Address'}
+        label={'Default'}
+        address={addr}
+        phone={phone}
+        id={'1'}
+        isSelected
+        onEdit={() => handleEditAddress(address)}
+      />
+    );
+  };
+
   const renderAddresses = () => {
+    const user = getUser();
+
+    if (!user) return renderGuestAddress();
+
     if (isLoading) return <p>Loading addresses...</p>;
+
     if (isError) return <p>Failed to load addresses. Please try again.</p>;
+
     if (
       !userDetails ||
       !Array.isArray(userDetails) ||
@@ -70,6 +103,7 @@ const SectionAddress = () => {
     ) {
       return <p>No addresses found.</p>;
     }
+
     return userDetails.map((item, index) => (
       <AddressItem
         title={item.label}
@@ -84,6 +118,8 @@ const SectionAddress = () => {
       />
     ));
   };
+
+  const getAddressButton = () => !!getUser() || !!address;
 
   return (
     <section className='px-20 py-28'>
@@ -103,7 +139,7 @@ const SectionAddress = () => {
           >
             {renderAddresses()}
           </RadioGroup>
-          <DialogTrigger asChild>
+          <DialogTrigger asChild hidden={getAddressButton()}>
             <img
               src='/icons/add-new-address.svg'
               alt='Add address button'

@@ -21,7 +21,7 @@ interface CartStore {
   decrementQuantity: (itemId: number) => void;
 
   address: Omit<Address, 'id'> | null;
-  setAddress: (address: Omit<Address, 'id'>) => void;
+  setAddress: (address: Omit<Address, 'id'> | null) => void;
 
   selectedAddress: Address | null;
   setSelectedAddress: (address: any) => void;
@@ -34,7 +34,7 @@ export const useCart = create<CartStore>()(
       address: null,
       selectedAddress: null,
 
-      setAddress: (address: Omit<Address, 'id'>) => {
+      setAddress: (address: Omit<Address, 'id'> | null) => {
         set({ address });
       },
 

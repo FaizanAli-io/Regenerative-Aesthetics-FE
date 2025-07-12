@@ -9,6 +9,8 @@ interface UserDetailsReq {
   state: string;
   country: string;
   label: string;
+  name?: string;
+  email?: string;
 }
 
 interface UserDetailsRes extends UserDetailsReq {
