@@ -25,37 +25,12 @@ export const useAddToCart = () => {
   return useMutation<Res, AxiosError, CartAddReq>({
     mutationFn: fn,
 
-    onMutate: async newItem => {
-      console.log('adding cart item started');
-      // Optimistic update logic
-      // await queryClient.cancelQueries(['wishlist']);
-      // const previousWishlist = queryClient.getQueryData<Res[]>(['wishlist']);
-      // queryClient.setQueryData<Res[]>(['wishlist'], old => [
-      //   ...(old || []),
-      //   {
-      //     id: Date.now(),
-      //     createdAt: new Date().toISOString(),
-      //     user: { id: newItem.userId },
-      //     product: { id: newItem.productId },
-      //   },
-      // ]);
-      // return { previousWishlist };
-    },
-
     onSuccess: data => {
-      console.log('added to the cart.', data);
       queryClient.invalidateQueries({ queryKey: CART_KEY });
     },
 
     onError: (error, newItem, context) => {
       console.error(error.message, error);
-      //   if (context?.previousWishlist) {
-      //     queryClient.setQueryData(['wishlist'], context.previousWishlist);
-      //   }
-    },
-
-    onSettled: () => {
-      // queryClient.invalidateQueries(['wishlist']);
     },
   });
 };

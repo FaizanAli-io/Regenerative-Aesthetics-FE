@@ -13,6 +13,9 @@ import { useWishlist } from '@/lib/hooks/wishlist/use-wishlist';
 import { useAddToCart } from '@/lib/hooks/cart/use-add-to-cart';
 import { getUser } from '@/lib/auth';
 import { useDeleteWishlist } from '@/lib/hooks/wishlist/delete-wishlist';
+import { useRouter } from 'next/navigation';
+import { useCart } from '@/lib/stores/cart';
+import { useAuth } from '@/lib/hooks/use-auth';
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
   product: Omit<Product, 'category'>; // Removed 'category' from Product type
@@ -28,19 +31,24 @@ const ProductCard = ({
   theme,
   ...props
 }: Props) => {
+  const router = useRouter();
+  const { isAuthenticated } = useAuth();
+  const { items: cartItems } = useCart(state => state.cart);
+
   const { mutate: addToWishlist } = useAddWishlist();
   const { data: wishlist } = useWishlist();
+  const { mutate: removeWishlist } = useDeleteWishlist();
 
   const { mutate: addToCart } = useAddToCart();
-  const { mutate: removeWishlist } = useDeleteWishlist();
+  const addToCartCache = useCart(state => state.addToCart);
 
   const [user, setUser] = useState<User | null>(null);
   const [isAdded, setIsAdded] = useState(false);
   const [isFavourite, setIsFavourite] = useState(false);
 
   useEffect(() => {
-    setUser(getUser());
-  }, []);
+    if (isAuthenticated) setUser(getUser());
+  }, [isAuthenticated]);
 
   useEffect(() => {
     if (favorite || !wishlist || !wishlist.wishlistItems.length) return;
@@ -52,8 +60,37 @@ const ProductCard = ({
     if (isProductInWishlist) setIsFavourite(true);
   }, [wishlist, favorite]);
 
+  useEffect(() => {
+    if (isAuthenticated || !cartItems.length) return;
+
+    const isProductInCart = cartItems.find(item => item.id === product.id);
+    if (isProductInCart) setIsAdded(true);
+  }, [cartItems, isAuthenticated, product.id]);
+
+  const handleAnonymousAddToCart = () => {
+    addToCartCache({
+      id: product.id,
+      title: product.title,
+      description: product.description,
+      price: product.price,
+      stock: product.stock,
+      images: product.images,
+      reviewCount: product.reviewCount,
+      updatedAt: product.updatedAt,
+      quantity: 1,
+    });
+
+    toast.success('Added to cart');
+  };
+
   const handleClick = () => {
     setIsAdded(true);
+
+    if (!user) {
+      handleAnonymousAddToCart();
+      return;
+    }
+
     addToCart(
       {
         id: product.id,
@@ -67,8 +104,9 @@ const ProductCard = ({
       }
     );
   };
+
   const handleFavorite = () => {
-    if (!user) return;
+    if (!user) return router.push('/auth');
 
     if (isFavourite) {
       // Optimistically update local state

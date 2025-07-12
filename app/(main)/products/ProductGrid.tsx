@@ -64,7 +64,6 @@ const ProductGrid = () => {
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    // Scroll to top when page changes
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -104,6 +103,7 @@ const ProductGrid = () => {
               </div>
             )}
           </div>
+
           {/* Pagination */}
           {totalItems > ITEMS_PER_PAGE && (
             <PaginationUI

@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useDeleteCart } from '@/lib/hooks/cart/use-delete-cart';
-import { useEditCart } from '@/lib/hooks/cart/use-edit-cart';
+import { useAuth } from '@/lib/hooks/use-auth';
 import { CartItem as ICartItem, useCart } from '@/lib/stores/cart';
 import clsx from 'clsx';
 import { XIcon } from 'lucide-react';
@@ -14,13 +14,19 @@ interface Props extends HTMLAttributes<HTMLDivElement> {
 }
 
 const CartItem = ({ product, className, ...props }: Props) => {
-  // const increment = useCart(state => state.incrementQuantity);
-  // const decrement = useCart(state => state.decrementQuantity);
-
   const { mutate: deleteItem } = useDeleteCart();
-  const { mutate: updateItem } = useEditCart();
+  const { isAuthenticated } = useAuth();
+  const remoteItem = useCart(state => state.removeFromCart);
+  const incrementItem = useCart(state => state.incrementQuantity);
+  const decrementItem = useCart(state => state.decrementQuantity);
 
   const handleRemove = () => {
+    if (!isAuthenticated) {
+      remoteItem(product.id);
+      toast.success('Product removed from cart!');
+      return;
+    }
+
     deleteItem(product.id, {
       onSuccess: () => {
         toast.success('Product removed!');
@@ -31,12 +37,15 @@ const CartItem = ({ product, className, ...props }: Props) => {
       },
     });
   };
+
   const handleIncrement = () => {
-    // updateItem({ id: product.id, quantity: product.quantity + 1 });
+    if (!isAuthenticated) return incrementItem(product.id);
+
     toast.info('You can only buy one product at a time!');
   };
+
   const handleDecrement = () => {
-    toast.info('You can only buy one product at a time!');
+    if (!isAuthenticated) return decrementItem(product.id);
   };
 
   return (
@@ -58,18 +67,17 @@ const CartItem = ({ product, className, ...props }: Props) => {
         />
         <div>
           <h2 className='text-lg font-semibold'>{product.title}</h2>
-          {/* <p className='text-gray-600'>{code}</p> */}
         </div>
       </div>
-      <div className='flex'>
+      <div className='flex space-x-2'>
         <Button
           onClick={handleDecrement}
           className='bg-white text-primary-darker text-2xl pt-1 cursor-pointer hover:bg-white'
         >
           -
         </Button>
-        <Input
-          className='border-1 w-10 px-3 py-1 rounded-sm border-gray-300 font-semibold text-center text-primary-darker'
+        <input
+          className='w-5 border-1 rounded-sm border-gray-300 font-semibold text-center text-primary-darker '
           value={product.quantity}
         />
         <Button
@@ -81,7 +89,6 @@ const CartItem = ({ product, className, ...props }: Props) => {
       </div>
       <div className='flex space-x-5 items-center'>
         <p className='text-2xl text-primary-darker'>
-          {/* make sure that the precision is no more than 2 */}
           {(parseFloat(product.price) * product.quantity).toFixed(2)}
         </p>
         <XIcon

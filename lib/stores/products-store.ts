@@ -9,7 +9,7 @@ enum ProductSort {
 
 type CategoryFilter = Record<string, boolean>;
 
-interface BearState {
+interface ProductState {
   priceFilter: {
     min: number;
     max: number;
@@ -23,7 +23,7 @@ interface BearState {
   setCategoryFilter: (category: string, value: boolean) => void;
 }
 
-const useProductsStore = create<BearState>()(set => ({
+const useProductsStore = create<ProductState>()(set => ({
   priceFilter: {
     min: 1,
     max: 50,

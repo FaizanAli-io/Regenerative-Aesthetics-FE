@@ -19,6 +19,7 @@ const BookPage = React.forwardRef<
 
 const Page = () => {
   const router = useRouter();
+
   useEffect(() => {
     const user = getUser();
     if (user) router.replace('/products');
