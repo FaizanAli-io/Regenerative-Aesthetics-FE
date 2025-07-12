@@ -14,8 +14,9 @@ import { useAddToCart } from '@/lib/hooks/cart/use-add-to-cart';
 import { getUser } from '@/lib/auth';
 import { useDeleteWishlist } from '@/lib/hooks/wishlist/delete-wishlist';
 import { useRouter } from 'next/navigation';
-import { useCart } from '@/lib/stores/cart';
+import { useCart as useCartCache } from '@/lib/stores/cart';
 import { useAuth } from '@/lib/hooks/use-auth';
+import { useCart } from '@/lib/hooks/cart/use-cart';
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
   product: Omit<Product, 'category'>; // Removed 'category' from Product type
@@ -33,14 +34,15 @@ const ProductCard = ({
 }: Props) => {
   const router = useRouter();
   const { isAuthenticated } = useAuth();
-  const { items: cartItems } = useCart(state => state.cart);
+
+  const { items: cartItems } = useCartCache(state => state.cart);
+  const addToCartCache = useCartCache(state => state.addToCart);
+  const { data: cartData, isFetched } = useCart();
+  const { mutate: addToCart } = useAddToCart();
 
   const { mutate: addToWishlist } = useAddWishlist();
   const { data: wishlist } = useWishlist();
   const { mutate: removeWishlist } = useDeleteWishlist();
-
-  const { mutate: addToCart } = useAddToCart();
-  const addToCartCache = useCart(state => state.addToCart);
 
   const [user, setUser] = useState<User | null>(null);
   const [isAdded, setIsAdded] = useState(false);
@@ -61,11 +63,20 @@ const ProductCard = ({
   }, [wishlist, favorite]);
 
   useEffect(() => {
-    if (isAuthenticated || !cartItems.length) return;
+    if (getUser() || !cartItems.length) return;
 
     const isProductInCart = cartItems.find(item => item.id === product.id);
     if (isProductInCart) setIsAdded(true);
-  }, [cartItems, isAuthenticated, product.id]);
+  }, [cartItems, user, product.id]);
+
+  useEffect(() => {
+    if (!cartData || !isFetched) return;
+
+    const isProductInCart = cartData.products.find(
+      item => item.product.id === product.id
+    );
+    if (isProductInCart) setIsAdded(true);
+  }, [cartData, isFetched, product.id]);
 
   const handleAnonymousAddToCart = () => {
     addToCartCache({
