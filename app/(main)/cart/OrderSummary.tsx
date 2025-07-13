@@ -39,7 +39,7 @@ const OrderSummary = ({ total }: Props) => {
 
       <div className='flex justify-between'>
         <p className='font-semibold text-xl'>Subtotal</p>
-        <p className='font-semibold text-xl'>${total}</p>
+        <p className='font-semibold text-xl'>${total.toFixed(2)}</p>
       </div>
 
       <div className='flex justify-between'>
@@ -53,7 +53,9 @@ const OrderSummary = ({ total }: Props) => {
 
       <div className='flex justify-between'>
         <p className='font-semibold text-xl'>Total</p>
-        <p className='font-semibold text-xl'>${total > 0 ? total + 100 : 0}</p>
+        <p className='font-semibold text-xl'>
+          ${total > 0 ? (total + 100).toFixed(2) : 0}
+        </p>
       </div>
 
       <Button

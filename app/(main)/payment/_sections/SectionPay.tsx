@@ -19,7 +19,8 @@ const SectionPay = () => {
 
   const { items: products } = useCart(state => state.cart);
   const { mutate: checkout, isPending: pendingCheckout } = useCheckout();
-  const { mutate: guestCheckout } = useGuestCheckout();
+  const { mutate: guestCheckout, isPending: pendingGuestCheckout } =
+    useGuestCheckout();
 
   const handleGuestCheckout = () => {
     if (!guestAddress) return toast.error('Please provide a delivery address!');
@@ -107,8 +108,11 @@ const SectionPay = () => {
         <ButtonOutline
           className='flex-1 bg-primary-variant2 text-white mt-5'
           onClick={handleCheckout}
+          disabled={pendingCheckout || pendingGuestCheckout}
         >
-          Confirm Order
+          {pendingCheckout || pendingGuestCheckout
+            ? 'Processing...'
+            : 'Confirm Order'}
         </ButtonOutline>
       </div>
     </section>

@@ -1,6 +1,8 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { getUser } from '@/lib/auth';
 import { useDeleteCart } from '@/lib/hooks/cart/use-delete-cart';
+import { useUpdateCart } from '@/lib/hooks/cart/use-update-cart';
 import { useAuth } from '@/lib/hooks/use-auth';
 import { CartItem as ICartItem, useCart } from '@/lib/stores/cart';
 import clsx from 'clsx';
@@ -14,14 +16,15 @@ interface Props extends HTMLAttributes<HTMLDivElement> {
 }
 
 const CartItem = ({ product, className, ...props }: Props) => {
+  const { mutate: updateQuantity } = useUpdateCart();
   const { mutate: deleteItem } = useDeleteCart();
-  const { isAuthenticated } = useAuth();
+
   const remoteItem = useCart(state => state.removeFromCart);
   const incrementItem = useCart(state => state.incrementQuantity);
   const decrementItem = useCart(state => state.decrementQuantity);
 
   const handleRemove = () => {
-    if (!isAuthenticated) {
+    if (!getUser()) {
       remoteItem(product.id);
       toast.success('Product removed from cart!');
       return;
@@ -39,13 +42,41 @@ const CartItem = ({ product, className, ...props }: Props) => {
   };
 
   const handleIncrement = () => {
-    if (!isAuthenticated) return incrementItem(product.id);
+    if (!getUser()) return incrementItem(product.id);
 
-    toast.info('You can only buy one product at a time!');
+    updateQuantity(
+      { productId: product.id, quantity: product.quantity + 1 },
+      {
+        onSuccess: () => {
+          toast.success('Product quantity updated!');
+        },
+        onError: error => {
+          console.error(error);
+          toast.error('Failed to update product quantity!');
+        },
+      }
+    );
+
+    // toast.info('You can only buy one product at a time!');
   };
 
   const handleDecrement = () => {
-    if (!isAuthenticated) return decrementItem(product.id);
+    if (!getUser()) return decrementItem(product.id);
+
+    if (product.quantity <= 1) return;
+
+    updateQuantity(
+      { productId: product.id, quantity: product.quantity - 1 },
+      {
+        onSuccess: () => {
+          toast.success('Product quantity updated!');
+        },
+        onError: error => {
+          console.error(error);
+          toast.error('Failed to update product quantity!');
+        },
+      }
+    );
   };
 
   return (
