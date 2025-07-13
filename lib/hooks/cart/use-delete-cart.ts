@@ -2,6 +2,8 @@ import order from '@/lib/services/orders-service';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { CART_KEY } from '../_cache-keys';
+import { CartRes } from './use-cart';
+import { produce } from 'immer';
 
 const fn = async (id: number): Promise<unknown> => {
   const res = await order.delete(id, '/cart/remove');
@@ -11,25 +13,37 @@ const fn = async (id: number): Promise<unknown> => {
 export const useDeleteCart = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<unknown, AxiosError, number>({
+  return useMutation<
+    unknown,
+    AxiosError,
+    number,
+    { cartItems: CartRes | null }
+  >({
     mutationFn: fn,
 
-    onMutate: async newItem => {
-      console.log('deleting cart item...');
-      // Optimistic update logic can be implemented here if needed
-    },
+    onMutate: async id => {
+      queryClient.cancelQueries({ queryKey: CART_KEY });
+      const prevCartItems = queryClient.getQueryData<CartRes>(CART_KEY);
 
-    onSuccess: data => {
-      console.log('deleted cart item.', data);
-      queryClient.invalidateQueries({ queryKey: CART_KEY });
+      queryClient.setQueryData<CartRes>(CART_KEY, old => {
+        return produce(old, draft => {
+          if (!draft) return draft;
+
+          draft.products = draft.products.filter(p => p.product.id !== id);
+
+          return draft;
+        });
+      });
+
+      return { cartItems: prevCartItems || null };
     },
 
     onError: (error, newItem, context) => {
       console.error(error.message, error);
+      if (context?.cartItems)
+        queryClient.setQueryData<CartRes>(CART_KEY, context.cartItems);
     },
 
-    onSettled: () => {
-      // Also invalidate queries when the mutation is settled (either succeeded or failed)
-    },
+    onSettled: () => queryClient.invalidateQueries({ queryKey: CART_KEY }),
   });
 };

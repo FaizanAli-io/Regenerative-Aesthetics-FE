@@ -4,16 +4,14 @@ import CartItem from './_components/CartItem';
 import OrderSummary from './OrderSummary';
 import { useCart } from '@/lib/hooks/cart/use-cart';
 import { useCart as useCartStore } from '@/lib/stores/cart';
-import { ProtectedPage } from '@/app/components/ProtectedPage';
-import { useAuth } from '@/lib/hooks/use-auth';
+import { getUser } from '@/lib/auth';
 
 const Page = () => {
-  const { data, isLoading, isError } = useCart();
+  const { data, isLoading } = useCart();
   const { items, totalPrice } = useCartStore(state => state.cart); // Ensure cache is initialized
-  const { isAuthenticated } = useAuth();
 
   const renderCartItems = () => {
-    if (isAuthenticated && isLoading) {
+    if (getUser() && isLoading) {
       return (
         <p className='text-gray-500 font-semibold text-lg mt-2 w-full h-full flex items-center justify-center'>
           Loading cart items...

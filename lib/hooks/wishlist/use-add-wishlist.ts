@@ -78,7 +78,7 @@ export const useAddWishlist = () => {
 
       return { previousWishlist, tempId };
     },
-    onSuccess: (data, variables, context) => {
+    onSuccess: (data, _, context) => {
       queryClient.setQueryData<WishlistResponse>(WISH_LIST_KEY, old => {
         if (old && context?.tempId) {
           return {
@@ -93,7 +93,7 @@ export const useAddWishlist = () => {
         return old;
       });
     },
-    onError: (error, newItem, context) => {
+    onError: (_, __, context) => {
       if (context?.previousWishlist) {
         queryClient.setQueryData(WISH_LIST_KEY, context.previousWishlist);
       }

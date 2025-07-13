@@ -1,9 +1,8 @@
+'use client';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { getUser } from '@/lib/auth';
 import { useDeleteCart } from '@/lib/hooks/cart/use-delete-cart';
 import { useUpdateCart } from '@/lib/hooks/cart/use-update-cart';
-import { useAuth } from '@/lib/hooks/use-auth';
 import { CartItem as ICartItem, useCart } from '@/lib/stores/cart';
 import clsx from 'clsx';
 import { XIcon } from 'lucide-react';
@@ -31,13 +30,8 @@ const CartItem = ({ product, className, ...props }: Props) => {
     }
 
     deleteItem(product.id, {
-      onSuccess: () => {
-        toast.success('Product removed!');
-      },
-      onError: error => {
-        console.error(error);
-        toast.error('Failed to remove product!');
-      },
+      onSuccess: () => toast.success('Product removed from cart!'),
+      onError: error => toast.error(error.message),
     });
   };
 
@@ -47,17 +41,9 @@ const CartItem = ({ product, className, ...props }: Props) => {
     updateQuantity(
       { productId: product.id, quantity: product.quantity + 1 },
       {
-        onSuccess: () => {
-          toast.success('Product quantity updated!');
-        },
-        onError: error => {
-          console.error(error);
-          toast.error('Failed to update product quantity!');
-        },
+        onError: error => toast.error(error.message),
       }
     );
-
-    // toast.info('You can only buy one product at a time!');
   };
 
   const handleDecrement = () => {
@@ -68,13 +54,7 @@ const CartItem = ({ product, className, ...props }: Props) => {
     updateQuantity(
       { productId: product.id, quantity: product.quantity - 1 },
       {
-        onSuccess: () => {
-          toast.success('Product quantity updated!');
-        },
-        onError: error => {
-          console.error(error);
-          toast.error('Failed to update product quantity!');
-        },
+        onError: error => toast.error(error.message),
       }
     );
   };

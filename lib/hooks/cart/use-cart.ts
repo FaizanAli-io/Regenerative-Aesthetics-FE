@@ -8,7 +8,7 @@ interface ResProduct extends Omit<Product, 'category'> {
   updatedAt: string;
 }
 
-interface Res {
+interface CartRes {
   id: number;
   orderAt: string;
   status: string;
@@ -26,7 +26,9 @@ interface Res {
 const useCart = () =>
   useQuery({
     queryKey: CART_KEY,
-    queryFn: () => cart.getOdd<Res>('/cart/mine').request.then(res => res.data),
+    queryFn: () =>
+      cart.getOdd<CartRes>('/cart/mine').request.then(res => res.data),
   });
 
 export { useCart };
+export type { CartRes };
