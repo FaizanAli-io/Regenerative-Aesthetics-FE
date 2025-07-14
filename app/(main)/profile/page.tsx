@@ -1,11 +1,12 @@
 import React from 'react';
+import UserDetailsTable from './_components/UserDetailsTable';
 
-const page = () => {
+const Page = () => {
   return (
     <div>
-      <h2>Profile</h2>
+      <UserDetailsTable />
     </div>
   );
 };
 
-export default page;
+export default Page;

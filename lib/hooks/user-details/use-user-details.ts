@@ -18,7 +18,6 @@ const useUserDetails = () =>
     },
     initialData: [],
     retry: 2,
-    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
 export { useUserDetails };

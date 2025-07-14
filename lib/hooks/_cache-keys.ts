@@ -2,6 +2,7 @@ const CATEGORIES_KEY = ['categories'];
 const PRODUCTS_KEY = ['products'];
 const WISH_LIST_KEY = ['wishlist'];
 const ORDERS_KEY = ['orders'];
+const USER_ORDERS_KEY = ['user-orders'];
 const USERS_KEY = ['users-admin'];
 const CART_KEY = ['cart'];
 const USER_DETAILS_KEY = ['user-details'];
@@ -16,4 +17,5 @@ export {
   CART_KEY,
   USER_DETAILS_KEY,
   BLOGS_KEY,
+  USER_ORDERS_KEY,
 };

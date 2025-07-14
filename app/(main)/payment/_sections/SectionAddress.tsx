@@ -31,7 +31,6 @@ const SectionAddress = () => {
   const handleEditAddress = (address: any) => {
     if (getUser()) setEditingAddress(address);
     else {
-      console.log('Editing guest address:', address);
       setEditingAddress({
         ...address,
         label: address.email,
@@ -119,7 +118,7 @@ const SectionAddress = () => {
     ));
   };
 
-  const getAddressButton = () => !!getUser() || !!address;
+  const getAddressButton = () => !getUser() && !!address;
 
   return (
     <section className='px-20 py-28'>
@@ -147,7 +146,7 @@ const SectionAddress = () => {
               onClick={() => setEditingAddress(null)}
             />
           </DialogTrigger>
-        </div>{' '}
+        </div>
         <DialogContent className='sm:max-w-[425px] max-h-[85vh] overflow-hidden flex flex-col'>
           <DialogHeader className='flex-shrink-0'>
             <DialogTitle>

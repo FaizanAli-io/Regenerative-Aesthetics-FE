@@ -20,12 +20,12 @@ export const useUpdateUserDetails = () => {
 
   return useMutation<UserDetailsRes, AxiosError, Req>({
     mutationFn: fn,
-    onMutate: async newItem => {
-      console.log('updating contact details...');
-    },
+    // onMutate: async newItem => {
+    //   console.log('updating contact details...', newItem);
+    // },
 
     onSuccess: data => {
-      console.log('updated the contact details...', data);
+      // console.log('updated the contact details...', data);
       queryClient.invalidateQueries({ queryKey: USER_DETAILS_KEY });
     },
 

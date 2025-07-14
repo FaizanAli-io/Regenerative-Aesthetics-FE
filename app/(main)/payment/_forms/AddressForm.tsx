@@ -145,6 +145,7 @@ function AddressForm({
           state: data.state,
           country: data.country,
           id: addressData.id,
+          name: data.name,
         },
         {
           onSuccess: () => {
