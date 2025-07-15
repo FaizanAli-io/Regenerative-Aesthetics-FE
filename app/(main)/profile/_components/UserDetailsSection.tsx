@@ -10,6 +10,7 @@ import { DialogTitle } from '@radix-ui/react-dialog';
 import AddressForm from '../../payment/_forms/AddressForm';
 import UserDetailsTable from './UserDetailsTable';
 import { useUserDialogStore } from '../_stores/userDetailsStore';
+import ProfileInfo from './ProfileInfo';
 
 const UserDetailsSection = () => {
   const dialogOpen = useUserDialogStore(s => s.dialogOpen);
@@ -26,6 +27,8 @@ const UserDetailsSection = () => {
   return (
     <div>
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <h2 className='font-bold text-3xl mb-4'>Profile</h2>
+        <ProfileInfo />
         <h2 className='font-bold text-3xl mb-4'>Address Book</h2>
         <UserDetailsTable />
         <DialogContent className='sm:max-w-[425px] max-h-[85vh] overflow-hidden flex flex-col'>
