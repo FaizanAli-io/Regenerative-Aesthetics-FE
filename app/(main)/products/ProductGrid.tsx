@@ -9,9 +9,15 @@ import ProductGridSkeleton from '@/app/components/ProductGridSkeleton';
 import { ProductSort, useProductsStore } from '@/lib/stores/products-store';
 import { Product } from '@/lib/services/products-service';
 import PaginationUI from '@/app/components/PaginationUI';
+import { useCategories } from '@/lib/hooks/categories/use-categories';
 
-const ProductGrid = () => {
+interface Props {
+  categoryId?: number;
+}
+
+const ProductGrid = ({ categoryId }: Props) => {
   const { data: products, isLoading, isError, isFetched } = useProducts();
+  const { data: categories, isLoading: isLoadingCategories } = useCategories();
   const { min, max } = useProductsStore(state => state.priceFilter);
   const sortBy = useProductsStore(state => state.sortBy);
   const categoryFilters = useProductsStore(state => state.categoryFilter);
@@ -42,15 +48,31 @@ const ProductGrid = () => {
     },
     [sortBy]
   );
-  // Filter products based on current filters
+
+  const getTargetCategory = () => {
+    if (!categoryId) return null;
+
+    const category = categories.find(c => +c.id === +categoryId);
+    const targetIds = category?.children.map(c => c.id);
+
+    return { category, targetIds };
+  };
+
   const filteredProducts = React.useMemo(() => {
     if (!products || !Array.isArray(products)) return [];
 
-    return products
+    let allProducts = [...products];
+    const target = getTargetCategory();
+    if (target?.targetIds && target.targetIds.length)
+      allProducts = allProducts.filter(p =>
+        target.targetIds?.includes(p.category.id)
+      );
+
+    return allProducts
       .filter(product => categoryFilters[product.category.title])
       .filter(product => +product.price >= min && +product.price <= max)
       .sort((a, b) => handleSort(a, b));
-  }, [products, categoryFilters, min, max, sortBy, handleSort]);
+  }, [products, categoryFilters, min, max, sortBy, handleSort, categories]);
 
   // Calculate pagination
   const totalItems = filteredProducts.length;
@@ -69,7 +91,7 @@ const ProductGrid = () => {
 
   return (
     <div className='space-y-10'>
-      {isLoading || !products.length ? (
+      {isLoading || isLoadingCategories || (!products.length && !isFetched) ? (
         <ProductGridSkeleton itemCount={10} theme='light' />
       ) : (
         <>

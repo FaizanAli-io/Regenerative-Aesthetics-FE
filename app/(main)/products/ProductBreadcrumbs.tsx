@@ -1,3 +1,4 @@
+'use client';
 import Link from 'next/link';
 
 import {
@@ -5,15 +6,27 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
-  // BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
-import { HTMLAttributes } from 'react';
+import { HTMLAttributes, useEffect, useState } from 'react';
+import { useCategories } from '@/lib/hooks/categories/use-categories';
 
-function ProductBreadcrumbs({
-  className,
-  ...props
-}: HTMLAttributes<HTMLDivElement>) {
+interface Props extends HTMLAttributes<HTMLDivElement> {
+  categoryId?: number;
+}
+
+function ProductBreadcrumbs({ className, categoryId, ...props }: Props) {
+  const { data: categories } = useCategories();
+  const [category, setCategory] = useState<string>('');
+
+  useEffect(() => {
+    if (!categoryId || !categories || !categories.length) return;
+
+    const target = categories.find(c => c.id === categoryId);
+
+    setCategory(target?.title || '');
+  }, [categories]);
+
   return (
     <Breadcrumb className={className} {...props}>
       <BreadcrumbList className='text-lg font-semibold'>
@@ -28,12 +41,12 @@ function ProductBreadcrumbs({
             <Link href='/products'>Products</Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
-        {/* <BreadcrumbSeparator /> */}
-        {/* <BreadcrumbItem>
-           <BreadcrumbPage className='font-semibold text-primary-darker'>
-            Hair Products
-          </BreadcrumbPage> 
-        </BreadcrumbItem> */}
+        {category && (
+          <>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>{category}</BreadcrumbItem>
+          </>
+        )}
       </BreadcrumbList>
     </Breadcrumb>
   );
