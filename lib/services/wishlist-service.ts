@@ -11,10 +11,16 @@ export interface WLProduct {
   updatedAt: string;
 }
 
+interface User {
+  id: number;
+  name: string;
+  email: string;
+}
 export interface WishlistItem {
   id: number;
   createdAt: string;
   product: WLProduct;
+  user: User;
 }
 
 export interface WishlistItemRequest {

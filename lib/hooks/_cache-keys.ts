@@ -1,6 +1,7 @@
 const CATEGORIES_KEY = ['categories'];
 const PRODUCTS_KEY = ['products'];
 const WISH_LIST_KEY = ['wishlist'];
+const WISH_LIST_ALL_KEY = ['wishlist-all'];
 const ORDERS_KEY = ['orders'];
 const USER_ORDERS_KEY = ['user-orders'];
 const USERS_KEY = ['users-admin'];
@@ -12,6 +13,7 @@ export {
   CATEGORIES_KEY,
   PRODUCTS_KEY,
   WISH_LIST_KEY,
+  WISH_LIST_ALL_KEY,
   ORDERS_KEY,
   USERS_KEY,
   CART_KEY,

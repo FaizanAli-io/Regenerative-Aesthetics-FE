@@ -35,6 +35,7 @@ const UserDetailTable = () => {
   return (
     <div>
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <h2 className='font-bold text-3xl mb-4'>Address Book</h2>
         <Table className='border-1'>
           <TableHeader className='bg-primary'>
             <TableRow>

@@ -8,6 +8,7 @@ import ProductsSection from './_sections/ProductsSection';
 import CategoriesSection from './_sections/CategoriesSection';
 import BlogsSection from './_sections/BlogsSection';
 import { ProtectedPage } from '@/app/components/ProtectedPage';
+import WishlistSection from './_sections/WishlistSection';
 
 export default function AdminPanel() {
   const activeIndex = useSidebarStore(state => state.activeIndex);
@@ -23,6 +24,8 @@ export default function AdminPanel() {
         return <CategoriesSection />;
       case 4:
         return <BlogsSection />;
+      case 5:
+        return <WishlistSection />;
     }
   };
 

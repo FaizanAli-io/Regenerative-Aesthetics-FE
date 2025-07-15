@@ -1,5 +1,4 @@
 'use client';
-
 import React from 'react';
 import NavItem from './NavItem';
 import useSidebarStore from '@/lib/stores/dashboard-sidebar-store';
@@ -24,6 +23,10 @@ const sections = [
   {
     icon: 'blogs',
     label: 'Blogs',
+  },
+  {
+    icon: 'wishlist',
+    label: 'Wishlists',
   },
 ];
 
