@@ -27,6 +27,7 @@ import {
 import { useLogin } from '@/lib/hooks/use-login';
 import { toast } from 'sonner';
 import Image from 'next/image';
+import { getUser } from '@/lib/auth';
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
   navigateToSignup?: () => void;
@@ -47,9 +48,8 @@ const FormSchema = z.object({
 });
 
 function LoginForm({ className, navigateToSignup, ...props }: Props) {
-  const { isAuthenticated } = useAuth();
   const { mutate: login, isPending, isSuccess } = useLogin();
-  const router = useRouter(); // Use useRouter for navigation
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -58,6 +58,7 @@ function LoginForm({ className, navigateToSignup, ...props }: Props) {
       password: '',
     },
   });
+
   function onSubmit(data: z.infer<typeof FormSchema>) {
     login(data, {
       onSuccess: () => {
@@ -72,7 +73,18 @@ function LoginForm({ className, navigateToSignup, ...props }: Props) {
     });
   }
 
-  if (isAuthenticated) return null;
+  if (getUser()) return null;
+
+  const handleForgotPass = () => {
+    const email = form.getValues().email;
+
+    const emailRegex = /^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$/;
+
+    if (!email) return toast.error('Enter your email');
+    if (!emailRegex.test(email)) return toast.error('Enter a valid email.');
+
+    toast.success('Reset password link sent!');
+  };
 
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
@@ -139,6 +151,11 @@ function LoginForm({ className, navigateToSignup, ...props }: Props) {
                         />
                       </FormControl>
                       <FormMessage />
+                      <div className='flex justify-end cursor-pointer'>
+                        <p className='underline' onClick={handleForgotPass}>
+                          Forgot Password?
+                        </p>
+                      </div>
                     </FormItem>
                   )}
                 />
@@ -150,6 +167,7 @@ function LoginForm({ className, navigateToSignup, ...props }: Props) {
                 >
                   {isPending ? 'Logging in...' : 'Login'}
                 </Button>
+
                 <Button variant='outline' className='w-full'>
                   Login with Google
                 </Button>
