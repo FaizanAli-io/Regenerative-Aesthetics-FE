@@ -1,5 +1,5 @@
 import React from 'react';
-import UserDetailsTable from './_components/UserDetailsTable';
+import UserDetailsTable from './_components/UserDetailsSection';
 
 const Page = () => {
   return (
