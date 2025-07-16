@@ -14,7 +14,6 @@ import AddressForm from '../_forms/AddressForm';
 import { useUserDetails } from '@/lib/hooks/user-details/use-user-details';
 import { useCart } from '@/lib/stores/cart';
 import { getUser } from '@/lib/auth';
-import { Address } from '@/lib/services/checkout-service';
 
 const SectionAddress = () => {
   const { data: userDetails, isLoading, isError } = useUserDetails();
@@ -87,6 +86,8 @@ const SectionAddress = () => {
   };
 
   const renderAddresses = () => {
+    if (typeof window === 'undefined') return null;
+
     const user = getUser();
 
     if (!user) return renderGuestAddress();

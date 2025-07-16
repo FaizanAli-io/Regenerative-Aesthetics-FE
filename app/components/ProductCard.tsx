@@ -15,14 +15,16 @@ import { getUser } from '@/lib/auth';
 import { useDeleteWishlist } from '@/lib/hooks/wishlist/delete-wishlist';
 import { useRouter } from 'next/navigation';
 import { useCart as useCartCache } from '@/lib/stores/cart';
-import { useAuth } from '@/lib/hooks/use-auth';
 import { useCart } from '@/lib/hooks/cart/use-cart';
+import { motion } from 'motion/react';
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
   product: Omit<Product, 'category'>; // Removed 'category' from Product type
   theme?: 'light' | 'dark' | 'primary';
   favorite?: boolean;
 }
+
+const Heart = motion(HeartIcon);
 
 const ProductCard = ({
   product,
@@ -33,7 +35,6 @@ const ProductCard = ({
   ...props
 }: Props) => {
   const router = useRouter();
-  const { isAuthenticated } = useAuth();
 
   const { items: cartItems } = useCartCache(state => state.cart);
   const addToCartCache = useCartCache(state => state.addToCart);
@@ -44,13 +45,9 @@ const ProductCard = ({
   const { data: wishlist } = useWishlist();
   const { mutate: removeWishlist } = useDeleteWishlist();
 
-  const [user, setUser] = useState<User | null>(null);
+  const user = getUser();
   const [isAdded, setIsAdded] = useState(false);
   const [isFavourite, setIsFavourite] = useState(false);
-
-  useEffect(() => {
-    if (isAuthenticated) setUser(getUser());
-  }, [isAuthenticated]);
 
   useEffect(() => {
     if (favorite || !wishlist || !wishlist.wishlistItems.length) return;
@@ -174,7 +171,9 @@ const ProductCard = ({
               'cursor-pointer'
             )}
           >
-            <HeartIcon
+            <Heart
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
               size='25'
               className='translate-x-2'
               fill={isFavourite || favorite ? '#fa6784' : 'none'}

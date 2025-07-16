@@ -30,6 +30,8 @@ const removeToken = () => localStorage && localStorage.removeItem(TOKEN_KEY);
 const USER_KEY = 'user';
 
 const getUser = (): User | null => {
+  if (typeof window === 'undefined') return null;
+
   if (!isValidToken()) {
     localStorage.removeItem(USER_KEY);
     return null;

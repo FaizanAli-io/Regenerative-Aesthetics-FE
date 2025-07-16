@@ -2,21 +2,11 @@ import React from 'react';
 import ShippingMethodItem from '../_components/ShippingMethodItem';
 
 const data = [
-  // {
-  //   charges: 'Free',
-  //   text: 'Bank Transfer (Easypaisa/JazzCash/bank)',
-  //   date: '17 Oct, 2025',
-  // },
   {
     charges: '$8.50',
     text: 'Cash on Delivery',
     date: '1 Oct, 2025',
   },
-  // {
-  //   charges: 'Schedule',
-  //   text: 'Delivery Point Pick Up',
-  //   date: 'Select Date',
-  // },
 ];
 
 const ShippingMethod = () => {
