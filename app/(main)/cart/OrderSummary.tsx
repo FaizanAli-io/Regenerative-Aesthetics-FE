@@ -39,22 +39,22 @@ const OrderSummary = ({ total }: Props) => {
 
       <div className='flex justify-between'>
         <p className='font-semibold text-xl'>Subtotal</p>
-        <p className='font-semibold text-xl'>${total.toFixed(2)}</p>
+        <p className='font-semibold text-xl'>PKR {total.toFixed(2)}</p>
       </div>
 
       <div className='flex justify-between'>
         <p className='text-black/70 text-lg'>Estimated Tax</p>
-        <p className='font-semibold text-xl'>${total > 0 ? '50' : '0'}</p>
+        <p className='font-semibold text-xl'>PKR {total > 0 ? '50' : '0'}</p>
       </div>
       <div className='flex justify-between'>
         <p className='text-black/70 text-lg'>Estimated shipping & Handling</p>
-        <p className='font-semibold text-xl'>${total > 0 ? '50' : '0'}</p>
+        <p className='font-semibold text-xl'>PKR {total > 0 ? '50' : '0'}</p>
       </div>
 
       <div className='flex justify-between'>
         <p className='font-semibold text-xl'>Total</p>
         <p className='font-semibold text-xl'>
-          ${total > 0 ? (total + 100).toFixed(2) : 0}
+          PKR {total > 0 ? (total + 100).toFixed(2) : 0}
         </p>
       </div>
 

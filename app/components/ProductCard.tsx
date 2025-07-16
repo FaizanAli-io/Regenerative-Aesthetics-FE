@@ -212,7 +212,7 @@ const ProductCard = ({
             'text-2xl my-3 font-semibold'
           )}
         >
-          {product.price}
+          PKR {product.price}
         </p>
 
         <Button

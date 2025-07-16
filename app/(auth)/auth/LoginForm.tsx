@@ -3,7 +3,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { useAuth } from '@/lib/hooks/use-auth'; // Assuming a hook to check authentication
 import { useRouter } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
@@ -28,6 +27,8 @@ import { useLogin } from '@/lib/hooks/use-login';
 import { toast } from 'sonner';
 import Image from 'next/image';
 import { getUser } from '@/lib/auth';
+import { useForgotPassword } from '@/lib/hooks/use-forgot-password';
+import { motion } from 'motion/react';
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
   navigateToSignup?: () => void;
@@ -49,6 +50,9 @@ const FormSchema = z.object({
 
 function LoginForm({ className, navigateToSignup, ...props }: Props) {
   const { mutate: login, isPending, isSuccess } = useLogin();
+  const { mutate: forgotPass, isPending: pendingForgotPass } =
+    useForgotPassword();
+
   const router = useRouter();
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -76,6 +80,8 @@ function LoginForm({ className, navigateToSignup, ...props }: Props) {
   if (getUser()) return null;
 
   const handleForgotPass = () => {
+    if (pendingForgotPass) return;
+
     const email = form.getValues().email;
 
     const emailRegex = /^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$/;
@@ -83,7 +89,7 @@ function LoginForm({ className, navigateToSignup, ...props }: Props) {
     if (!email) return toast.error('Enter your email');
     if (!emailRegex.test(email)) return toast.error('Enter a valid email.');
 
-    toast.success('Reset password link sent!');
+    forgotPass({ email });
   };
 
   return (
@@ -152,9 +158,13 @@ function LoginForm({ className, navigateToSignup, ...props }: Props) {
                       </FormControl>
                       <FormMessage />
                       <div className='flex justify-end cursor-pointer'>
-                        <p className='underline' onClick={handleForgotPass}>
+                        <motion.p
+                          whileTap={{ scale: 0.95 }}
+                          className='underline'
+                          onClick={handleForgotPass}
+                        >
                           Forgot Password?
-                        </p>
+                        </motion.p>
                       </div>
                     </FormItem>
                   )}
