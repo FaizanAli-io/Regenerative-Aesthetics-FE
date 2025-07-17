@@ -21,7 +21,6 @@ import { UserDetailsRes } from '@/lib/services/user-contact-service';
 import { useUpdateUserDetails } from '@/lib/hooks/user-details/use-edit-user-details';
 import { useCart } from '@/lib/stores/cart';
 import { getUser } from '@/lib/auth';
-import { clear } from 'console';
 
 const FormSchema = z.object({
   label: z.string().refine(val => {

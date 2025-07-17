@@ -59,22 +59,25 @@ export const useAddWishlist = () => {
 
       const tempId = Date.now(); // Store temp ID for later reference
 
-      const wishlistItem: WishlistItem = {
+      const wishlistItem: Omit<WishlistItem, 'user'> = {
         id: tempId,
         createdAt: new Date().toISOString(),
         product,
       };
 
-      queryClient.setQueryData<WishlistResponse>(WISH_LIST_KEY, old => {
-        if (old) {
-          return {
-            ...old,
-            totalItems: old.totalItems + 1,
-            wishlistItems: [...old.wishlistItems, wishlistItem],
-          };
+      queryClient.setQueryData<Omit<WishlistResponse, 'user'>>(
+        WISH_LIST_KEY,
+        old => {
+          if (old) {
+            return {
+              ...old,
+              totalItems: old.totalItems + 1,
+              wishlistItems: [...old.wishlistItems, wishlistItem],
+            } as WishlistResponse;
+          }
+          return old;
         }
-        return old;
-      });
+      );
 
       return { previousWishlist, tempId };
     },

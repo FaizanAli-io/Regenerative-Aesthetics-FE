@@ -8,6 +8,7 @@ const USERS_KEY = ['users-admin'];
 const CART_KEY = ['cart'];
 const USER_DETAILS_KEY = ['user-details'];
 const BLOGS_KEY = ['blogs'];
+const REVIEWS_KEY = ['reviews'];
 
 export {
   CATEGORIES_KEY,
@@ -20,4 +21,5 @@ export {
   USER_DETAILS_KEY,
   BLOGS_KEY,
   USER_ORDERS_KEY,
+  REVIEWS_KEY,
 };
