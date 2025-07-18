@@ -3,14 +3,16 @@ import { StarIcon } from 'lucide-react';
 import React from 'react';
 
 interface Props {
-  review: Omit<Review, 'user'>;
+  review: Review;
+  displayUsername?: boolean;
 }
 
-const ReviewHistoryItem = ({ review }: Props) => {
+const ReviewHistoryItem = ({ review, displayUsername = false }: Props) => {
   return (
     <div>
       <div className='flex justify-between'>
         <div>
+          <div>{displayUsername && <p>{review.user.email}</p>}</div>
           <h2 className='text-lg text-primary-darker font-semibold'>
             {review.product.title}
           </h2>

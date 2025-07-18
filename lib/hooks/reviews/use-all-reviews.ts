@@ -1,13 +1,13 @@
 import review, { Review } from '@/lib/services/review-service';
 import { useQuery } from '@tanstack/react-query';
-import { REVIEWS_KEY } from '../_cache-keys';
+import { REVIEWS_ALL_KEY } from '../_cache-keys';
 
-const useReviews = () =>
+const useAllReviews = () =>
   useQuery({
-    queryKey: REVIEWS_KEY,
+    queryKey: REVIEWS_ALL_KEY,
     queryFn: async () => {
       try {
-        const response = await review.getOdd<Review[]>('').request;
+        const response = await review.getAll<Review>().request;
         return response.data;
       } catch (error) {
         console.error(error);
@@ -16,4 +16,4 @@ const useReviews = () =>
     },
   });
 
-export { useReviews };
+export { useAllReviews };

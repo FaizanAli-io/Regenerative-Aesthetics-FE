@@ -28,6 +28,10 @@ const sections = [
     icon: 'wishlist',
     label: 'Wishlists',
   },
+  {
+    icon: 'reviews',
+    label: 'Reviews',
+  },
 ];
 
 const Sidepanel = () => {

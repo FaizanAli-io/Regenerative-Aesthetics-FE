@@ -1,25 +1,12 @@
-const CATEGORIES_KEY = ['categories'];
-const PRODUCTS_KEY = ['products'];
-const WISH_LIST_KEY = ['wishlist'];
-const WISH_LIST_ALL_KEY = ['wishlist-all'];
-const ORDERS_KEY = ['orders'];
-const USER_ORDERS_KEY = ['user-orders'];
-const USERS_KEY = ['users-admin'];
-const CART_KEY = ['cart'];
-const USER_DETAILS_KEY = ['user-details'];
-const BLOGS_KEY = ['blogs'];
-const REVIEWS_KEY = ['reviews'];
-
-export {
-  CATEGORIES_KEY,
-  PRODUCTS_KEY,
-  WISH_LIST_KEY,
-  WISH_LIST_ALL_KEY,
-  ORDERS_KEY,
-  USERS_KEY,
-  CART_KEY,
-  USER_DETAILS_KEY,
-  BLOGS_KEY,
-  USER_ORDERS_KEY,
-  REVIEWS_KEY,
-};
+export const CATEGORIES_KEY = ['categories'];
+export const PRODUCTS_KEY = ['products'];
+export const WISH_LIST_KEY = ['wishlist'];
+export const WISH_LIST_ALL_KEY = ['wishlist-all'];
+export const ORDERS_KEY = ['orders'];
+export const USER_ORDERS_KEY = ['user-orders'];
+export const USERS_KEY = ['users-admin'];
+export const CART_KEY = ['cart'];
+export const USER_DETAILS_KEY = ['user-details'];
+export const BLOGS_KEY = ['blogs'];
+export const REVIEWS_KEY = ['reviews'];
+export const REVIEWS_ALL_KEY = ['reviews-all'];
