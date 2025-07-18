@@ -2,6 +2,10 @@
 import React from 'react';
 import NavItem from './NavItem';
 import useSidebarStore from '@/lib/stores/dashboard-sidebar-store';
+import { removeToken, removeUser } from '@/lib/auth';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { LogOutIcon } from 'lucide-react';
 
 const sections = [
   {
@@ -35,7 +39,14 @@ const sections = [
 ];
 
 const Sidepanel = () => {
+  const router = useRouter();
   const activeIndex = useSidebarStore(state => state.activeIndex);
+
+  const handleLogout = () => {
+    removeToken();
+    removeUser();
+    router.replace('/auth');
+  };
 
   return (
     <div className='hidden md:flex w-64 flex-col bg-[#f0f9f0] border-r'>
@@ -67,6 +78,9 @@ const Sidepanel = () => {
             active={i === activeIndex}
           />
         ))}
+        <Button className='cursor-pointer' onClick={handleLogout}>
+          <LogOutIcon /> Logout
+        </Button>
       </nav>
     </div>
   );
