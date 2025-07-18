@@ -51,7 +51,7 @@ const Page = async ({ params }: Props) => {
   const { token } = await params;
 
   return (
-    <div className='flex justify-center my-44'>
+    <div className='flex justify-center items-center my-44 h-[55vh]'>
       <ResetPasswordForm token={token} />
     </div>
   );
