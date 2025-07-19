@@ -1,18 +1,24 @@
-import type { NextConfig } from 'next';
+import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   images: {
-    domains: ['res.cloudinary.com', 'example.com'],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com"
+      },
+      {
+        protocol: "https",
+        hostname: "example.com"
+      }
+    ]
   },
   eslint: {
-    // Disable ESLint during builds
-    ignoreDuringBuilds: true,
+    ignoreDuringBuilds: true
   },
   typescript: {
-    // Disable TypeScript during builds
-    ignoreBuildErrors: true,
-  },
+    ignoreBuildErrors: true
+  }
 };
 
 export default nextConfig;
